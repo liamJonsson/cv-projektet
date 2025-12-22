@@ -18,15 +18,21 @@ namespace MyApp.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Privacy(string id)
         {
-            return View();
+            return Content("Privacy-metoden anropades. ID = " + id);
+        }
+
+        public IActionResult Settings()
+        {
+            return Content("Settings-metoden i HomeController anropades");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            //return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return Content("Error-metoden anropades");
         }
     }
 }
