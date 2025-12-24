@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyApp.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace MyApp
 {
@@ -10,6 +11,14 @@ namespace MyApp
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllersWithViews();
+
+            // För inloggningen
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/User/Login"; 
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5); // Loggas ut automatiskt efter 5 min
+                });
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -27,6 +36,7 @@ namespace MyApp
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
