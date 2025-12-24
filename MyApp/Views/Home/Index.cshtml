@@ -1,8 +1,17 @@
 ﻿@model IEnumerable<MyApp.Models.Project>
 
-<div class="text-center mb-4">
-    <h1>Project Portal</h1>
-    <p>Welcome to the project management system.</p>
+<div class="d-flex mb-4">
+    <form asp-action="Index" method="get">
+        <label for="search">Hitta användare</label>
+        @* Andra border color på input fältet när man klickat i den samt ändra storleken på fältet *@
+        <input class="ms-2 border-0 bg-light" type="search" id="search" name="query" placeholder="Sök användare..." />
+        @*Flytta på sökikonen*@
+        <button class="ms-2 border-0" type="submit" aria-label="Sök">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 14 14">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>
+        </button>
+    </form>
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -10,36 +19,25 @@
     <a asp-controller="Project" asp-action="Add" class="btn btn-success">+ Add New Project</a>
 </div>
 
-<table class="table table-striped table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>Title</th>
-            <th>Language</th>
-            <th>Created By</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Title</td>
-                <td><span class="badge bg-info text-dark">@item.CodeLanguage</span></td>
-                <td>
-                    @if (item.Creator != null)
-                    {
-                        <a asp-controller="User" asp-action="Edit" asp-route-id="@item.CreatorId">@item.Creator.Name</a>
-                    }
-                    else
-                    {
-                        <span class="text-muted">Unknown</span>
-                    }
-                </td>
-                <td>
-                    <a asp-controller="Project" asp-action="Edit" asp-route-id="@item.ProjectId" class="btn btn-sm btn-warning">Edit</a>
-                    <a asp-controller="Project" asp-action="Delete" asp-route-id="@item.ProjectId" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Title</td>
+        <td><span class="badge bg-info text-dark">@item.CodeLanguage</span></td>
+        <td>
+            @if (item.Creator != null)
+            {
+                <a asp-controller="User" asp-action="Edit" asp-route-id="@item.CreatorId">@item.Creator.Name</a>
+            }
+            else
+            {
+                <span class="text-muted">Unknown</span>
+            }
+        </td>
+        <td>
+            <a asp-controller="Project" asp-action="Edit" asp-route-id="@item.ProjectId" class="btn btn-sm btn-warning">Edit</a>
+            <a asp-controller="Project" asp-action="Delete" asp-route-id="@item.ProjectId" class="btn btn-sm btn-danger">Delete</a>
+        </td>
+    </tr>
+}
+
