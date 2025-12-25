@@ -1,0 +1,29 @@
+﻿@model MyApp.Models.Project
+
+<h1>@Model.Title</h1>
+
+<p>@Model.Description</p>
+<p><strong>Språk:</strong> @Model.CodeLanguage</p>
+
+<p>
+    <strong>Tidsperiod:</strong>
+    @Model.StartDate – @Model.EndDate
+</p>
+
+<p>
+    <strong>Skapad av:</strong> @Model.Creator.Name
+</p>
+
+
+
+<h3>Deltagare</h3>
+<ul>
+    @foreach (var participant in Model.Participants)
+    {
+        if (User.Identity.IsAuthenticated || participant.User.Visibility)
+        {
+            <li>@participant.User.Name</li>
+        }
+    }
+</ul>
+

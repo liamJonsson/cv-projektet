@@ -1,0 +1,31 @@
+﻿@model List<MyApp.Models.Project>
+
+<h1>Projects</h1>
+
+
+    @foreach (var project in Model)
+    {
+    <h3>
+        <a asp-action="Details" asp-route-id="@project.ProjectId">
+            @project.Title
+        </a>
+    </h3>
+
+
+        <ul>
+            @foreach (var participant in project.Participants)
+        {
+            @if (User.Identity.IsAuthenticated || participant.User.Visibility == true)
+            {
+                <li>@participant.User.Name</li>
+            }
+        }
+
+
+        </ul>
+    }
+
+
+
+
+
