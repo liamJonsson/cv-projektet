@@ -15,8 +15,8 @@ namespace MyApp.Controllers
 
         public IActionResult Index()
         {
-            var projects = _context.Projects.Include(p => p.Creator).ToList();
-            return View(projects);
+            var users = _context.Users.ToList();    
+            return View(users);
         }
     }
 }

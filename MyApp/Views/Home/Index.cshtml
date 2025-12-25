@@ -1,10 +1,10 @@
-﻿@model IEnumerable<MyApp.Models.Project>
+﻿@model IEnumerable<MyApp.Models.User>
 
 <div class="d-flex mb-4">
     <form asp-action="Index" method="get">
         <label for="search">Hitta användare</label>
         @* Andra border color på input fältet när man klickat i den samt ändra storleken på fältet *@
-        <input class="ms-2 border-0 bg-light" type="search" id="search" name="query" placeholder="Sök användare..." />
+        <input class="ms-2 border-0 bg-light" style="width: 200px;" type="search" id="search" name="query" placeholder="Sök användare..." />
         @*Flytta på sökikonen*@
         <button class="ms-2 border-0" type="submit" aria-label="Sök">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 14 14">
@@ -14,30 +14,22 @@
     </form>
 </div>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>Current Projects</h3>
-    <a asp-controller="Project" asp-action="Add" class="btn btn-success">+ Add New Project</a>
-</div>
-
 @foreach (var item in Model)
 {
-    <tr>
-        <td>@item.Title</td>
-        <td><span class="badge bg-info text-dark">@item.CodeLanguage</span></td>
-        <td>
-            @if (item.Creator != null)
-            {
-                <a asp-controller="User" asp-action="Edit" asp-route-id="@item.CreatorId">@item.Creator.Name</a>
-            }
-            else
-            {
-                <span class="text-muted">Unknown</span>
-            }
-        </td>
-        <td>
-            <a asp-controller="Project" asp-action="Edit" asp-route-id="@item.ProjectId" class="btn btn-sm btn-warning">Edit</a>
-            <a asp-controller="Project" asp-action="Delete" asp-route-id="@item.ProjectId" class="btn btn-sm btn-danger">Delete</a>
-        </td>
-    </tr>
+    @if(item.Visibility == true)
+    {
+        <h3>@item.Name</h3>
+        <div class="d-flex" style="width: 90%; margin-bottom: 20px;">
+            <div class="bg-light p-2" style="width: 47%; height: 300px; margin-right: 6%;">
+                <h4>CV</h4>
+            </div>
+            <div class="bg-light p-2" style="width: 47%; height: 300px;">
+                <h4>Senaste projekt</h4>
+            </div>
+        </div>
+        <div style="width: 90%; text-align: right;">
+            <button class="btn btn-light">Se profil</button>
+        </div>
+    }
 }
 
