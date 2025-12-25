@@ -95,6 +95,8 @@ namespace MyApp.Models
                     Title = "Mitt Första C# Projekt",
                     Description = "En enkel konsolapplikation.",
                     CodeLanguage = "C#",
+                    StartDate = new DateOnly(2025, 10, 1),
+                    EndDate = new DateOnly(2025, 12, 15),
                     ZipFile = "console.zip",
                     CreatorId = 1
                 },
@@ -104,6 +106,8 @@ namespace MyApp.Models
                     Title = "React Frontend",
                     Description = "En snygg frontend-app.",
                     CodeLanguage = "JavaScript",
+                    StartDate = new DateOnly(2025, 9, 12),
+                    EndDate = new DateOnly(2025, 12, 23),
                     ZipFile = "react.zip",
                     CreatorId = 2
                 }
