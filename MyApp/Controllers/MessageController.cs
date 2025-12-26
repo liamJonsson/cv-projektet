@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Models;
@@ -8,21 +10,58 @@ namespace MyApp.Controllers
     public class MessageController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
+        private List<Message> userMessages = new List<Message>();
 
-        public MessageController(ApplicationDbContext context)
+        public MessageController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // Lista alla meddelanden (Inbox)
-        public IActionResult Index()
+        // Visa användarens meddelanden
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            var messages = _context.Messages
-                .Include(m => m.Sender)
-                .Include(m => m.Receiver)
-                .OrderByDescending(m => m.MessageId) // Nyast först
-                .ToList();
-            return View(messages);
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser == null)
+            {
+                //Användaren skickas till inloggningssidan om den inte är inloggad
+                return RedirectToAction("Login", "User");
+            }
+
+            userMessages = await _context.Messages
+                .Where(m => m.ReceiverId == currentUser.Id)
+                .OrderByDescending(m => m.MessageId)
+                .Select(m => new Message
+                {
+                    MessageId = m.MessageId,
+                    Text = m.Text,
+                    SenderName = m.SenderName,
+                })
+                .ToListAsync();
+
+            return View("ViewMessages", userMessages);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAsRead(int[] messageIds)
+        {
+            foreach (var message in userMessages)
+            {
+                if (messageIds != null && messageIds.Contains(message.MessageId))
+                {
+                     message.Read = true;
+                    
+                }
+                else
+                {
+                    message.Read = false;
+                }
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ViewMessages");
         }
 
         // Skriv nytt meddelande
@@ -30,16 +69,15 @@ namespace MyApp.Controllers
         public IActionResult Send()
         {
             // Vi behöver två listor med användare (Avsändare och Mottagare)
-            ViewBag.Users = new SelectList(_context.Users, "UserId", "Name");
+            ViewBag.Users = new SelectList(_context.Users, "Id", "Name");
             return View();
         }
 
         [HttpPost]
-        public IActionResult Send(Message message)
+        public async Task<IActionResult> Send(Message message)
         {
-            message.Read = false; // Ej läst när det skickas
             _context.Messages.Add(message);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }

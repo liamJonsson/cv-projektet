@@ -1,0 +1,24 @@
+﻿@model IEnumerable<MyApp.Models.Message>
+
+<h2> Mina meddelanden</h2>
+
+@if(Model == null || !Model.Any())
+{
+	<p>Det finns inga meddelanden.</p>
+}
+else
+{
+	@foreach (var message in Model)
+	{	
+		<div>
+			<input type ="checkbox" name="MessageIds" value ="@message.MessageId" />
+			<h3>Från: @message.SenderName</h3>
+			<p> @message.Text</p>
+		</div>
+
+		<button type="submit"> Spara meddelanden som har markerats som läst</button>
+	}
+
+}
+
+

@@ -9,11 +9,11 @@ namespace MyApp.Models
             public int MessageId { get; set; }
 
             [Required(ErrorMessage = "Vänligen skriv ett meddelande.")]
-            public string Text { get; set; }
+            public string Text { get; set; } = string.Empty;
             public bool Read { get; set; } = false;
 
             [Required(ErrorMessage = "Vänligen fyll i ditt namn när du ej är inloggad.")]
-            public string SenderName { get; set; }
+            public string SenderName { get; set; } = string.Empty;
 
             //Foreign keys
             public int? SenderId { get; set; }
