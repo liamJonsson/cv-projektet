@@ -122,7 +122,7 @@ namespace MyApp.Models
             );
 
             modelBuilder.Entity<Message>().HasData(
-                new Message { MessageId = 1, Text = "Hej", Read = false, SenderId = 1, ReceiverId = 2 }
+                new Message { MessageId = 1, Text = "Hej", Read = false, SenderName = "Lisa Skarf", SenderId = 1, ReceiverId = 2 }
             );
 
 
