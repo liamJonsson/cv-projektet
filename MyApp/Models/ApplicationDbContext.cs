@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using MyApp.Models;
 
 namespace MyApp.Models
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -11,14 +14,15 @@ namespace MyApp.Models
 
         // Tabellerna i databasen
         public DbSet<Address> Addresses { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Behaviour
+            // Identity
+            base.OnModelCreating(modelBuilder);
+            // Behaviour
             modelBuilder.Entity<ProjectUser>()
                 .HasKey(pu => new { pu.ProjectId, pu.UserId });
 
@@ -56,35 +60,42 @@ namespace MyApp.Models
             modelBuilder.Entity<Address>().HasData(
                 new Address { AddressId = 1, HomeAddress = "Exempelgatan 10", City = "Stockholm", ZipCode = "123 45" }
             );
-
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
-                    UserId = 1,
+                    Id = 1, 
                     Name = "Lisa Skarf",
                     ProfileImage = "default.jpg",
                     Email = "lisa.skarf@example.com",
+                    NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
                     UserName = "lisaskarf",
-                    Password = "passwordlisa",
+                    NormalizedUserName = "LISASKARF",
+                    PasswordHash = "HASH_PLACEHOLDER", // PasswordHash
                     PhoneNumber = "0720204584",
                     Cv = "cv_lisa.pdf",
                     Visibility = true,
                     Deactivated = false,
-                    AddressId = 1
+                    AddressId = 1,
+                    EmailConfirmed = true,
+                    SecurityStamp = string.Empty
                 },
                 new User
                 {
-                    UserId = 2,
+                    Id = 2,
                     Name = "Liam Jonsson",
                     ProfileImage = "default.jpg",
                     Email = "liam.jonsson@example.com",
+                    NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
                     UserName = "liamjonsson",
-                    Password = "passwordliam",
+                    NormalizedUserName = "LIAMJONSSON",
+                    PasswordHash = "HASH_PLACEHOLDER",
                     PhoneNumber = "0737528105",
                     Cv = "cv_liam.pdf",
                     Visibility = true,
                     Deactivated = false,
-                    AddressId = 1
+                    AddressId = 1,
+                    EmailConfirmed = true,
+                    SecurityStamp = string.Empty
                 }
             );
 
@@ -98,7 +109,7 @@ namespace MyApp.Models
                     StartDate = new DateOnly(2025, 10, 1),
                     EndDate = new DateOnly(2025, 12, 15),
                     ZipFile = "console.zip",
-                    CreatorId = 1
+                    CreatorId = 1,
                 },
                 new Project
                 {
@@ -109,7 +120,7 @@ namespace MyApp.Models
                     StartDate = new DateOnly(2025, 9, 12),
                     EndDate = new DateOnly(2025, 12, 23),
                     ZipFile = "react.zip",
-                    CreatorId = 2
+                    CreatorId = 2,
                 }
             );
 

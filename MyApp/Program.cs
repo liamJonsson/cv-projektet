@@ -1,6 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace MyApp
 {
@@ -12,18 +12,14 @@ namespace MyApp
 
             builder.Services.AddControllersWithViews();
 
-            // För inloggningen
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/User/Login"; 
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5); // Loggas ut automatiskt efter 5 min
-                });
-
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Connection string not found.");
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            builder.Services.AddIdentity<User, IdentityRole<int>>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
 
             var app = builder.Build();
 
