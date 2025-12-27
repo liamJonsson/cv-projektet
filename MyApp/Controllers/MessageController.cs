@@ -7,11 +7,11 @@ using MyApp.Models;
 
 namespace MyApp.Controllers
 {
+    [Authorize]
     public class MessageController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
-        private List<Message> userMessages = new List<Message>();
 
         public MessageController(ApplicationDbContext context, UserManager<User> userManager)
         {
@@ -20,26 +20,14 @@ namespace MyApp.Controllers
         }
 
         // Visa användarens meddelanden
-        [Authorize]
+      
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
-            if (currentUser == null)
-            {
-                //Användaren skickas till inloggningssidan om den inte är inloggad
-                return RedirectToAction("Login", "User");
-            }
-
-            userMessages = await _context.Messages
+            var userMessages = await _context.Messages
                 .Where(m => m.ReceiverId == currentUser.Id)
                 .OrderByDescending(m => m.MessageId)
-                .Select(m => new Message
-                {
-                    MessageId = m.MessageId,
-                    Text = m.Text,
-                    SenderName = m.SenderName,
-                })
                 .ToListAsync();
 
             return View("ViewMessages", userMessages);
@@ -48,12 +36,17 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> MarkAsRead(int[] messageIds)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var userMessages = await _context.Messages
+                .Where(m => m.ReceiverId == currentUser.Id)
+                .ToListAsync();
+
             foreach (var message in userMessages)
             {
                 if (messageIds != null && messageIds.Contains(message.MessageId))
                 {
                      message.Read = true;
-                    
                 }
                 else
                 {
@@ -61,7 +54,7 @@ namespace MyApp.Controllers
                 }
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction("ViewMessages");
+            return RedirectToAction("Index");
         }
 
         // Skriv nytt meddelande

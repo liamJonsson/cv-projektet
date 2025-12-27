@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Models;
+using System.Threading.Tasks;
 
 namespace MyApp.Models
 {
@@ -22,6 +23,10 @@ namespace MyApp.Models
         {
             // Identity
             base.OnModelCreating(modelBuilder);
+
+            //DENNA KAN TAS BORT SENARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            var hasher = new PasswordHasher<User>();
+
             // Behaviour
             modelBuilder.Entity<ProjectUser>()
                 .HasKey(pu => new { pu.ProjectId, pu.UserId });
@@ -77,7 +82,8 @@ namespace MyApp.Models
                     Deactivated = false,
                     AddressId = 1,
                     EmailConfirmed = true,
-                    SecurityStamp = string.Empty
+                    SecurityStamp = "78901234-5678-9012-3456-789012345678",
+                    ConcurrencyStamp = "d2eb4f2f-6e57-4d1a-9c11-a93aa5825c19"
                 },
                 new User
                 {
@@ -95,7 +101,28 @@ namespace MyApp.Models
                     Deactivated = false,
                     AddressId = 1,
                     EmailConfirmed = true,
-                    SecurityStamp = string.Empty
+                    SecurityStamp = "12345678 - 1234 - 5678 - 1234 - 567812345678",
+                    ConcurrencyStamp = "5e632b10-1032-48d9-b9db-b8dbada42280"
+                },
+                //DENNA KAN TAS BORT SENARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                new User
+                {
+                    Id = 3,
+                    Name = "Test Testsson",
+                    ProfileImage = "default.jpg",
+                    Email = "test@test.se",
+                    NormalizedEmail = "TEST@TEST.SE",
+                    UserName = "testanvandare",
+                    NormalizedUserName = "TESTANVANDARE",
+                    PasswordHash = hasher.HashPassword(null, "Lösenord123!"),
+                    PhoneNumber = "0700000000",
+                    Cv = "cv_test.pdf",
+                    Visibility = true,
+                    Deactivated = false,
+                    AddressId = 1,
+                    EmailConfirmed = true,
+                    SecurityStamp = "8d2eb4f2f - 6e57 - 4d1a - 9c11 - a93aa5825c19",
+                    ConcurrencyStamp = "b2b4f2f6 - e574 - d1a9 - c11a - 93aa5825c19"
                 }
             );
 
@@ -133,7 +160,24 @@ namespace MyApp.Models
             );
 
             modelBuilder.Entity<Message>().HasData(
-                new Message { MessageId = 1, Text = "Hej", Read = false, SenderName = "Lisa Skarf", SenderId = 1, ReceiverId = 2 }
+                new Message {
+                    MessageId = 1,
+                    Text = "Hej", 
+                    Read = false, 
+                    SenderName = "Lisa Skarf", 
+                    SenderId = 1, 
+                    ReceiverId = 2 
+                },
+                //DENNA KAN TAS BORT SENARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                new Message
+                {
+                    MessageId = 2,
+                    Text = "Funkar inloggningen?",
+                    Read = false,
+                    SenderName = "Lisa Skarf",
+                    SenderId = 1,
+                    ReceiverId = 3 
+                }
             );
 
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MyApp.Models;
 
 namespace MyApp
@@ -20,6 +21,12 @@ namespace MyApp
 
             builder.Services.AddIdentity<User, IdentityRole<int>>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/User/Login";
+                options.LogoutPath = "/User/Logout";
+            }); 
 
             var app = builder.Build();
 

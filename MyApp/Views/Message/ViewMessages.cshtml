@@ -8,17 +8,18 @@
 }
 else
 {
-	@foreach (var message in Model)
-	{	
-		<div>
-			<input type ="checkbox" name="MessageIds" value ="@message.MessageId" />
-			<h3>Från: @message.SenderName</h3>
-			<p> @message.Text</p>
-		</div>
+	<form asp-action="MarkAsRead" method="post">
+		@foreach (var message in Model)
+		{	
+			<div>
+				<input type ="checkbox" name="messageIds" value ="@message.MessageId" @(message.Read ? "checked" : "") />
+				<h3>Från: @message.SenderName</h3>
+				<p> @message.Text</p>
+				</div>
+		}
 
 		<button type="submit"> Spara meddelanden som har markerats som läst</button>
-	}
-
+	</form>
 }
 
 
