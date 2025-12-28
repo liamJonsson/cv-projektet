@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using MyApp.Models;
 using System.Threading.Tasks;
 
@@ -19,10 +20,20 @@ namespace MyApp.Models
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<Message> Messages { get; set; }
 
+        // Säger åt EF Core att ignorera att hash-koderna ändras
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.ConfigureWarnings(warnings =>
+                warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Identity
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>().ToTable("Users");
+            var hasher = new PasswordHasher<User>();
 
             // Behaviour
             modelBuilder.Entity<ProjectUser>()
@@ -58,50 +69,54 @@ namespace MyApp.Models
                 .HasForeignKey(m => m.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //Example data
+            //Exempel data
             modelBuilder.Entity<Address>().HasData(
                 new Address { AddressId = 1, HomeAddress = "Exempelgatan 10", City = "Stockholm", ZipCode = "123 45" }
             );
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = 1, 
-                    Name = "Lisa Skarf",
-                    ProfileImage = "default.jpg",
-                    Email = "lisa.skarf@example.com",
-                    NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
-                    UserName = "lisaskarf",
-                    NormalizedUserName = "LISASKARF",
-                    PasswordHash = "HASH_PLACEHOLDER", // PasswordHash
-                    PhoneNumber = "0720204584",
-                    Cv = "cv_lisa.pdf",
-                    Visibility = true,
-                    Deactivated = false,
-                    AddressId = 1,
-                    EmailConfirmed = true,
-                    SecurityStamp = "78901234-5678-9012-3456-789012345678",
-                    ConcurrencyStamp = "d2eb4f2f-6e57-4d1a-9c11-a93aa5825c19"
-                },
-                new User
-                {
-                    Id = 2,
-                    Name = "Liam Jonsson",
-                    ProfileImage = "default.jpg",
-                    Email = "liam.jonsson@example.com",
-                    NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
-                    UserName = "liamjonsson",
-                    NormalizedUserName = "LIAMJONSSON",
-                    PasswordHash = "HASH_PLACEHOLDER",
-                    PhoneNumber = "0737528105",
-                    Cv = "cv_liam.pdf",
-                    Visibility = true,
-                    Deactivated = false,
-                    AddressId = 1,
-                    EmailConfirmed = true,
-                    SecurityStamp = "12345678 - 1234 - 5678 - 1234 - 567812345678",
-                    ConcurrencyStamp = "5e632b10-1032-48d9-b9db-b8dbada42280"
-                }
-            );
+
+            var lisa = new User
+            {
+                Id = 1,
+                Name = "Lisa Skarf",
+                ProfileImage = "default.jpg",
+                Email = "lisa.skarf@example.com",
+                NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
+                UserName = "lisaskarf",
+                NormalizedUserName = "LISASKARF",
+                PhoneNumber = "0720204584",
+                Cv = "cv_lisa.pdf",
+                Visibility = true,
+                Deactivated = false,
+                AddressId = 1,
+                EmailConfirmed = true,
+                SecurityStamp = "11111111-1111-1111-1111-111111111111",
+                ConcurrencyStamp = "22222222-2222-2222-2222-222222222222"
+            };
+            lisa.PasswordHash = hasher.HashPassword(lisa, "Lösenord123!");
+
+            var liam = new User
+            {
+                Id = 2,
+                Name = "Liam Jonsson",
+                ProfileImage = "default.jpg",
+                Email = "liam.jonsson@example.com",
+                NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
+                UserName = "liamjonsson",
+                NormalizedUserName = "LIAMJONSSON",
+                PhoneNumber = "0737528105",
+                Cv = "cv_liam.pdf",
+                Visibility = true,
+                Deactivated = false,
+                AddressId = 1,
+                EmailConfirmed = true,
+                SecurityStamp = "33333333-3333-3333-3333-333333333333",
+                ConcurrencyStamp = "44444444-4444-4444-4444-444444444444"
+            };
+            
+            liam.PasswordHash = hasher.HashPassword(liam, "Lösenord123!");
+
+            // Lägger till dem i databasen
+            modelBuilder.Entity<User>().HasData(lisa, liam);
 
             modelBuilder.Entity<Project>().HasData(
                 new Project
