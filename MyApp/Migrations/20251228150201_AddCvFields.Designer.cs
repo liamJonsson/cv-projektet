@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyApp.Models;
 
@@ -11,9 +12,11 @@ using MyApp.Models;
 namespace MyApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251228150201_AddCvFields")]
+    partial class AddCvFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -352,9 +355,6 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CvImage")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Deactivated")
                         .HasColumnType("bit");
 
@@ -399,6 +399,7 @@ namespace MyApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfileImage")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -446,7 +447,7 @@ namespace MyApp.Migrations
                             Name = "Lisa Skarf",
                             NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
                             NormalizedUserName = "LISASKARF",
-                            PasswordHash = "AQAAAAIAAYagAAAAECBxtHJYTe+GlzaRQMGBHiVQGCCIgHdtyDe57YBHAhkYTKd6zBaykGnDEHru4QSSTw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENdccBMZDegV12sbPinyvj15w1LHz8AN6VTeTWvhV/zEXBjsuFLBPh/lOsQfbzx0PQ==",
                             PhoneNumber = "0720204584",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
@@ -469,7 +470,7 @@ namespace MyApp.Migrations
                             Name = "Liam Jonsson",
                             NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
                             NormalizedUserName = "LIAMJONSSON",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBDZ7L/Kw6oN4fTqcqotoH5xIIkBq3Z4JQgrY2GoBb7G/ptjy1RNdQZHSE4MEzx9RQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC1Qn9Vzcb8OhPLX15C/UdmP3cabPTMjDqfe4k5LZzADpb5WbDzhYZ4dv9v1ckPXeA==",
                             PhoneNumber = "0737528105",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",

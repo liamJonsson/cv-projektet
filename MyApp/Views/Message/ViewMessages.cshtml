@@ -1,0 +1,25 @@
+﻿@model IEnumerable<MyApp.Models.Message>
+
+<h2> Mina meddelanden</h2>
+
+@if(Model == null || !Model.Any())
+{
+	<p>Det finns inga meddelanden.</p>
+}
+else
+{
+	<form asp-action="MarkAsRead" method="post">
+		@foreach (var message in Model)
+		{	
+			<div>
+				<input type ="checkbox" name="messageIds" value ="@message.MessageId" @(message.Read ? "checked" : "") />
+				<h3>Från: @message.SenderName</h3>
+				<p> @message.Text</p>
+				</div>
+		}
+
+		<button type="submit"> Spara meddelanden som har markerats som läst</button>
+	</form>
+}
+
+

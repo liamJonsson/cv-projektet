@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyApp.Models;
 
@@ -11,9 +12,11 @@ using MyApp.Models;
 namespace MyApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251228132128_FixTableAndUsers")]
+    partial class FixTableAndUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -352,14 +355,8 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CvImage")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Deactivated")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Education")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -367,9 +364,6 @@ namespace MyApp.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Experience")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -399,12 +393,10 @@ namespace MyApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfileImage")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -446,7 +438,7 @@ namespace MyApp.Migrations
                             Name = "Lisa Skarf",
                             NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
                             NormalizedUserName = "LISASKARF",
-                            PasswordHash = "AQAAAAIAAYagAAAAECBxtHJYTe+GlzaRQMGBHiVQGCCIgHdtyDe57YBHAhkYTKd6zBaykGnDEHru4QSSTw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMVvvJ3naeV9oQy0oJtDdBFTRJgNn0NEd6xKaboBvxHfqhTPrunfTkxCRQmXoCZcsA==",
                             PhoneNumber = "0720204584",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
@@ -469,7 +461,7 @@ namespace MyApp.Migrations
                             Name = "Liam Jonsson",
                             NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
                             NormalizedUserName = "LIAMJONSSON",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBDZ7L/Kw6oN4fTqcqotoH5xIIkBq3Z4JQgrY2GoBb7G/ptjy1RNdQZHSE4MEzx9RQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOG3pzGq4Z7+Me0J51pDykvPQB3P7hloRBb/ufqmiMocgYrvjBRQwKRMuuuIxWfLvw==",
                             PhoneNumber = "0737528105",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",

@@ -1,0 +1,187 @@
+﻿@model MyApp.InputModels.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Redigera Profil";
+    var currentProfilePic = string.IsNullOrEmpty(Model.CurrentProfileImage) ? "default.jpg" : Model.CurrentProfileImage;
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-5">Mina uppgifter</h2>
+    <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="CurrentProfileImage" />
+        <input type="hidden" asp-for="CurrentCvImage" />
+        <div class="row mb-5">
+            <div class="col-12 d-flex flex-column align-items-center mb-4">
+                <div class="position-relative" style="width: 150px; height: 150px;">
+                    <img src="~/images/@currentProfilePic" class="rounded-circle img-fluid shadow-sm" style="width: 100%; height: 100%; object-fit: cover;" alt="Profilbild">
+                    <label for="profileImageInput" class="btn btn-secondary btn-sm rounded-circle position-absolute bottom-0 end-0 shadow" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                        <i class="bi bi-plus-lg text-white"></i>
+                    </label>
+                    <input asp-for="NewProfileImageFile" id="profileImageInput" class="d-none" accept="image/*" />
+                </div>
+                <small class="text-muted mt-2">Klicka på plusset för att byta bild</small>
+                @if (Model.CurrentProfileImage != "default.jpg" && !string.IsNullOrEmpty(Model.CurrentProfileImage))
+                {
+                    <div class="form-check mt-2">
+                        <input asp-for="RemoveProfileImage" class="form-check-input" />
+                        <label asp-for="RemoveProfileImage" class="form-check-label text-danger small">
+                            Ta bort bild <i class="bi bi-trash"></i>
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 fw-bold">Namn</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input asp-for="Name" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 fw-bold">Telefonnummer</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input asp-for="PhoneNumber" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 fw-bold">Mailadress</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input asp-for="Email" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 fw-bold">Adress</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input asp-for="HomeAddress" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 fw-bold">Användarnamn</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input asp-for="UserName" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                        </div>
+                        <span asp-validation-for="UserName" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row mb-4 align-items-center">
+                    <label class="col-sm-4 fw-bold">Synlighet</label>
+                    <div class="col-sm-8">
+                        <select asp-for="Visibility" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;">
+                            <option value="true">Offentlig (Alla kan se)</option>
+                            <option value="false">Privat (Endast inloggade)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-sm-8 offset-sm-4">
+                        <a asp-action="DeactivateAccount"
+                           class="text-danger text-decoration-underline small"
+                           onclick="return confirm('Är du säker på att du vill avaktivera ditt konto? Din profil kommer inte längre synas för andra, men den raderas inte.');">
+                            Avaktivera konto
+                        </a>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-secondary px-4 py-2">Spara uppgifter</button>
+            </div>
+            <div class="col-md-6">
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-3 fw-bold">Postnr</label>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input asp-for="ZipCode" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                        </div>
+                    </div>
+                    <label class="col-sm-2 text-end fw-bold">Ort</label>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input asp-for="City" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="text-center mt-5 mb-3">Mitt CV</h3>
+
+        <div class="p-4 rounded position-relative" style="background-color: #dcdcdc;">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="fw-bold">Kompetenser</h5>
+                    <textarea asp-for="Skills" class="form-control bg-transparent border-0" rows="3" placeholder="Skriv dina kompetenser..."></textarea>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="fw-bold">Utbildning</h5>
+                    <textarea asp-for="Education" class="form-control bg-transparent border-0" rows="3" placeholder="Skriv din utbildning..."></textarea>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="fw-bold">Tidigare erfarenhet</h5>
+                    <textarea asp-for="Experience" class="form-control bg-transparent border-0" rows="3" placeholder="Skriv din erfarenhet..."></textarea>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex flex-column align-items-end">
+                <div class="position-relative rounded-circle overflow-hidden shadow-sm" style="width: 100px; height: 100px; background-color: #6c6c6c;">
+                    @if (!string.IsNullOrEmpty(Model.CurrentCvImage))
+                    {
+                        <img src="~/images/@Model.CurrentCvImage" style="width: 100%; height: 100%; object-fit: cover;" />
+                    }
+
+                    <label for="cvImageInput" class="btn btn-secondary btn-sm rounded-circle position-absolute bottom-0 end-0 shadow-sm" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin: 5px;">
+                        <i class="bi bi-plus-lg text-white" style="font-size: 0.8rem;"></i>
+                    </label>
+                    <input asp-for="NewCvImageFile" id="cvImageInput" class="d-none" accept="image/*" />
+                </div>
+                <small class="text-muted mb-1">Lägg till bild i CV</small>
+
+                @if (!string.IsNullOrEmpty(Model.CurrentCvImage))
+                {
+                    <div class="form-check">
+                        <input asp-for="RemoveCvImage" class="form-check-input" />
+                        <label asp-for="RemoveCvImage" class="form-check-label text-danger small">
+                            Ta bort bild <i class="bi bi-trash"></i>
+                        </label>
+                    </div>
+                }
+            </div>
+
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-secondary btn-sm">Spara uppgifter</button>
+            </div>
+        </div> <h3 class="text-center mt-5 mb-3">Mina projekt</h3>
+        <div class="row">
+            <div class="col-12 text-center text-muted p-4 rounded" style="background-color: #f8f9fa;">
+                Här kommer du kunna lägga till och ta bort projekt i nästa steg.
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-5 mb-5">
+            <button type="button" class="btn btn-secondary" style="background-color: #c0c0c0; border: none;">Exportera profil</button>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyApp.Models;
 
@@ -11,9 +12,11 @@ using MyApp.Models;
 namespace MyApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251227131720_AddIdentityStandard")]
+    partial class AddIdentityStandard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -352,14 +355,8 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CvImage")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Deactivated")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Education")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -367,9 +364,6 @@ namespace MyApp.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Experience")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -399,12 +393,10 @@ namespace MyApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfileImage")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -429,7 +421,7 @@ namespace MyApp.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
                         new
@@ -437,7 +429,7 @@ namespace MyApp.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             AddressId = 1,
-                            ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
+                            ConcurrencyStamp = "d2eb4f2f-6e57-4d1a-9c11-a93aa5825c19",
                             Cv = "cv_lisa.pdf",
                             Deactivated = false,
                             Email = "lisa.skarf@example.com",
@@ -446,11 +438,11 @@ namespace MyApp.Migrations
                             Name = "Lisa Skarf",
                             NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
                             NormalizedUserName = "LISASKARF",
-                            PasswordHash = "AQAAAAIAAYagAAAAECBxtHJYTe+GlzaRQMGBHiVQGCCIgHdtyDe57YBHAhkYTKd6zBaykGnDEHru4QSSTw==",
+                            PasswordHash = "HASH_PLACEHOLDER",
                             PhoneNumber = "0720204584",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
-                            SecurityStamp = "11111111-1111-1111-1111-111111111111",
+                            SecurityStamp = "78901234-5678-9012-3456-789012345678",
                             TwoFactorEnabled = false,
                             UserName = "lisaskarf",
                             Visibility = true
@@ -460,7 +452,7 @@ namespace MyApp.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             AddressId = 1,
-                            ConcurrencyStamp = "44444444-4444-4444-4444-444444444444",
+                            ConcurrencyStamp = "5e632b10-1032-48d9-b9db-b8dbada42280",
                             Cv = "cv_liam.pdf",
                             Deactivated = false,
                             Email = "liam.jonsson@example.com",
@@ -469,11 +461,11 @@ namespace MyApp.Migrations
                             Name = "Liam Jonsson",
                             NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
                             NormalizedUserName = "LIAMJONSSON",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBDZ7L/Kw6oN4fTqcqotoH5xIIkBq3Z4JQgrY2GoBb7G/ptjy1RNdQZHSE4MEzx9RQ==",
+                            PasswordHash = "HASH_PLACEHOLDER",
                             PhoneNumber = "0737528105",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
-                            SecurityStamp = "33333333-3333-3333-3333-333333333333",
+                            SecurityStamp = "12345678 - 1234 - 5678 - 1234 - 567812345678",
                             TwoFactorEnabled = false,
                             UserName = "liamjonsson",
                             Visibility = true
