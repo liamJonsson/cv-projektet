@@ -10,9 +10,13 @@ namespace MyApp.Models
         public string Name { get; set; }
         //Profile image
         [DataType(DataType.ImageUrl)]
-        public string ProfileImage { get; set; }
+        public string? ProfileImage { get; set; }
         //CV - Filename for the CV
         public string Cv { get; set; }
+        public string? CvImage { get; set; }
+        public string? Skills { get; set; }
+        public string? Education { get; set; }
+        public string? Experience { get; set; } 
         public bool Visibility { get; set; } = false;
         public bool Deactivated { get; set; } = false;
 
