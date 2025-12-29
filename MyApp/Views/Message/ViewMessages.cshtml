@@ -1,25 +1,110 @@
-﻿@model IEnumerable<MyApp.Models.Message>
+﻿@* @model IEnumerable<MyApp.Models.Message>
+<div class="container mt-5">
+	<h2 class="text-center mb-5"> Mina meddelanden</h2>
 
-<h2> Mina meddelanden</h2>
+	@if(Model == null || !Model.Any())
+	{
+		<div class="text-center text-muted fst-italic">
+			<p>Det finns inga meddelanden.</p>
+		</div>
+	}
+	else
+	{
+		<form asp-action="MarkAsRead" method="post" class="mt-4">
+			@foreach (var message in Model)
+			{
+				var fontWeight = "bold";
+				var textColor = "black";
 
-@if(Model == null || !Model.Any())
-{
-	<p>Det finns inga meddelanden.</p>
-}
-else
-{
-	<form asp-action="MarkAsRead" method="post">
-		@foreach (var message in Model)
-		{	
-			<div>
-				<input type ="checkbox" name="messageIds" value ="@message.MessageId" @(message.Read ? "checked" : "") />
-				<h3>Från: @message.SenderName</h3>
-				<p> @message.Text</p>
+				if (message.Read)
+				{
+						fontWeight = "normal";
+						textColor = "gray";
+				}
+
+				<div class="mb-4 mx-auto" style="width: 60%;">		
+					<h4 style="font-weight: @fontWeight; color: @textColor;"> 
+						Från: @message.SenderName
+					</h4>
+								
+					<div class="p-3 rounded d-flex justify-content-between align-items-center" style="background-color: #dcdcdc;">
+						<p class="px-2" style="font-weight: @fontWeight; color: @textColor;"> @message.Text</p>
+
+						<div class="form-check d-flex align-items-center gap-2">
+							<input class="form-check-input" type="checkbox" name="messageIds" value="@message.MessageId" @(message.Read ? "checked" : "") id="check-@message.MessageId" style="filter: grayscale(1) brightness(1.3); cursor: pointer;"/>
+							<label class="small fw-bold" for="check-@message.MessageId">Läst</label>
+						</div>
+					</div>
+					<p style e="font-weight: @fontWeight; color: @textColor;">
+						@message.SentAt.ToString("yyyy-MM-dd HH:mm")
+					</p>
 				</div>
-		}
+			}
+			<div class="mx-auto text-end" style="width: 60%;">
+				<button type="submit" class="btn btn-secondary px-4 py-2 mt-2"> Spara ändringar</button>
+			</div>
+			</form>
 
-		<button type="submit"> Spara meddelanden som har markerats som läst</button>
-	</form>
-}
+	}
+</div> *@
+
+@model IEnumerable<MyApp.Models.Message>
+<div class="container mt-5">
+	<h2 class="text-center mb-5"> Mina meddelanden</h2>
+
+	@if(Model == null || !Model.Any())
+	{
+		<div class="text-center text-muted fst-italic">
+			<p>Det finns inga meddelanden.</p>
+		</div>
+	}
+	else
+	{
+		
+			@foreach (var message in Model)
+			{
+				var fontWeight = "bold";
+				var textColor = "black";
+
+				if (message.Read)
+				{
+						fontWeight = "normal";
+						textColor = "gray";
+				}
+
+				<div class="mb-4 mx-auto" style="width: 60%;">		
+					<h4 style="font-weight: @fontWeight; color: @textColor;"> 
+						Från: @message.SenderName
+					</h4>
+								
+					<div class="p-3 rounded d-flex justify-content-between align-items-center" style="background-color: #dcdcdc;">
+						<p class="px-2" style="font-weight: @fontWeight; color: @textColor;"> @message.Text</p>
+
+						<div class="form-check d-flex align-items-center gap-2">
+							<form asp-action="UpdateRead" asp-route-id="@message.MessageId" asp-route-status="@(!message.Read)" method="post">
+								<button type="submit" class="btn p-0 border-0 d-flex align-items-center gap-2" style="background: transparent; cursor: pointer;">
+									@if(message.Read)
+									{
+										<i class="bi bi-check-square-fill" style="font-size: 1.3rem; color: #6c757d;"></i>
+									}
+									else
+									{
+										<i class="bi bi-square" style="font-size: 1.3rem; color: #666;"></i>
+									}
+								<label class="small fw-bold mb-0" style="cursor: pointer; color: @textColor;">Läst</label>
+								</button>
+							</form>
+						</div>
+					</div>
+					<p style="font-weight: @fontWeight; color: @textColor;">
+						@message.SentAt.ToString("yyyy-MM-dd HH:mm")
+					</p>
+				</div>
+			}
+	}
+</div>
+
+
+
 
 

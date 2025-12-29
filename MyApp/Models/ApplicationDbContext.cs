@@ -155,11 +155,32 @@ namespace MyApp.Models
                 new Message {
                     MessageId = 1,
                     Text = "Hej", 
+                    SentAt = System.DateTime.Now,
                     Read = false, 
                     SenderName = "Lisa Skarf", 
                     SenderId = 1, 
                     ReceiverId = 2 
-                }
+                },
+                 new Message
+                 {
+                     MessageId = 2,
+                     Text = "Hej igen",
+                     SentAt = System.DateTime.Now,
+                     Read = false,
+                     SenderName = "Lisa S",
+                     SenderId = 1,
+                     ReceiverId = 2
+                 },
+                 new Message
+                 {
+                     MessageId = 3,
+                     Text = "Hej på dig hahahbdhbdhabdhabdhb hdbhadb hdbhbdahbd hdbabhbdhahdba hbdabdhbah hbadhdabhdb hbaddhbb. habdha hadbhbd ahdbadhb hadbhad habdhadb ahdbhd badhbd badhd habdhadbhabd hbdahd hbadbdah hbadhbd badhdb bdahdb bahdbd abdhadb badibdadb Hejdå!",
+                     SentAt = System.DateTime.Now,
+                     Read = false,
+                     SenderName = "Lisa S",
+                     SenderId = 1,
+                     ReceiverId = 2
+                 }
             );
         }
     }

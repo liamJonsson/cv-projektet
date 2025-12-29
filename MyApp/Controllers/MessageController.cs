@@ -33,28 +33,43 @@ namespace MyApp.Controllers
             return View("ViewMessages", userMessages);
         }
 
+        //[HttpPost]
+        //public async Task<IActionResult> MarkAsRead(int[] messageIds)
+        //{
+        //    var currentUser = await _userManager.GetUserAsync(User);
+
+        //    var userMessages = await _context.Messages
+        //        .Where(m => m.ReceiverId == currentUser.Id)
+        //        .ToListAsync();
+
+        //    foreach (var message in userMessages)
+        //    {
+        //        if (messageIds != null && messageIds.Contains(message.MessageId))
+        //        {
+        //             message.Read = true;
+        //        }
+        //        else
+        //        {
+        //            message.Read = false;
+        //        }
+        //    }
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction("Index");
+        //}
+
         [HttpPost]
-        public async Task<IActionResult> MarkAsRead(int[] messageIds)
+        public async Task<IActionResult> UpdateRead(int id, bool status)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
+            var message = await _context.Messages.FindAsync(id);
 
-            var userMessages = await _context.Messages
-                .Where(m => m.ReceiverId == currentUser.Id)
-                .ToListAsync();
-
-            foreach (var message in userMessages)
+            if(message != null)
             {
-                if (messageIds != null && messageIds.Contains(message.MessageId))
-                {
-                     message.Read = true;
-                }
-                else
-                {
-                    message.Read = false;
-                }
+                message.Read = status;
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
+
         }
 
         // Skriv nytt meddelande

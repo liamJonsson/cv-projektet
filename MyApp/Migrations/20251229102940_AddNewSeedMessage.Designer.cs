@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyApp.Models;
 
@@ -11,9 +12,11 @@ using MyApp.Models;
 namespace MyApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251229102940_AddNewSeedMessage")]
+    partial class AddNewSeedMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -210,9 +213,6 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -233,7 +233,6 @@ namespace MyApp.Migrations
                             ReceiverId = 2,
                             SenderId = 1,
                             SenderName = "Lisa Skarf",
-                            SentAt = new DateTime(2025, 12, 29, 14, 59, 55, 208, DateTimeKind.Local).AddTicks(8818),
                             Text = "Hej"
                         },
                         new
@@ -243,18 +242,7 @@ namespace MyApp.Migrations
                             ReceiverId = 2,
                             SenderId = 1,
                             SenderName = "Lisa S",
-                            SentAt = new DateTime(2025, 12, 29, 14, 59, 55, 212, DateTimeKind.Local).AddTicks(995),
                             Text = "Hej igen"
-                        },
-                        new
-                        {
-                            MessageId = 3,
-                            Read = false,
-                            ReceiverId = 2,
-                            SenderId = 1,
-                            SenderName = "Lisa S",
-                            SentAt = new DateTime(2025, 12, 29, 14, 59, 55, 212, DateTimeKind.Local).AddTicks(1017),
-                            Text = "Hej på dig hahahbdhbdhabdhabdhb hdbhadb hdbhbdahbd hdbabhbdhahdba hbdabdhbah hbadhdabhdb hbaddhbb. habdha hadbhbd ahdbadhb hadbhad habdhadb ahdbhd badhbd badhd habdhadbhabd hbdahd hbadbdah hbadhbd badhdb bdahdb bahdbd abdhadb badibdadb Hejdå!"
                         });
                 });
 
@@ -470,7 +458,7 @@ namespace MyApp.Migrations
                             Name = "Lisa Skarf",
                             NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
                             NormalizedUserName = "LISASKARF",
-                            PasswordHash = "AQAAAAIAAYagAAAAED65qFTCjhjI9Xu31Y4ZwRA+9iNvgOYYqN1bNP+Vwp8dnhOuOzDbLS8PaU3u8uJguw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDU1eGuHQ2QrKxaCMtnxqubvWlee1tkZi/vE9hchIQGzTOLwXXauKt3DMRl3RRfksw==",
                             PhoneNumber = "0720204584",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
@@ -493,7 +481,7 @@ namespace MyApp.Migrations
                             Name = "Liam Jonsson",
                             NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
                             NormalizedUserName = "LIAMJONSSON",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAczylhsXLL2kvRLaVzRSc+cfZw5fX0V18sJwxhCzB2XJ+zR4SgmcrbOdDUNql7baQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENS5+PEmRg3CT9Y8k3YFOz6kEY2ndr4TjTBDTeNH4ybCrJUPKC/mdqp23j+PAIkjfA==",
                             PhoneNumber = "0737528105",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
