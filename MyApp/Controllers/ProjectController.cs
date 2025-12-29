@@ -32,9 +32,9 @@ namespace MyApp.Controllers
         public IActionResult Details(int id)
         {
             var project = _context.Projects
-                .Include(p => p.Creator)
                 .Include(p => p.Participants)
-                .ThenInclude(pu => pu.User)
+                .ThenInclude(p => p.User)
+                .Include(pu => pu.Creator)
                 .FirstOrDefault(p => p.ProjectId == id);
 
             if (project == null)

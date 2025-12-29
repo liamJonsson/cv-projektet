@@ -29,3 +29,52 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* PROJEktLISTNING */
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.project-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    background-color: #f5f5f5;
+    position: relative;
+}
+
+.project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    position: static;
+}
+
+    .project-card-header a {
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+.project-add {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.project-card-footer {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.project-edit {
+    display: inline-block;
+    margin-top:8px;
+    font-size: 14px;
+    text-decoration: underline;
+}

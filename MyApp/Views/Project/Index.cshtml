@@ -1,29 +1,71 @@
 ﻿@model List<MyApp.Models.Project>
 
-<h1>Projects</h1>
+<h1>Alla projekt</h1>
 
+@if (User.Identity.IsAuthenticated)
+{
+    <button class="btn btn-outline-secondary mb-3" disabled>
+        Skapa projekt +
+        </button>
+}
 
+<div class="projects-grid">
     @foreach (var project in Model)
     {
-    <h3>
-        <a asp-action="Details" asp-route-id="@project.ProjectId">
-            @project.Title
-        </a>
-    </h3>
+        <div class="project-card">
+
+            <div class="project-card-header">
+                <strong>Titel:</strong>
+                <a class="project-add"
+                   asp-action="Details"
+                   asp-route-id="@project.ProjectId">
+                    +
+                </a>
 
 
-        <ul>
-            @foreach (var participant in project.Participants)
+               
+            </div>
+
+            <p>
+                <strong>Beskrivning:</strong><br />
+                @project.Description
+            </p>
+
+            <p>
+                <strong>Programmeringsspråk:</strong>
+                @project.CodeLanguage
+            </p>
+
+            <p><strong>Deltagare:</strong></p>
+            <ul>
+                @foreach (var participant in project.Participants)
+                {
+                    if (User.Identity.IsAuthenticated || participant.User.Visibility)
+                    {
+                        <li>@participant.User.Name</li>
+                    }
+                }
+            </ul>
+
+            <div class="project-card-footer">
+                Skapad av: @project.Creator?.Name
+            </div>
+
+        </div>
+
+        @if (User.Identity.IsAuthenticated &&
+            User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+            == project.CreatorId.ToString())
         {
-            @if (User.Identity.IsAuthenticated || participant.User.Visibility == true)
-            {
-                <li>@participant.User.Name</li>
-            }
+            <a asp-action="Edit" 
+            asp-route-id="@project.ProjectId"
+            class="project-edit">
+            redigera projekt
+        </a>
         }
-
-
-        </ul>
     }
+</div>
+
 
 
 
