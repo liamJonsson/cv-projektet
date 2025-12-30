@@ -49,20 +49,24 @@
 
             <div class="project-card-footer">
                 Skapad av: @project.Creator?.Name
+
+                @* REDIGERA – bara om ägare *@
+                @if (User.Identity.IsAuthenticated &&
+                            User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                            == project.Creator?.Id.ToString())
+                {
+                    <a asp-action="Edit"
+                       asp-route-id="@project.ProjectId"
+                       class="edit-project-btn">
+                        Redigera
+                    </a>
+                }
+
             </div>
 
         </div>
 
-        @if (User.Identity.IsAuthenticated &&
-            User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
-            == project.CreatorId.ToString())
-        {
-            <a asp-action="Edit" 
-            asp-route-id="@project.ProjectId"
-            class="project-edit">
-            redigera projekt
-        </a>
-        }
+        
     }
 </div>
 
