@@ -10,6 +10,9 @@ namespace MyApp.Models
 
             [Required(ErrorMessage = "Vänligen skriv ett meddelande.")]
             public string Text { get; set; } = string.Empty;
+
+            public DateTime SentAt { get; set; }
+
             public bool Read { get; set; } = false;
 
             [Required(ErrorMessage = "Vänligen fyll i ditt namn när du ej är inloggad.")]

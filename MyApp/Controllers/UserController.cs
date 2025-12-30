@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Serialization;
+using System.IO;
 using MyApp.InputModels;
 using MyApp.Models;
 
@@ -199,6 +201,34 @@ namespace MyApp.Controllers
 
             if (userToUpdate != null)
             {
+                var existingUserWithEmail = await _userManager.FindByEmailAsync(model.Email);
+                if (existingUserWithEmail != null && existingUserWithEmail.Id != userToUpdate.Id)
+                {
+                    ModelState.AddModelError("Email", "Denna e-postadress används redan av ett annat konto.");
+                }
+
+                var existingUserWithName = await _userManager.FindByNameAsync(model.UserName);
+                if (existingUserWithName != null && existingUserWithName.Id != userToUpdate.Id)
+                {
+                    ModelState.AddModelError("UserName", "Användarnamnet är tyvärr upptaget.");
+                }
+
+                if (!string.IsNullOrEmpty(model.PhoneNumber))
+                {
+                    var existingUserWithPhone = await _context.Users
+                        .FirstOrDefaultAsync(u => u.PhoneNumber == model.PhoneNumber && u.Id != userToUpdate.Id);
+
+                    if (existingUserWithPhone != null)
+                    {
+                        ModelState.AddModelError("PhoneNumber", "Detta telefonnummer är redan registrerat.");
+                    }
+                }
+                if (!ModelState.IsValid)
+                {
+                    model.CurrentProfileImage = userToUpdate.ProfileImage;
+                    model.CurrentCvImage = userToUpdate.CvImage;
+                    return View(model);
+                }
                 userToUpdate.Name = model.Name;
                 userToUpdate.PhoneNumber = model.PhoneNumber;
                 userToUpdate.Email = model.Email;
@@ -232,7 +262,18 @@ namespace MyApp.Controllers
                 {
                     userToUpdate.CvImage = null;
                 }
-
+                if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.NewPassword))
+                {
+                    var changePasswordResult = await _userManager.ChangePasswordAsync(userToUpdate, model.CurrentPassword, model.NewPassword);
+                    if (!changePasswordResult.Succeeded)
+                    {
+                        foreach (var error in changePasswordResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return View(model);
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction("MyPage");
             }
@@ -256,7 +297,7 @@ namespace MyApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // Hjälpmetod för att spara filer
+        // Hjälpmetod för att spara bildfiler
         private async Task<string> UploadFile(IFormFile file)
         {
             string uniqueFileName = null;
@@ -274,5 +315,90 @@ namespace MyApp.Controllers
             }
             return uniqueFileName;
         }
+
+        // Exportera profil
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> ExportProfile(int id)
+        {
+            var user = await _context.Users
+                .Include(u => u.Address)
+                .Include(u => u.ParticipatingProjects)
+                .ThenInclude(pu => pu.Project)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null) return NotFound();
+            bool isLoggedOut = !User.Identity.IsAuthenticated;
+            if (user.Visibility == false && isLoggedOut)
+            {
+                return Forbid(); // Eller NotFound()
+            }
+            var exportData = new ProfileXmlDto
+            {
+                Name = user.Name,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Skills = user.Skills?.Trim(),
+                Education = user.Education?.Trim(),
+                Experience = user.Experience?.Trim(),
+                ZipCode = user.Address?.ZipCode,
+                City = user.Address?.City
+            };
+            if (user.ParticipatingProjects != null)
+            {
+                foreach (var projUser in user.ParticipatingProjects)
+                {
+                    exportData.Projects.Add(new ProjectXmlDto
+                    {
+                        Title = projUser.Project.Title,
+                        Description = projUser.Project.Description,
+                        CodeLanguage = projUser.Project.CodeLanguage
+                    });
+                }
+            }
+            var serializer = new XmlSerializer(typeof(ProfileXmlDto));
+
+            using (var stream = new MemoryStream())
+            {
+                var settings = new System.Xml.XmlWriterSettings
+                {
+                    Indent = true,             
+                    Encoding = System.Text.Encoding.UTF8
+                };
+
+                using (var writer = System.Xml.XmlWriter.Create(stream, settings))
+                {
+                    serializer.Serialize(writer, exportData);
+                }
+                var content = stream.ToArray();
+                return File(content, "application/xml", $"Profil_{user.UserName}.xml");
+            }
+        }
+    }
+
+    // För XML-exporten
+    public class ProfileXmlDto
+    {
+        public string Name { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+
+        public string Skills { get; set; }
+        public string Education { get; set; }
+        public string Experience { get; set; }
+
+        public string Street { get; set; }
+        public string ZipCode { get; set; }
+        public string City { get; set; }
+        public List<ProjectXmlDto> Projects { get; set; } = new List<ProjectXmlDto>();
+    }
+
+    public class ProjectXmlDto
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string CodeLanguage { get; set; }
     }
 }

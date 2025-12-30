@@ -8,7 +8,6 @@
     var isOwner = loggedInId == Model.Id.ToString();
     ViewData["Title"] = isOwner ? "Min Profil" : Model.Name;
 }
-
 <div class="container mt-5">
     <div class="d-flex justify-content-center align-items-center mb-4 position-relative">
         <h2>@(isOwner ? "Mina Uppgifter" : "Profil")</h2>
@@ -56,27 +55,27 @@
         </div>
     </div>
     <h3 class="text-center mt-5 mb-4">CV</h3>
-    <div class="p-4 rounded" style="background-color: #dcdcdc;">
+    <div class="p-4 rounded position-relative" style="background-color: #dcdcdc;">
         <div class="row">
-            <div class="col-md-4 d-flex flex-column">
+            <div class="col-md-4 d-flex flex-column mb-3">
                 <h5 class="fw-bold">Kompetenser</h5>
-                <p class="flex-grow-1">@(Model.Skills ?? "Inga kompetenser angivna.")</p>
+                <p class="flex-grow-1" style="white-space: pre-line; line-height: 1.8;">@(Model.Skills ?? "Inga kompetenser angivna.")</p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-3">
                 <h5 class="fw-bold">Utbildning</h5>
-                <p>@(Model.Education ?? "Ingen utbildning angiven.")</p>
+                <p style="white-space: pre-line; line-height: 1.8;">@(Model.Education ?? "Ingen utbildning angiven.")</p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 mb-5">
                 <h5 class="fw-bold">Tidigare erfarenhet</h5>
-                <p>@(Model.Experience ?? "Ingen erfarenhet angiven.")</p>
+                <p style="white-space: pre-line; line-height: 1.8;">@(Model.Experience ?? "Ingen erfarenhet angiven.")</p>
             </div>
         </div>
-        <div class="mt-3 d-flex justify-content-end">
-            <div class="rounded-circle overflow-hidden shadow-sm" style="width: 80px; height: 80px; background-color: #6c6c6c;">
-                @if (!string.IsNullOrEmpty(Model.CvImage))
-                {
-                    <img src="~/images/@Model.CvImage" style="width: 100%; height: 100%; object-fit: cover;" alt="CV Bild" />
+        <div class="position-absolute bottom-0 start-0 m-3">
+            <div class="rounded-circle overflow-hidden shadow-sm" style="width: 130px; height: 130px; background-color: #6c6c6c;">
+                @{
+                    var imageToShow = string.IsNullOrEmpty(Model.CvImage) ? "default.jpg" : Model.CvImage;
                 }
+                <img src="~/images/@imageToShow" style="width: 100%; height: 100%; object-fit: cover;" alt="CV Bild" />
             </div>
         </div>
     </div>
@@ -102,26 +101,48 @@
             <div class="col-12 text-center text-muted fst-italic">Inga projekt kopplade ännu.</div>
         }
     </div>
-    <div class="row mt-5 justify-content-center">
-        <div class="col-md-8">
-            <h3 class="text-center mb-4">Skicka meddelande</h3>
-
-            <div class="mb-3">
-                <label>Namn</label>
-                <input type="text" class="form-control border-0" style="background-color: #dcdcdc;"
-                       value="@(User.Identity.IsAuthenticated? User.Identity.Name : "")"
-                       placeholder="Ditt namn" disabled="@(User.Identity.IsAuthenticated)" />
+    @if (isOwner)
+    {
+            <div class="col-12 text-center mt-4">
+                <a asp-controller="Project" asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-search"></i> Hitta och lägg till projekt
+                </a>
             </div>
-            <div class="mb-3">
-                <label>Meddelande</label>
-                <textarea class="form-control border-0" rows="5" style="background-color: #dcdcdc;"></textarea>
-            </div>
-            <div class="text-end">
-                <button class="btn btn-secondary disabled">Skicka</button>
+    }
+    @if (!isOwner)
+    {
+        <div class="row mt-5 justify-content-center">
+            <div class="col-md-8">
+                <h3 class="text-center mb-4">Skicka meddelande</h3>
+                <form asp-controller="Message" asp-action="Send" method="post">
+                    <input type="hidden" name="ReceiverId" value="@Model.Id" />
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <input type="hidden" name="SenderId" value="@loggedInId" />
+                    }
+                    <div class="mb-3">
+                        <label>Från</label>
+                        <input type="text" name="SenderName" class="form-control border-0" style="background-color: #dcdcdc;"
+                               value="@(User.Identity.IsAuthenticated? User.Identity.Name : "")"
+                               @(User.Identity.IsAuthenticated ? "readonly" : "required placeholder='Skriv ditt namn'") />
+                    </div>
+                    <div class="mb-3">
+                        <label>Meddelande</label>
+                        <textarea name="Text" class="form-control border-0" rows="5" style="background-color: #dcdcdc;" required placeholder="Skriv ditt meddelande här..."></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-secondary">Skicka</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
+    }
     <div class="mt-5 mb-5 text-center">
-        <button class="btn btn-secondary px-4 py-2">Exportera profil</button>
+        <form asp-controller="User" asp-action="ExportProfile" method="get">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-secondary px-4 py-2">
+                <i class="bi bi-file-earmark-code"></i> Exportera profil
+            </button>
+        </form>
     </div>
 </div>
