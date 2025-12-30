@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<MyApp.Models.User>
 
-<div class="d-flex mb-4">
+<div class="d-flex justify-content-center" style="width: 90%; margin: 50px 0">
     <form asp-action="Index" method="get">
-        <label for="search">Hitta användare</label>
+        <label class="fs-5" for="search">Hitta användare</label>
         @* Andra border color på input fältet när man klickat i den samt ändra storleken på fältet *@
-        <input class="ms-2 border-0 bg-light" style="width: 200px;" type="search" id="search" name="query" placeholder="Sök användare..." />
+        <input class="ms-2 border-0 bg-light" style="width: 400px;" type="search" id="search" name="query" placeholder="Sök användare..." />
         @*Flytta på sökikonen*@
         <button class="ms-2 border-0" type="submit" aria-label="Sök">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 14 14">
@@ -18,13 +18,46 @@
 {
     @if(item.Visibility == true)
     {
+        var latestProject = item.ParticipatingProjects
+            .Where(pp => pp.Project != null)
+            .OrderByDescending(pp => pp.Project.EndDate)
+            .FirstOrDefault();
+    
         <h3>@item.Name</h3>
         <div class="d-flex" style="width: 90%; margin-bottom: 20px;">
-            <div class="bg-light p-2" style="width: 47%; height: 300px; margin-right: 6%;">
-                <h4>CV</h4>
+            <div class="bg-light p-2" style="width: 47%; margin-right: 6%;">
+                <div style="width: 96%; margin: 0 auto; overflow-wrap: break-word;">
+                    <h4>CV</h4>
+                </div>
             </div>
-            <div class="bg-light p-2" style="width: 47%; height: 300px;">
-                <h4>Senaste projekt</h4>
+            <div class="bg-light p-2" style="width: 47%;">
+                <div style="width: 96%; margin: 0 auto; overflow-wrap: break-word;">
+                    <h4>Senaste projekt</h4>
+                    @if (latestProject != null)
+                    {
+                        <p class="fst-italic">@latestProject.Project.Title</p>
+                        <p>@latestProject.Project.Description</p>
+                        <p>Programmeringsspråk: @latestProject.Project.CodeLanguage</p>
+                        <p>
+                            @*Join är en inbyggs metod i string-klassen och gör flera strängar till en sträng
+                        , " ," indikerar på att varje sträng ska separeras med ett kommatecken 
+                        och resten hämtar namnet på alla deltagarna i ett specifikt projekt!*@
+                            Deltagare: @string.Join(", ", latestProject.Project.Participants
+                                        .Select(p => p.User.Name))
+                        </p>
+                        <p>Skapad av: @latestProject.Project.Creator.Name</p>
+                        <p>
+                            @latestProject.Project.ZipFile
+                            <a href="~/uploads/@latestProject.Project.ZipFile" download class="ps-1 text-decoration-underline">
+                                Ladda ner zip
+                            </a>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>Inga projekt ännu</p>
+                    }
+                </div>
             </div>
         </div>
         <div style="width: 90%; text-align: right;">
