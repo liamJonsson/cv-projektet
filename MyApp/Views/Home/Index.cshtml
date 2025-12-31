@@ -28,9 +28,20 @@
             <div class="bg-light p-2" style="width: 47%; margin-right: 6%;">
                 <div style="width: 96%; margin: 0 auto; overflow-wrap: break-word;">
                     <h4>CV</h4>
-                    <iframe src="~/cv/test-cv.pdf"
-                            style="width:100%; height:100vh;">
-                    </iframe>
+                    @{
+                        var filePath = "wwwroot/cv/" + item.Cv;
+                    }
+
+                    @if (!string.IsNullOrEmpty(item.Cv) && System.IO.File.Exists(filePath))
+                    {
+                        <iframe src="~/cv/@item.Cv"
+                                style="width:100%; height:100vh; border:none;">
+                        </iframe>
+                    }
+                    else
+                    {
+                        <p>Inget CV är uppladdat</p>
+                    }
                 </div>
             </div>
             <div class="bg-light p-2" style="width: 47%;">
