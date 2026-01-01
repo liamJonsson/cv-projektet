@@ -16,7 +16,8 @@
 
 @foreach (var item in Model)
 {
-    @if(item.Visibility == true)
+    bool isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+    @if (isLoggedIn || item.Visibility == true)
     {
         var latestProject = item.ParticipatingProjects
             .Where(pp => pp.Project != null)
@@ -75,7 +76,23 @@
             </div>
         </div>
         <div style="width: 90%; text-align: right;">
-            <button class="btn btn-light">Se profil</button>
+            @if (isLoggedIn)
+            {
+                <a asp-controller="User"
+                   asp-action="MyPage"
+                   asp-route-id="@item.Id"
+                   class="btn btn-light">
+                    Se profil
+                </a>
+            }
+            else
+            {
+                <a asp-controller="User"
+                   asp-action="Login"
+                   class="btn btn-light">
+                    Se profil
+                </a>
+            }
         </div>
     }
 }
