@@ -60,47 +60,48 @@
 	}
 	else
 	{
-		
-			@foreach (var message in Model)
+		@foreach (var message in Model)
+		{
+			var fontWeight = "bold";
+			var textColor = "black";
+
+			if (message.Read)
 			{
-				var fontWeight = "bold";
-				var textColor = "black";
-
-				if (message.Read)
-				{
-						fontWeight = "normal";
-						textColor = "gray";
-				}
-
-				<div class="mb-4 mx-auto" style="width: 60%;">		
-					<h4 style="font-weight: @fontWeight; color: @textColor;"> 
-						Från: @message.SenderName
-					</h4>
-								
-					<div class="p-3 rounded d-flex justify-content-between align-items-center" style="background-color: #dcdcdc;">
-						<p class="px-2" style="font-weight: @fontWeight; color: @textColor;"> @message.Text</p>
-
-						<div class="form-check d-flex align-items-center gap-2">
-							<form asp-action="UpdateRead" asp-route-id="@message.MessageId" asp-route-status="@(!message.Read)" method="post">
-								<button type="submit" class="btn p-0 border-0 d-flex align-items-center gap-2" style="background: transparent; cursor: pointer;">
-									@if(message.Read)
-									{
-										<i class="bi bi-check-square-fill" style="font-size: 1.3rem; color: #6c757d;"></i>
-									}
-									else
-									{
-										<i class="bi bi-square" style="font-size: 1.3rem; color: #666;"></i>
-									}
-									<span class="small mb-0" style="cursor: pointer; color: @textColor;">Läst</span>
-								</button>
-							</form>
-						</div>
-					</div>
-					<p style=" color: @textColor;">
-						@message.SentAt.ToString("yyyy-MM-dd HH:mm")
-					</p>
-				</div>
+					fontWeight = "normal";
+					textColor = "gray";
 			}
+
+			<div class="mb-4 mx-auto" style="width: 60%;">		
+				<h4 style="font-weight: @fontWeight; color: @textColor;"> 
+					Från: @message.SenderName
+				</h4>
+								
+				<div class="p-2 rounded d-flex justify-content-between" style="background-color: #dcdcdc;">
+					<p class="px-2" style="font-weight: @fontWeight; color: @textColor;"> @message.Text</p>
+
+					<div class="d-flex align-items-center">
+						<form asp-action="UpdateRead" method="post">
+							<input type="hidden" name="messageId" value="@message.MessageId"/>
+
+							<button type="submit" class="btn p-0 border-0 d-flex gap-2" style="background: transparent; cursor: pointer;">
+								@if(message.Read)
+								{
+									<i class="bi bi-check-square-fill"></i>
+								}
+								else
+								{
+									<i class="bi bi-square"></i>
+								}
+								<span style="cursor: pointer; color: @textColor;">Läst</span>
+							</button>
+						</form>
+					</div>
+				</div>
+				<p style=" color: @textColor;">
+					@message.SentAt.ToString("yyyy-MM-dd HH:mm")
+				</p>
+			</div>
+		}
 	}
 </div>
 

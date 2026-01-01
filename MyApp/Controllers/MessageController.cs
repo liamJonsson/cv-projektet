@@ -20,7 +20,7 @@ namespace MyApp.Controllers
         }
 
         // Visa användarens meddelanden
-      
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -58,13 +58,13 @@ namespace MyApp.Controllers
         //}
 
         [HttpPost]
-        public async Task<IActionResult> UpdateRead(int id, bool status)
+        public async Task<IActionResult> UpdateRead(int messageId)
         {
-            var message = await _context.Messages.FindAsync(id);
+            var message = await _context.Messages.FindAsync(messageId);
 
             if(message != null)
             {
-                message.Read = status;
+                message.Read = !message.Read;
                 await _context.SaveChangesAsync();
             }
 
