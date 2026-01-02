@@ -1,0 +1,48 @@
+﻿@model MyApp.Models.Project
+@using System.Security.Claims
+
+<h1>@Model.Title</h1>
+
+@if (User.Identity.IsAuthenticated)
+{
+    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (currentUserId != null && currentUserId == Model.CreatorId.ToString())
+    {
+        <a asp-action"Edit"
+        asproute-id="@Model.ProjectId"
+        class=" "btn btn-outline-primary mb-3">
+    </a>
+    }
+}
+
+<p>
+    <strong>Beskrivning:</strong><br />
+    @Model.Description
+</p>
+
+<p>
+    <strong>Programmeringsspråk:</strong>
+    @Model.CodeLanguage
+</p>
+
+<p>
+    <strong>Deltagare:</strong>
+</p>
+
+<ul>
+    @foreach (var participant in Model.Participants)
+    {
+        if (User.Identity.IsAuthenticated || participant.User.Visibility)
+        
+        {
+            <li>@participant.User.Name</li>
+        }
+    }
+</ul>
+
+<p>
+    <strong>Skapad av:</strong> @Model.Creator?.Name
+</p>
+
+
