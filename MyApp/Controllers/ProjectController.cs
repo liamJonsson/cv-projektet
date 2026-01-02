@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MyApp.Models;
 
 namespace MyApp.Controllers
@@ -12,6 +13,38 @@ namespace MyApp.Controllers
         {
             _context = context;
         }
+
+
+        // här ska index- action ligga
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var projects = _context.Projects
+                .Include(p => p.Participants)
+                .ThenInclude(pu => pu.User)
+       
+                .ToList();
+
+
+            return View(projects);
+        }
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var project = _context.Projects
+                .Include(p => p.Participants)
+                .ThenInclude(p => p.User)
+                .Include(pu => pu.Creator)
+                .FirstOrDefault(p => p.ProjectId == id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            return View(project);
+        }
+
 
         [HttpGet]
         public IActionResult Add()

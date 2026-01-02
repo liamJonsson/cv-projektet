@@ -1,0 +1,77 @@
+﻿@model List<MyApp.Models.Project>
+
+<h1>Alla projekt</h1>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <button class="btn btn-outline-secondary mb-3" disabled>
+        Skapa projekt +
+        </button>
+}
+
+<div class="projects-grid">
+    @foreach (var project in Model)
+    {
+        <div class="project-card">
+
+            <div class="project-card-header">
+                <strong>Titel:</strong>
+                <a class="project-add"
+                   asp-action="Details"
+                   asp-route-id="@project.ProjectId">
+                    +
+                </a>
+
+
+               
+            </div>
+
+            <p>
+                <strong>Beskrivning:</strong><br />
+                @project.Description
+            </p>
+
+            <p>
+                <strong>Programmeringsspråk:</strong>
+                @project.CodeLanguage
+            </p>
+
+            <p><strong>Deltagare:</strong></p>
+            <ul>
+                @foreach (var participant in project.Participants)
+                {
+                    if (User.Identity.IsAuthenticated || participant.User.Visibility)
+                    {
+                        <li>@participant.User.Name</li>
+                    }
+                }
+            </ul>
+
+            <div class="project-card-footer">
+                Skapad av: @project.Creator?.Name
+
+                @* REDIGERA – bara om ägare *@
+                @if (User.Identity.IsAuthenticated &&
+                            User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                            == project.Creator?.Id.ToString())
+                {
+                    <a asp-action="Edit"
+                       asp-route-id="@project.ProjectId"
+                       class="edit-project-btn">
+                        Redigera
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
+        
+    }
+</div>
+
+
+
+
+
+
