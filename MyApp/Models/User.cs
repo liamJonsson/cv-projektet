@@ -19,6 +19,7 @@ namespace MyApp.Models
         public string? Experience { get; set; } 
         public bool Visibility { get; set; } = false;
         public bool Deactivated { get; set; } = false;
+        public int ProfileViews { get; set; } = 0;
 
         //Foreign key - AdressId
         [Required]
