@@ -150,9 +150,17 @@ namespace MyApp.Controllers
             }
             bool isLoggedOut = !User.Identity.IsAuthenticated;
             bool isPrivate = userProfile.Visibility == false;
+            var loggedInUserId = _userManager.GetUserId(User);
+
+            if (loggedInUserId != null && int.Parse(loggedInUserId) != userProfile.Id)
+            {
+                userProfile.ProfileViews++;
+                await _context.SaveChangesAsync();
+            }
+
             if (isPrivate && isLoggedOut)
             {
-                return View("PrivateProfile");
+                return RedirectToAction("Login");
             }
             return View("MyPage", userProfile);
         }
@@ -260,7 +268,7 @@ namespace MyApp.Controllers
                 }
                 else if (model.RemoveCvImage)
                 {
-                    userToUpdate.CvImage = null;
+                    userToUpdate.CvImage = "default.jpg";
                 }
                 if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.NewPassword))
                 {

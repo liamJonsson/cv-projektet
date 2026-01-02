@@ -9,14 +9,21 @@
     ViewData["Title"] = isOwner ? "Min Profil" : Model.Name;
 }
 <div class="container mt-5">
+    @if (isOwner)
+    {
+        <div class="">
+            <i class="bi bi-eye"></i>
+            <span>@Model.ProfileViews</span>
+        </div>
+    }
     <div class="d-flex justify-content-center align-items-center mb-4 position-relative">
-        <h2>@(isOwner ? "Mina Uppgifter" : "Profil")</h2>
         @if (isOwner)
         {
             <a asp-action="EditProfile" class="btn btn-outline-secondary btn-sm position-absolute end-0">
                 <i class="bi bi-pencil"></i> Redigera
             </a>
         }
+        <h2>@(isOwner ? "Mina Uppgifter" : "Profil")</h2>
     </div>
     <div class="row">
         <div class="col-md-6">
