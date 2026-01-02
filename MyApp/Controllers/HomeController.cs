@@ -15,7 +15,13 @@ namespace MyApp.Controllers
 
         public IActionResult Index()
         {
-            var users = _context.Users.ToList();    
+            var users = _context.Users
+                //Gör att varje user får tillgång till ParticipatingProjects
+                .Include(u => u.ParticipatingProjects)
+                //och därefter Projects i den tabellen
+                    .ThenInclude(pp => pp.Project)
+                .ToList();
+
             return View(users);
         }
     }
