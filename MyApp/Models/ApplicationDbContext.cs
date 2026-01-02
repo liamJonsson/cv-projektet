@@ -125,8 +125,8 @@ namespace MyApp.Models
                     Title = "Mitt Första C# Projekt",
                     Description = "En enkel konsolapplikation.",
                     CodeLanguage = "C#",
-                    StartDate = new DateOnly(2025, 10, 1),
-                    EndDate = new DateOnly(2025, 12, 15),
+                    StartDate = new DateTime(2025, 10, 1),
+                    EndDate = new DateTime(2025, 12, 15),
                     ZipFile = "console.zip",
                     CreatorId = 1,
                 },
@@ -136,8 +136,8 @@ namespace MyApp.Models
                     Title = "React Frontend",
                     Description = "En snygg frontend-app.",
                     CodeLanguage = "JavaScript",
-                    StartDate = new DateOnly(2025, 9, 12),
-                    EndDate = new DateOnly(2025, 12, 23),
+                    StartDate = new DateTime(2025, 9, 12),
+                    EndDate = new DateTime(2025, 12, 23),
                     ZipFile = "react.zip",
                     CreatorId = 2,
                 }
@@ -154,8 +154,8 @@ namespace MyApp.Models
             modelBuilder.Entity<Message>().HasData(
                 new Message {
                     MessageId = 1,
-                    Text = "Hej", 
-                    SentAt = System.DateTime.Now,
+                    Text = "Hej hej. Vilket bra projekt. Hur har du tänkt när du gjorde Add-metoden? Vill gärna lära mig av dig. Hör av dig ifall du är intresserad att vara min handledare!!", 
+                    SentAt = new DateTime(2025, 9, 12, 14, 30, 0),
                     Read = false, 
                     SenderName = "Lisa Skarf", 
                     SenderId = 1, 
@@ -164,20 +164,20 @@ namespace MyApp.Models
                  new Message
                  {
                      MessageId = 2,
-                     Text = "Hej igen",
-                     SentAt = System.DateTime.Now,
+                     Text = "Gott nytt år!",
+                     SentAt = new DateTime(2025, 12, 31, 23, 59, 0),
                      Read = false,
-                     SenderName = "Lisa S",
+                     SenderName = "Meja Ammer",
                      SenderId = 1,
                      ReceiverId = 2
                  },
                  new Message
                  {
                      MessageId = 3,
-                     Text = "Hej på dig hahahbdhbdhabdhabdhb hdbhadb hdbhbdahbd hdbabhbdhahdba hbdabdhbah hbadhdabhdb hbaddhbb. habdha hadbhbd ahdbadhb hadbhad habdhadb ahdbhd badhbd badhd habdhadbhabd hbdahd hbadbdah hbadhbd badhdb bdahdb bahdbd abdhadb badibdadb Hejdå!",
-                     SentAt = System.DateTime.Now,
+                     Text = "Hej Liam! Hur har du det på lovet? Har du haft en bra jul? Vi ses snart. Hör gärna av dig. När vi ses ska vi programmera klart systemet. Ha det gott! /Lisa",
+                     SentAt = new DateTime(2025, 12, 29, 8, 0, 0),
                      Read = false,
-                     SenderName = "Lisa S",
+                     SenderName = "Lisa Skarf",
                      SenderId = 1,
                      ReceiverId = 2
                  }

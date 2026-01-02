@@ -1,50 +1,58 @@
 ﻿@model MyApp.Models.Project
 
-<div class="Title" style="text-align: center; margin-top: 75px;">
+<div class="Title" style="text-align: center; margin-top: 50px;">
     <h3>Skapa ett projekt</h3>
 </div>
 
-<!-- Fyller i info om projektet -->
-<form asp-action="Add" method="post">
-    <div style="width: 700px; margin: 0 18%;">
-        <div class="create-project project-title" style="margin-top: 50px;">
-            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Titel</label>
-            <input asp-for="Title" style="width: 500px;" required />
-        </div>
-
-        <div class="create-project project-description" style="margin-top: 50px;">
-            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Beskrivning</label>
-            <textarea asp-for="Description" style="width: 500px;" rows="4" required></textarea>
-        </div>
-
-        <div class="create-project project-programming-language" style="margin-top: 50px;">
-            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Programmeringsspråk</label>
-            <input asp-for="CodeLanguage" style="width: 500px;" required />
-        </div>
-
-        <div class="create-project project-start-date" style="margin-top: 50px;">
-            <label style="margin-left: 200px;">Startdatum</label>
-            <input asp-for="StartDate" placeholder="Ex. 2025-01-01" required />
-        </div> 
-        
-        <div class="create-project project-zip" style="margin-top: 50px;">
-            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Ladda upp ZIP-fil</label>
-            <input asp-for="ZipFile" style="width: 500px;" required />
-        </div>
-
-        <div class="create-project project-creator" style="margin-top: 50px;">
-            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Skapad av</label>
-            <select asp-for="CreatorId" asp-items="ViewBag.Creators" style="width: 500px;" required></select>
-        </div>
+@if (ViewBag.SuccessMessage != null)
+{
+    <div style="margin: 20px auto; width: 500px; padding: 10px; background-color: #d4edda; color: #155724; text-align: center;">
+        @ViewBag.SuccessMessage
     </div>
+}
 
-    <button type="submit" class="btn btn-success">Spara</button>
-    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+<!-- Fyller i info om projektet -->
+<form asp-action="Add" method="post" enctype="multipart/form-data">
+    <div style="width: 100%; margin: 0 18%;">
+        <div class="create-project project-title" style="margin-top: 25px;">
+            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Titel</label>
+            <input asp-for="Title" style="width: 500px; background-color: #D9D9D9; border: none;" required />
+        </div>
+
+        <div class="create-project project-description" style="margin-top: 25px;">
+            <label style="display: inline-block; width: 150px; text-align: right; vertical-align: top; margin-right: 20px;">Beskrivning</label>
+            <textarea asp-for="Description" style="width: 500px; background-color: #D9D9D9; border: none;" rows="4" required></textarea>
+        </div>
+
+        <div class="create-project project-programming-language" style="margin-top: 25px;">
+            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Programmeringsspråk</label>
+            <input asp-for="CodeLanguage" style="width: 500px; background-color: #D9D9D9; border: none;" required />
+        </div>
+
+        <div class="create-project project-start-date" style="margin-top: 25px;">
+            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Startdatum</label>
+            <input asp-for="StartDate" type="date" style="width: 500px; background-color: #D9D9D9; border: none;" required />
+        </div> 
+
+        <div class="create-project project-creator" style="margin-top: 25px;">
+            <label style="display: inline-block; width: 150px; text-align: right; margin-right: 20px;">Skapad av</label>
+            <input type="text" value="@User.Identity.Name" style="width: 500px; background-color: #D9D9D9; border: none;" readonly />
+        </div>
+        
+        <div class="create-project project-zip" style="margin-top: 25px; display: inline-block;">
+            <label style="width: 150px; text-align: right; margin-right: 20px;">Ladda upp ZIP-fil</label>
+            <input type="file" name="fileToUpload" accept=".zip" style="text-align: right;">
+        </div>
+
+        <div class="create-project project-save-button" style="margin-top: 25px; text-align: center; margin-right: 98px;">
+            <button type="submit" style="display: inline-block; width: 150px; height: 50px; background-color: #C6C4C4; border: none;">Spara projekt</button>
+        </div>
+    </div>  
 </form>
 
 @* Skapa i CSS:
-.create-project{
-    margin-top: 50px;
+.create-project{    
+    margin-top: 25px;
 }
 
 .create-project label{
@@ -56,4 +64,5 @@
 
 .create-project input{
     width: 500px;
+    background-color: #D9D9D9;
 } *@
