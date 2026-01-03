@@ -21,7 +21,7 @@
     {
         var latestProject = item.ParticipatingProjects
             .Where(pp => pp.Project != null)
-            .OrderByDescending(pp => pp.Project.EndDate)
+            .OrderByDescending(pp => pp.Project.StartDate)
             .FirstOrDefault();
     
         <h3 class="m-2">@item.Name</h3>
@@ -47,26 +47,16 @@
             </div>
             <div class="bg-light p-2" style="width: 47%;">
                 <div style="width: 96%; margin: 0 auto; overflow-wrap: break-word;">
-                    <h5>Senaste projekt</h5>
+                    <h5 class="text-center">Senaste projekt</h5>
                     @if (latestProject != null)
                     {
-                        <p class="fst-italic">@latestProject.Project.Title</p>
-                        <p>@latestProject.Project.Description</p>
-                        <p>Programmeringsspråk: @latestProject.Project.CodeLanguage</p>
-                        <p>
-                            @*Join är en inbyggs metod i string-klassen och gör flera strängar till en sträng
-                        , " ," indikerar på att varje sträng ska separeras med ett kommatecken 
-                        och resten hämtar namnet på alla deltagarna i ett specifikt projekt!*@
-                            Deltagare: @string.Join(", ", latestProject.Project.Participants
-                                        .Select(p => p.User.Name))
-                        </p>
-                        <p>Skapad av: @latestProject.Project.Creator.Name</p>
-                        <p>
-                            @latestProject.Project.ZipFile
-                            <a href="~/uploads/@latestProject.Project.ZipFile" download class="ps-1 text-decoration-underline">
-                                Ladda ner zip
-                            </a>
-                        </p>
+                        <div class="p-4 rounded h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                            <h5 class="fw-bold">@latestProject.Project.Title</h5>
+                            <p class="small text-muted">@latestProject.Project.Description</p>
+                            <div class="mt-auto w-100 pt-3 border-top border-secondary">
+                                <span class="badge bg-secondary">@latestProject.Project.CodeLanguage</span>
+                            </div>
+                        </div>
                     }
                     else
                     {
