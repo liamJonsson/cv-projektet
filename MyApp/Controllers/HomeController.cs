@@ -13,6 +13,7 @@ namespace MyApp.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             var users = _context.Users
@@ -24,5 +25,24 @@ namespace MyApp.Controllers
 
             return View(users);
         }
+
+        [HttpGet]
+        public IActionResult Search(string query)
+        {
+            var users = _context.Users
+                .Include(u => u.ParticipatingProjects)
+                    .ThenInclude(pp => pp.Project)
+                //Denna gör så att databasen avvaktas med att köra tills att vi är klara med frågan
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                //Här byggs frågan på med ett where villkor
+                users = users.Where(u => u.Name.Contains(query));
+            }
+            //Och här körs faktiskt databasen, inte innan alls
+            return View("Index", users.ToList());
+        }
+
     }
 }

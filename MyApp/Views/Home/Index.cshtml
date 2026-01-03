@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MyApp.Models.User>
 
 <div class="d-flex justify-content-center" style="width: 90%; margin: 50px 0">
-    <form asp-action="Index" method="get">
+    <form asp-action="search" method="get">
         <label class="fs-5" for="search">Hitta användare</label>
         @* Andra border color på input fältet när man klickat i den samt ändra storleken på fältet *@
         <input class="ms-2 border-0 bg-light" style="width: 400px;" type="search" id="search" name="query" placeholder="Sök användare..." />
@@ -76,23 +76,14 @@
             </div>
         </div>
         <div style="width: 90%; text-align: right;">
-            @if (isLoggedIn)
-            {
+            
                 <a asp-controller="User"
                    asp-action="Profile"
                    asp-route-id="@item.Id"
                    class="btn btn-light">
                     Se profil
-                </a>
-            }
-            else
-            {
-                <a asp-controller="User"
-                   asp-action="Login"
-                   class="btn btn-light">
-                    Se profil
-                </a>
-            }
+               </a>
+            
         </div>
     }
 }
