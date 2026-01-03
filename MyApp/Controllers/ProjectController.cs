@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Models;
-using Microsoft.AspNetCore.Mvc;
 
 
 
@@ -10,10 +12,12 @@ namespace MyApp.Controllers
     public class ProjectController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public ProjectController(ApplicationDbContext context)
+        public ProjectController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
 
@@ -51,19 +55,32 @@ namespace MyApp.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            ViewBag.Creators = new SelectList(_context.Users, "Id", "Name");
             return View();
         }
 
-        [HttpPost]
-        public IActionResult Add(Project project)
+        [Authorize] //Man måste vara inloggad för att komma åt Skapa projekt
+        [HttpPost] //Metoden körs när vi klickar Spara i gränssnittet 
+        public async Task<IActionResult> Add(Project project)
         {
-            _context.Projects.Add(project);
-            _context.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            if (!ModelState.IsValid) //Om något är fel/tomt etc så går vi in i if-satsen
+            {
+                return View(project); //Visa formuläret igen, inget sparas i databasen
+            }
+
+            var user = await _userManager.GetUserAsync(User); //Hämta inloggad användare
+
+            project.CreatorId = user.Id; //Sätter CreatodId på projektet till Id:t på personen som är inloggad
+
+            _context.Projects.Add(project); //Lägger till projektet i Entity Framework
+            await _context.SaveChangesAsync(); //Sparar till databasen, SQL insert 
+
+            ModelState.Clear();
+
+            ViewBag.SuccessMessage = "Projektet har lagts till!";
+            return View(new Project());
         }
 
-        
+
         [HttpGet]
         public IActionResult Edit(int id)
         {
