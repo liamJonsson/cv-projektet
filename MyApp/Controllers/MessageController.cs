@@ -72,21 +72,26 @@ namespace MyApp.Controllers
 
         }
 
-        // Skriv nytt meddelande
-        [HttpGet]
-        public IActionResult Send()
-        {
-            // Vi behöver två listor med användare (Avsändare och Mottagare)
-            ViewBag.Users = new SelectList(_context.Users, "Id", "Name");
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> Send(Message message)
         {
-            _context.Messages.Add(message);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            message.SentAt = DateTime.Now;
+
+            ModelState.Remove("SentAt");
+            ModelState.Remove("Sender");
+            ModelState.Remove("Receiver");
+
+            if (ModelState.IsValid)
+            {
+                _context.Messages.Add(message);
+                await _context.SaveChangesAsync();
+                //"Meddelandet har skickats" läggs till i lådan "Sent"
+                TempData["Sent"] = "Meddelandet har skickats";
+
+            }
+
+            return RedirectToAction("Profile", "User", new { id = message.ReceiverId}, "message-section");
+
         }
     }
 }
