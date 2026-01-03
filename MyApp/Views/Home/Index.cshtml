@@ -24,30 +24,30 @@
             .OrderByDescending(pp => pp.Project.EndDate)
             .FirstOrDefault();
     
-        <h3>@item.Name</h3>
+        <h3 class="m-2">@item.Name</h3>
         <div class="d-flex" style="width: 90%; margin-bottom: 20px;">
             <div class="bg-light p-2" style="width: 47%; margin-right: 6%;">
                 <div style="width: 96%; margin: 0 auto; overflow-wrap: break-word;">
-                    <h4>CV</h4>
-                    @{
-                        var filePath = "wwwroot/cv/" + item.Cv;
-                    }
+                    <h5>CV</h5>
+                    <div class="rounded h-100 d-flex flex-column">
+                        <h6 class="fw-bold">Kompetenser</h6>
+                        <p class="small text-muted">@item.Skills</p>
 
-                    @if (!string.IsNullOrEmpty(item.Cv) && System.IO.File.Exists(filePath))
-                    {
-                        <iframe src="~/cv/@item.Cv"
-                                style="width:100%; height:100vh; border:none;">
-                        </iframe>
-                    }
-                    else
-                    {
-                        <p>Inget CV är uppladdat</p>
-                    }
+                        <div class="mt-auto w-100 py-3 border-top border-secondary"></div>
+
+                        <h6 class="fw-bold">Utbildningar</h6>
+                        <p class="small text-muted">@item.Education</p>
+
+                        <div class="mt-auto w-100 py-3 border-top border-secondary"></div>
+
+                        <h6 class="fw-bold">Tidigare erfarenheter</h6>
+                        <p class="small text-muted">@item.Experience</p>
+                    </div>
                 </div>
             </div>
             <div class="bg-light p-2" style="width: 47%;">
                 <div style="width: 96%; margin: 0 auto; overflow-wrap: break-word;">
-                    <h4>Senaste projekt</h4>
+                    <h5>Senaste projekt</h5>
                     @if (latestProject != null)
                     {
                         <p class="fst-italic">@latestProject.Project.Title</p>
