@@ -148,6 +148,12 @@ namespace MyApp.Controllers
             {
                 return NotFound();
             }
+            
+            if(User.Identity?.IsAuthenticated == true)
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                ViewBag.LoggedInUser = currentUser;
+            }
             bool isLoggedOut = !User.Identity.IsAuthenticated;
             bool isPrivate = userProfile.Visibility == false;
             var loggedInUserId = _userManager.GetUserId(User);

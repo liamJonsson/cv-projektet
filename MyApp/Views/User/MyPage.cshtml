@@ -119,28 +119,43 @@
     @if (!isOwner)
     {
         <div class="row mt-5 justify-content-center">
-            <div class="col-md-8">
+            <div id="message-section" class="col-md-8">
                 <h3 class="text-center mb-4">Skicka meddelande</h3>
                 <form asp-controller="Message" asp-action="Send" method="post">
                     <input type="hidden" name="ReceiverId" value="@Model.Id" />
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <input type="hidden" name="SenderId" value="@loggedInId" />
+                        <input type="hidden" name="SenderId" value="@((ViewBag.LoggedInUser as User)?.Id)" />
                     }
                     <div class="mb-3">
                         <label>Från</label>
                         <input type="text" name="SenderName" class="form-control border-0" style="background-color: #dcdcdc;"
-                               value="@(User.Identity.IsAuthenticated? User.Identity.Name : "")"
-                               @(User.Identity.IsAuthenticated ? "readonly" : "required placeholder='Skriv ditt namn'") />
+                               value="@(User.Identity.IsAuthenticated ? ((ViewBag.LoggedInUser as User)?.Name) : "")"
+                               @(User.Identity.IsAuthenticated ? "readonly" : "placeholder='Skriv ditt namn'") 
+                               data-val="true" data-val-required="Namn krävs"/>
+                        <span class="text-danger" data-valmsg-for="SenderName" data-valmsg-replace="true"></span>
                     </div>
                     <div class="mb-3">
                         <label>Meddelande</label>
-                        <textarea name="Text" class="form-control border-0" rows="5" style="background-color: #dcdcdc;" required placeholder="Skriv ditt meddelande här..."></textarea>
+                        <textarea name="Text" class="form-control border-0" rows="5" style="background-color: #dcdcdc;" 
+                        placeholder="Skriv ditt meddelande här..."
+                        data-val="true" data-val-required="Meddelande får inte vara tomt"></textarea>
+                        <span class="text-danger" data-valmsg-for="Text" data-valmsg-replace="true"></span>
                     </div>
                     <div class="text-end">
                         <button type="submit" class="btn btn-secondary">Skicka</button>
                     </div>
                 </form>
+                @section Scripts{
+                   <partial name="_ValidationScriptsPartial" />
+                }
+                
+                @if(TempData["Sent"] != null)
+                {
+                    <span class="text-success">
+                        @TempData["Sent"]
+                    </span>
+                }
             </div>
         </div>
     }
