@@ -67,7 +67,8 @@
             <div class="col-md-4 d-flex flex-column mb-3">
                 <div>
                     <h5 class="fw-bold">Kompetenser</h5>
-                    <p style="white-space: pre-line; line-height: 1.8;">@(Model.Skills ?? "Inga kompetenser angivna.")</p>
+                    <p class="text-break" style="white-space: pre-line; line-height: 1.8;">
+                        @(Model.Skills ?? "Inga kompetenser angivna.")</p>
                 </div>
                 <div class="mt-auto pt-3">
                     <div class="rounded-circle overflow-hidden shadow-sm" style="width: 130px; height: 130px; background-color: #6c6c6c;">
@@ -80,12 +81,14 @@
             </div>
             <div class="col-md-4 mb-3">
                 <h5 class="fw-bold">Utbildning</h5>
-                <p style="white-space: pre-line; line-height: 1.8;">@(Model.Education ?? "Ingen utbildning angiven.")</p>
+                <<p class="text-break" style="white-space: pre-line; line-height: 1.8;">
+                    @(Model.Education ?? "Ingen utbildning angiven.")</p>
             </div>
 
             <div class="col-md-4 mb-5">
                 <h5 class="fw-bold">Tidigare erfarenhet</h5>
-                <p style="white-space: pre-line; line-height: 1.8;">@(Model.Experience ?? "Ingen erfarenhet angiven.")</p>
+                <<p class="text-break" style="white-space: pre-line; line-height: 1.8;">
+                    @(Model.Experience ?? "Ingen erfarenhet angiven.")</p>
             </div>
         </div>
     </div>
