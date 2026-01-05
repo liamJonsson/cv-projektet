@@ -35,27 +35,12 @@ namespace MyApp.Controllers
                 //Denna gör så att databasen avvaktas med att köra tills att vi är klara med frågan
                 .AsQueryable();
 
-            bool isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
-
             if (!string.IsNullOrWhiteSpace(query))
             {
-                //Splittar upp sökningarna där det är mellanrum, Remove... gör så att tomma strängar inte tas med
-                var terms = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var term in terms)
-                {
-                    users = users.Where(u =>
-                        u.Name.Contains(term) ||
-                        (u.Skills != null && u.Skills.Contains(term))
-                    );
-                }
+                //Här byggs frågan på med ett where villkor
+                users = users.Where(u => u.Name.Contains(query));
             }
-
-            if (!isLoggedIn)
-            {
-                users = users.Where(u => u.Visibility == true);
-            }
-
+            //Och här körs faktiskt databasen, inte innan alls
             return View("Index", users.ToList());
         }
 
