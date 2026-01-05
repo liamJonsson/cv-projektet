@@ -81,31 +81,39 @@
                     </div>
                 </div>
                 <hr class="my-4" />
-                <h5 class="mb-3">Byt lösenord (Valfritt)</h5>
-                <div class="row mb-3 align-items-center">
-                    <label class="col-sm-4 fw-bold">Nuvarande lösenord</label>
-                    <div class="col-sm-8">
-                        <input asp-for="CurrentPassword" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                        <span asp-validation-for="CurrentPassword" class="text-danger small"></span>
+                <div class="form-group mb-3">
+                    <label asp-for="CurrentPassword" class="control-label">Nuvarande lösenord</label>
+                    <div class="input-group">
+                        <input asp-for="CurrentPassword" class="form-control" type="password" id="currentPass" />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('currentPass', 'iconCurrent')">
+                            <i class="bi bi-eye" id="iconCurrent"></i>
+                        </button>
                     </div>
+                    <span asp-validation-for="CurrentPassword" class="text-danger"></span>
                 </div>
 
-                <div class="row mb-3 align-items-center">
-                    <label class="col-sm-4 fw-bold">Nytt lösenord</label>
-                    <div class="col-sm-8">
-                        <input asp-for="NewPassword" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                        <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                <div class="form-group mb-3">
+                    <label asp-for="NewPassword" class="control-label">Nytt lösenord</label>
+                    <div class="input-group">
+                        <input asp-for="NewPassword" class="form-control" type="password" id="newPass" />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('newPass', 'iconNew')">
+                            <i class="bi bi-eye" id="iconNew"></i>
+                        </button>
                     </div>
+                    <span asp-validation-for="NewPassword" class="text-danger"></span>
                 </div>
-
-                <div class="row mb-4 align-items-center">
-                    <label class="col-sm-4 fw-bold">Bekräfta nytt</label>
-                    <div class="col-sm-8">
-                        <input asp-for="ConfirmPassword" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                <div class="form-group mb-3">
+                    <label asp-for="ConfirmPassword" class="control-label">Bekräfta nytt lösenord</label>
+                    <div class="input-group">
+                        <input asp-for="ConfirmPassword" class="form-control" type="password" id="confirmPass" />
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('confirmPass', 'iconConfirm')">
+                            <i class="bi bi-eye" id="iconConfirm"></i>
+                        </button>
                     </div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
                 <hr class="my-4" />
+                <h5 class="mb-3">Byt lösenord</h5>
                 <div class="row mb-4 align-items-center">
                     <label class="col-sm-4 fw-bold">Synlighet</label>
                     <div class="col-sm-8">
@@ -193,8 +201,25 @@
         </div>
     </form>
 </div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        function togglePassword(fieldId, iconId) {
+            var field = document.getElementById(fieldId);
+            var icon = document.getElementById(iconId);
+
+            if (field.type === "password") {
+                field.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                field.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        }
+    </script>
 }
