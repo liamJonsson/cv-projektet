@@ -89,15 +89,6 @@
             </div>
         </div>
     </div>
-        <div class="position-absolute bottom-0 start-0 m-3">
-            <div class="rounded-circle overflow-hidden shadow-sm" style="width: 130px; height: 130px; background-color: #6c6c6c;">
-                @{
-                    var imageToShow = string.IsNullOrEmpty(Model.CvImage) ? "default.jpg" : Model.CvImage;
-                }
-                <img src="~/images/@imageToShow" style="width: 100%; height: 100%; object-fit: cover;" alt="CV Bild" />
-            </div>
-        </div>
-    </div>
     <h3 class="text-center mt-5 mb-4">Projekt</h3>
     <div class="row">
         @if (Model.ParticipatingProjects != null && Model.ParticipatingProjects.Any())
