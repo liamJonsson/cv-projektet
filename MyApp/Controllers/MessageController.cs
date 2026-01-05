@@ -30,7 +30,7 @@ namespace MyApp.Controllers
                 .OrderByDescending(m => m.MessageId)
                 .ToListAsync();
 
-            return View("ViewMessages", userMessages);
+            return View(userMessages);
         }
 
         [Authorize]
@@ -69,6 +69,23 @@ namespace MyApp.Controllers
 
             return RedirectToAction("Profile", "User", new { id = message.ReceiverId}, "message-section");
 
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Delete(int messageId)
+        {
+            var message = await _context.Messages.FindAsync(messageId);
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if(message != null && message.ReceiverId == currentUser.Id)
+            {
+                _context.Messages.Remove(message);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Meddelandet har tagits bort!";
+            }
+            return RedirectToAction("Index");
         }
     }
 }
