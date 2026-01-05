@@ -7,7 +7,6 @@ using MyApp.Models;
 
 namespace MyApp.Controllers
 {
-    [Authorize]
     public class MessageController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +19,7 @@ namespace MyApp.Controllers
         }
 
         // Visa användarens meddelanden
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -33,30 +33,7 @@ namespace MyApp.Controllers
             return View("ViewMessages", userMessages);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> MarkAsRead(int[] messageIds)
-        //{
-        //    var currentUser = await _userManager.GetUserAsync(User);
-
-        //    var userMessages = await _context.Messages
-        //        .Where(m => m.ReceiverId == currentUser.Id)
-        //        .ToListAsync();
-
-        //    foreach (var message in userMessages)
-        //    {
-        //        if (messageIds != null && messageIds.Contains(message.MessageId))
-        //        {
-        //             message.Read = true;
-        //        }
-        //        else
-        //        {
-        //            message.Read = false;
-        //        }
-        //    }
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction("Index");
-        //}
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> UpdateRead(int messageId)
         {
