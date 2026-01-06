@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Models;
-
-
+using System.Security.Claims;
 
 namespace MyApp.Controllers
 {
@@ -20,37 +19,18 @@ namespace MyApp.Controllers
             _userManager = userManager;
         }
 
-
-        // här ska index- action ligga
         [HttpGet]
         public IActionResult Index()
         {
             var projects = _context.Projects
+                .Where(p => p.CreatorId != null) // Ändrat till null-koll om det är en sträng
+                .Include(p => p.Creator)
                 .Include(p => p.Participants)
-                .ThenInclude(pu => pu.User)
-       
+                    .ThenInclude(pu => pu.User)
                 .ToList();
-
 
             return View(projects);
         }
-        [HttpGet]
-        public IActionResult Details(int id)
-        {
-            var project = _context.Projects
-                .Include(p => p.Participants)
-                .ThenInclude(p => p.User)
-                .Include(pu => pu.Creator)
-                .FirstOrDefault(p => p.ProjectId == id);
-
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            return View(project);
-        }
-
 
         [HttpGet]
         public IActionResult Add()
@@ -58,63 +38,60 @@ namespace MyApp.Controllers
             return View();
         }
 
-        [Authorize] //Man måste vara inloggad för att komma åt Skapa projekt
-        [HttpPost] //Metoden körs när vi klickar Spara i gränssnittet 
+        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> Add(Project project)
         {
-            if (!ModelState.IsValid) //Om något är fel/tomt etc så går vi in i if-satsen
+            
+            if (!ModelState.IsValid)
             {
-                return View(project); //Visa formuläret igen, inget sparas i databasen
+                return View(project);
             }
 
-            var user = await _userManager.GetUserAsync(User); //Hämta inloggad användare
+            var user = await _userManager.GetUserAsync(User);
+            project.CreatorId = user.Id;
 
-            project.CreatorId = user.Id; //Sätter CreatodId på projektet till Id:t på personen som är inloggad
-
-            _context.Projects.Add(project); //Lägger till projektet i Entity Framework
-            await _context.SaveChangesAsync(); //Sparar till databasen, SQL insert 
+            _context.Projects.Add(project);
+            await _context.SaveChangesAsync();
 
             ModelState.Clear();
-
             ViewBag.SuccessMessage = "Projektet har lagts till!";
             return View(new Project());
         }
-
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
             var project = _context.Projects.Find(id);
-            ViewBag.Creators = new SelectList(_context.Users, "UserId", "Name", project.CreatorId);
+            if (project == null) return NotFound();
+
+            ViewBag.Creators = new SelectList(_context.Users, "Id", "Name", project.CreatorId);
             return View(project);
         }
 
-       
-            [HttpPost]
-            public IActionResult Edit(Project project)
-            {
-                var existingProject = _context.Projects
-                    .AsNoTracking()
-                    .FirstOrDefault(p => p.ProjectId == project.ProjectId);
+        [HttpPost]
+        public IActionResult Edit(Project project)
+        {
+            var existingProject = _context.Projects
+                .AsNoTracking()
+                .FirstOrDefault(p => p.ProjectId == project.ProjectId);
 
-                if (existingProject == null)
-                    return NotFound();
+            if (existingProject == null)
+                return NotFound();
 
-                //  behåll ägaren – ändras aldrig
-                project.CreatorId = existingProject.CreatorId;
+            project.CreatorId = existingProject.CreatorId;
 
-                _context.Projects.Update(project);
-                _context.SaveChanges();
+            _context.Projects.Update(project);
+            _context.SaveChanges();
 
-                return RedirectToAction("Index", "Home");
-            }
-
-        
+            return RedirectToAction("Index");
+        }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
             var project = _context.Projects.Find(id);
+            if (project == null) return NotFound();
             return View(project);
         }
 
@@ -122,9 +99,78 @@ namespace MyApp.Controllers
         public IActionResult DeleteConfirmed(int id)
         {
             var project = _context.Projects.Find(id);
-            _context.Projects.Remove(project);
-            _context.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            if (project != null)
+            {
+                _context.Projects.Remove(project);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> JoinProject(int id)
+        {
+            // 1. Hämta ID som en sträng från Identity
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Challenge();
+            }
+
+            // 2. Konvertera strängen till en int
+            // Vi använder int.Parse eftersom vi vet att ID:t ska finnas om man är inloggad
+            int userIdInt = int.Parse(userIdString);
+
+            // 3. Kontrollera om kopplingen redan finns (nu med int mot int)
+            var exists = await _context.ProjectUsers
+                .AnyAsync(pu => pu.ProjectId == id && pu.UserId == userIdInt);
+
+            if (!exists)
+            {
+                // 4. Skapa kopplingen
+                var projectUser = new ProjectUser
+                {
+                    ProjectId = id,
+                    UserId = userIdInt // Nu matchar typerna!
+                };
+
+                _context.ProjectUsers.Add(projectUser);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Du har gått med i projektet!";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+    
+
+    [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> LeaveProject(int id)
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString)) return Challenge();
+
+            int userIdInt = int.Parse(userIdString);
+
+            // Hitta kopplingen i databasen
+            var projectUser = await _context.ProjectUsers
+                .FirstOrDefaultAsync(pu => pu.ProjectId == id && pu.UserId == userIdInt);
+
+            if (projectUser != null)
+            {
+                _context.ProjectUsers.Remove(projectUser);
+                await _context.SaveChangesAsync();
+
+                // Bekräftelsemeddelande
+                TempData["SuccessMessage"] = "Du har nu lämnat projektet.";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
+
 }
