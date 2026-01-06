@@ -127,6 +127,17 @@
         <div class="row mt-5 justify-content-center">
             <div id="message-section" class="col-md-8">
                 <h3 class="text-center mb-4">Skicka meddelande</h3>
+                @if (TempData["Sent"] != null)
+                {
+                    <div class="row mb-3 mt-3">
+                        <div class="col-12">
+                            <div class="alert alert-success alert-dismissible show text-center border-0 mx-auto" role="alert" style="border-radius: 6px; padding: 10px;">
+                                @TempData["Sent"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;  font-size: 0.8rem; padding: 0.5rem;"></button>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <form asp-controller="Message" asp-action="Send" method="post">
                     <input type="hidden" name="ReceiverId" value="@Model.Id" />
                     @if (User.Identity.IsAuthenticated)
@@ -137,8 +148,8 @@
                         <label>Från</label>
                         <input type="text" name="SenderName" class="form-control border-0" style="background-color: #dcdcdc;"
                                value="@(User.Identity.IsAuthenticated ? ((ViewBag.LoggedInUser as User)?.Name) : "")"
-                               @(User.Identity.IsAuthenticated ? "readonly" : "placeholder='Skriv ditt namn'") 
-                               data-val="true" data-val-required="Namn krävs"/>
+                               @Html.Raw(User.Identity.IsAuthenticated ? "readonly=\"readonly\"" : "placeholder=\"Skriv ditt namn här...\"")
+                                                      data - val = "true" data - val - required = "Namn krävs" />
                         <span class="text-danger" data-valmsg-for="SenderName" data-valmsg-replace="true"></span>
                     </div>
                     <div class="mb-3">
@@ -154,13 +165,6 @@
                 </form>
                 @section Scripts{
                    <partial name="_ValidationScriptsPartial" />
-                }
-                
-                @if(TempData["Sent"] != null)
-                {
-                    <span class="text-success">
-                        @TempData["Sent"]
-                    </span>
                 }
             </div>
         </div>
