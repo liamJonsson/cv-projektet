@@ -148,30 +148,21 @@ namespace MyApp.Controllers
             {
                 return NotFound();
             }
-           
+            
             if(User.Identity?.IsAuthenticated == true)
             {
                 var currentUser = await _userManager.GetUserAsync(User);
                 ViewBag.LoggedInUser = currentUser;
             }
+            bool isLoggedOut = !User.Identity.IsAuthenticated;
+            bool isPrivate = userProfile.Visibility == false;
             var loggedInUserId = _userManager.GetUserId(User);
-            bool isOwner = false;
-            if (loggedInUserId != null)
-            {
-                isOwner = int.Parse(loggedInUserId) == userProfile.Id;
-            }
-            string refererUrl = Request.Headers["Referer"].ToString();
-            string currentPath = Request.Path.ToString(); 
 
-            // Om referer innehåller nuvarande sökväg så är det en refresh
-            bool isRefresh = !string.IsNullOrEmpty(refererUrl) && refererUrl.Contains(currentPath);
-            if (!isOwner && !isRefresh)
+            if (loggedInUserId != null && int.Parse(loggedInUserId) != userProfile.Id)
             {
                 userProfile.ProfileViews++;
                 await _context.SaveChangesAsync();
             }
-            bool isLoggedOut = !User.Identity.IsAuthenticated;
-            bool isPrivate = userProfile.Visibility == false;
 
             if (isPrivate && isLoggedOut)
             {
