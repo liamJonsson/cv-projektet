@@ -72,20 +72,28 @@ namespace MyApp.Controllers
         [HttpPost]
         public IActionResult Edit(Project project)
         {
-            var existingProject = _context.Projects
-                .AsNoTracking()
-                .FirstOrDefault(p => p.ProjectId == project.ProjectId);
+            if (!ModelState.IsValid)
+            {
+                return View(project);
+            }
 
-            if (existingProject == null)
-                return NotFound();
+            var dbProject = _context.Projects.FirstOrDefault(p => p.ProjectId == project.ProjectId);
 
-            project.CreatorId = existingProject.CreatorId;
+            if (dbProject != null)
+            {
+                dbProject.Title = project.Title;
+                dbProject.Description = project.Description;
+                dbProject.CodeLanguage = project.CodeLanguage;
+                dbProject.StartDate = project.StartDate; // Lägg till denna rad!
+                dbProject.ZipFile = project.ZipFile;
 
-            _context.Projects.Update(project);
-            _context.SaveChanges();
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Projektet har uppdaterats!";
+            }
 
             return RedirectToAction("Index");
         }
+
 
         [HttpGet]
         public IActionResult Delete(int id)
