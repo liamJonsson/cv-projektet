@@ -160,11 +160,20 @@ namespace MyApp.Controllers
             {
                 isOwner = int.Parse(loggedInUserId) == userProfile.Id;
             }
-            string refererUrl = Request.Headers["Referer"].ToString();
-            string currentPath = Request.Path.ToString(); 
+            // Refresh hantering
+            var refererUri = Request.GetTypedHeaders().Referer;
+            bool isRefresh = false;
 
-            // Om referer innehåller nuvarande sökväg så är det en refresh
-            bool isRefresh = !string.IsNullOrEmpty(refererUrl) && refererUrl.Contains(currentPath);
+            if (refererUri != null)
+            {
+                string refererPath = refererUri.AbsolutePath;
+                string currentPath = Request.Path;
+                
+                if (refererPath.Equals(currentPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    isRefresh = true;
+                }
+            }
             if (!isOwner && !isRefresh)
             {
                 userProfile.ProfileViews++;
