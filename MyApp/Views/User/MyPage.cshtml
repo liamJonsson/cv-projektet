@@ -92,6 +92,14 @@
             </div>
         </div>
     </div>
+    @*   En div som innehåller knappen "Hitta liknande användare" och diven som som visar matchande användare *@
+    <div class="d-flex justify-content-center mt-5">
+        <button id="btnFindSimilarUsers" class="btn btn-secondary px-5 py-3" onclick="loadSimilarUsers()">
+            <i class="bi-people-fill"></i> Hitta liknande användare
+        </button>
+        @* En div där liknande användare kommer synas *@
+        <div id="similarUsers"></div>
+    </div>
     <h3 class="text-center mt-5 mb-4">Projekt</h3>
     <div class="row">
         @if (Model.ParticipatingProjects != null && Model.ParticipatingProjects.Any())
@@ -163,9 +171,6 @@
                         <button type="submit" class="btn btn-secondary">Skicka</button>
                     </div>
                 </form>
-                @section Scripts{
-                   <partial name="_ValidationScriptsPartial" />
-                }
             </div>
         </div>
     }
@@ -178,3 +183,18 @@
         </form>
     </div>
 </div>
+@section Scripts {
+    @*Gör att skicka-meddelanden formulärets felmeddelanden visas direkt 
+    utan att sidan laddas om, om användaren inte fyllt i det som måste vara ifyllt *@
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        //Denna funktion körs när man klickar på "Hitta liknande användare" kanppen
+        function loadSimilarUsers() {
+            //Diven med id "similarUsers" laddas med HTMLkod från vår partial view(_SimilarUsers.cshtml)
+            //genom att anoropa FindSimilarUsers i UserControllern. Detta gör att innehållet syns direkt på sidan
+            //utan att hela webbläsaren behöver laddas om tack vare AJAX (.load)
+            $("#similarUsers").load("/User/FindSimilarUsers?id=@Model.Id")
+        }
+    </script>
+}

@@ -320,6 +320,41 @@ namespace MyApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> FindSimilarUsers(int id)
+        {
+            //Hämtar användaren man har klickat sig in på
+            var selectedUser = await _context.Users.Where(u => u.Id == id)
+                .FirstOrDefaultAsync();
+
+            //Om användaren inte existerar kommer ett felmeddelande returneras
+            if (selectedUser == null)
+            {
+                return Content("Ett fel uppstod då profilen du besöker inte kunde hittas");
+            }
+
+            //Om användaren man klickat sig in på inte har några skills kommer en tom lista
+            //returneras till Partial View så att ett meddelande kan visas som säger att inga liknande användare kunde hittas
+            if (string.IsNullOrWhiteSpace(selectedUser.Skills))
+            {
+                return PartialView("_SimilarUsers", new List<User>());
+            }
+
+            //Hämtar max 3 användare med liknande skills som personen man har klickat sig in på
+            //som inte har avvaktiverat sitt konto samt har en offentlig profil om man själv inte är inloggad
+            var userMatches = await _context.Users
+                .Where(u => u.Id != id && u.Deactivated == false)
+                .Where(u => u.Skills.Contains(selectedUser.Skills))
+                .Where(u => User.Identity.IsAuthenticated || u.Visibility == true)                
+                .Take(3)
+                .ToListAsync();
+
+            //En partial view returneras med de liknande användarna istället för en hel vy så att sidan
+            //inte behöver laddas om
+            return PartialView("_SimilarUsers", userMatches);
+
+        }
+
         // Hjälpmetod för att spara bildfiler
         private async Task<string> UploadFile(IFormFile file)
         {
