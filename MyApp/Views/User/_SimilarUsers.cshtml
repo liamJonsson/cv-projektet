@@ -1,0 +1,28 @@
+﻿@model IEnumerable<User>
+
+@if (Model != null && Model.Any())
+{
+	<div>
+		<h5>Användare med liknande kompetenser:</h5>
+		@foreach (var user in Model)
+		{
+			<div>
+				<h6>@user.Name</h6>
+
+				<div style="width: 90%; text-align: right;">
+					<a asp-controller="User"
+					   asp-action="Profile"
+					   asp-route-id="@user.Id"
+					   class="btn btn-light">
+						Se profil
+					</a>
+				</div>
+
+			</div>
+		}
+	</div>
+}
+else
+{
+	<p>Inga liknande användare kunde hittas baserat på denna användares kompetenser</p>
+}
