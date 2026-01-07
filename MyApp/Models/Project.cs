@@ -16,11 +16,10 @@ namespace MyApp.Models
 
         [Required(ErrorMessage = "Vänligen fyll i ett startdatum.")]
         public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "Vänligen fyll i ett programmeringsspråk.")]
+        [RegularExpression(@"^[a-z4A-Z0-9+#]*$", ErrorMessage = "Max 1 ord tillåtet.")]
         public string CodeLanguage { get; set; } = string.Empty;
-        public string? ZipFile { get; set; }
 
         //Foreign key
         public int CreatorId { get; set; }
