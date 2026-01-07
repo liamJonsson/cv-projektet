@@ -161,19 +161,11 @@ namespace MyApp.Controllers
                 isOwner = int.Parse(loggedInUserId) == userProfile.Id;
             }
             // Refresh hantering
-            var refererUri = Request.GetTypedHeaders().Referer;
-            bool isRefresh = false;
+            string referer = Request.Headers["Referer"].ToString();
+            string currentUrlPart = $"/User/Profile/{id}";
+            bool isRefresh = !string.IsNullOrEmpty(referer) && referer.Contains(currentUrlPart);
 
-            if (refererUri != null)
-            {
-                string refererPath = refererUri.AbsolutePath;
-                string currentPath = Request.Path;
-                
-                if (refererPath.Equals(currentPath, StringComparison.OrdinalIgnoreCase))
-                {
-                    isRefresh = true;
-                }
-            }
+            // Räkna bara om det INTE är ägaren OCH INTE är en refresh
             if (!isOwner && !isRefresh)
             {
                 userProfile.ProfileViews++;
