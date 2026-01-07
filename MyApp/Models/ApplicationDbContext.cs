@@ -126,8 +126,6 @@ namespace MyApp.Models
                     Description = "En enkel konsolapplikation.",
                     CodeLanguage = "C#",
                     StartDate = new DateTime(2025, 10, 1),
-                    EndDate = new DateTime(2025, 12, 15),
-                    ZipFile = "console.zip",
                     CreatorId = 1,
                 },
                 new Project
@@ -137,8 +135,6 @@ namespace MyApp.Models
                     Description = "En snygg frontend-app.",
                     CodeLanguage = "JavaScript",
                     StartDate = new DateTime(2025, 9, 12),
-                    EndDate = new DateTime(2025, 12, 23),
-                    ZipFile = "react.zip",
                     CreatorId = 2,
                 }
             );

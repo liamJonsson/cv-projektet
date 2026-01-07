@@ -64,3 +64,20 @@
         </div>
     </form>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            // Hämta input-fältet baserat på ID (CodeLanguage)
+            var input = $("#CodeLanguage");
+
+            // Lyssna på "input"-händelsen (sker varje gång ett tecken skrivs eller tas bort)
+            input.on("input", function () {
+                // Tvinga jQuery Validation att köra kontrollen omedelbart
+                $(this).valid();
+            });
+        });
+    </script>
+}

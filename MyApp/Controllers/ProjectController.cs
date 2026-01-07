@@ -38,22 +38,30 @@ namespace MyApp.Controllers
             return View();
         }
 
-        [Authorize]
-        [HttpPost]
+        [Authorize] //Man måste vara inloggad för att komma åt Skapa projekt
+        [HttpPost] //Metoden körs när vi klickar Spara i gränssnittet 
         public async Task<IActionResult> Add(Project project)
         {
-            
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) //Om något är fel/tomt etc så går vi in i if-satsen
             {
-                return View(project);
+                return View(project); //Visa formuläret igen, inget sparas i databasen
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            project.CreatorId = user.Id;
+            var user = await _userManager.GetUserAsync(User); //Hämta inloggad användare
 
-            _context.Projects.Add(project);
-            await _context.SaveChangesAsync();
+            project.CreatorId = user.Id; //Sätter CreatodId på projektet till Id:t på personen som är inloggad
 
+            project.Participants.Add(new ProjectUser //Lägger till skaparen i deltagar-listan
+            {
+                UserId = user.Id
+            });
+
+            _context.Projects.Add(project); //Lägger till projektet i Entity Framework
+            await _context.SaveChangesAsync(); //Sparar till databasen, SQL insert 
+
+            ModelState.Clear();
+
+            //Rensa formuläret och ladda om sidan
             ModelState.Clear();
             ViewBag.SuccessMessage = "Projektet har lagts till!";
             return View(new Project());
@@ -85,7 +93,6 @@ namespace MyApp.Controllers
                 dbProject.Description = project.Description;
                 dbProject.CodeLanguage = project.CodeLanguage;
                 dbProject.StartDate = project.StartDate; // Lägg till denna rad!
-                dbProject.ZipFile = project.ZipFile;
 
                 _context.SaveChanges();
                 TempData["SuccessMessage"] = "Projektet har uppdaterats!";
