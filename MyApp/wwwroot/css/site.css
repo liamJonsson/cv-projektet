@@ -227,8 +227,12 @@ body {
     }
 
     /*Home - Index*/
-    .page-width{
+    .homepageWidth {
         width: 90%;
+    }
+
+    .overflow-break {
+        overflow-wrap: break-word;
     }
 
     .box-width {
