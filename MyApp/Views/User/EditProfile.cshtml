@@ -81,6 +81,7 @@
                     </div>
                 </div>
                 <hr class="my-4" />
+                <h5 class="mb-3">Byt lösenord</h5>
                 <div class="form-group mb-3">
                     <label asp-for="CurrentPassword" class="control-label">Nuvarande lösenord</label>
                     <div class="input-group">
@@ -91,7 +92,6 @@
                     </div>
                     <span asp-validation-for="CurrentPassword" class="text-danger"></span>
                 </div>
-
                 <div class="form-group mb-3">
                     <label asp-for="NewPassword" class="control-label">Nytt lösenord</label>
                     <div class="input-group">
@@ -113,14 +113,13 @@
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
                 <hr class="my-4" />
-                <h5 class="mb-3">Byt lösenord</h5>
                 <div class="row mb-4 align-items-center">
                     <label class="col-sm-4 fw-bold">Synlighet</label>
                     <div class="col-sm-8">
                         <select asp-for="Visibility" class="form-control border-0 inputGroupStyle">
                             <option value="true">Offentlig</option>
                             <option value="false">Privat</option>
-                        </select>
+                        </select>  
                     </div>
                 </div>
                 <div class="row mb-4">
@@ -140,6 +139,7 @@
                     <div class="col-sm-3">
                         <div class="input-group">
                             <input asp-for="ZipCode" class="form-control border-0 inputGroupStyle" />
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
                     </div>
                     <label class="col-sm-2 text-end fw-bold">Ort</label>

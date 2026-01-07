@@ -157,7 +157,7 @@
                         <input type="text" name="SenderName" class="form-control border-0 ourBackgroundColor"
                                value="@(User.Identity.IsAuthenticated ? ((ViewBag.LoggedInUser as User)?.Name) : "")"
                                @Html.Raw(User.Identity.IsAuthenticated ? "readonly=\"readonly\"" : "placeholder=\"Skriv ditt namn här...\"")
-                                                      data - val = "true" data - val - required = "Namn krävs" />
+                                                      data-val="true" data-val-required="Namn krävs" />
                         <span class="text-danger" data-valmsg-for="SenderName" data-valmsg-replace="true"></span>
                     </div>
                     <div class="mb-3">

@@ -10,47 +10,47 @@
     <form asp-action="Register" method="post">
         
         <div class="row mb-3 align-items-center">
-            <label class="col-md-3 col-form-label">Namn*</label>
+            <label class="col-md-3 col-form-label">Namn</label>
             <div class="col-md-9">
-                <input asp-for="Name" class="form-control border-0¨inputGroupStyle" />
-                <span asp-validation-for="Name" class="text-danger small"></span>
+                <input asp-for="Name" class="form-control border-0 inputGroupStyle" />
+                <span asp-validation-for="Name" class="text-danger small ourBackgroundColor"></span>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
-            <label class="col-md-3 col-form-label">Telefonnummer*</label>
+            <label class="col-md-3 col-form-label">Telefonnummer</label>
             <div class="col-md-9">
                 <input asp-for="PhoneNumber" class="form-control border-0 inputGroupStyle" />
                 <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
-            <label class="col-md-3 col-form-label">Mailadress*</label>
+            <label class="col-md-3 col-form-label">Mailadress</label>
             <div class="col-md-9">
                 <input asp-for="Email" type="email" class="form-control border-0 inputGroupStyle"/>
                 <span asp-validation-for="Email" class="text-danger small"></span>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
-            <label class="col-md-3 col-form-label">Adress*</label>
+            <label class="col-md-3 col-form-label">Adress</label>
             <div class="col-md-9">
                 <input asp-for="HomeAddress" class="form-control border-0 inputGroupStyle" />
                 <span asp-validation-for="HomeAddress" class="text-danger small"></span>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
-            <label class="col-md-3 col-form-label">Postnummer*</label>
+            <label class="col-md-3 col-form-label">Postnummer</label>
             <div class="col-md-3">
-                <input asp-for="ZipCode" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;"/>
+                <input asp-for="ZipCode" class="form-control border-0 inputGroupStyle"/>
                 <span asp-validation-for="ZipCode" class="text-danger small"></span>
             </div>
-            <label class="col-md-1 col-form-label text-md-end">Ort*</label>
+            <label class="col-md-1 col-form-label text-md-end">Ort</label>
             <div class="col-md-5">
                 <input asp-for="City" class="form-control border-0 inputGroupStyle" />
                 <span asp-validation-for="City" class="text-danger small"></span>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
-            <label class="col-md-3 col-form-label">Användarnamn*</label>
+            <label class="col-md-3 col-form-label">Användarnamn</label>
             <div class="col-md-9">
                 <input asp-for="UserName" class="form-control border-0 inputGroupStyle" />
                 <span asp-validation-for="UserName" class="text-danger small"></span>
@@ -58,7 +58,7 @@
         </div>
 
         <div class="row mb-3 align-items-center">
-            <label class="col-md-3 col-form-label">Lösenord*</label>
+            <label class="col-md-3 col-form-label">Lösenord</label>
             <div class="col-md-9">
                 <div class="input-group">
                     <input asp-for="Password" type="password" class="form-control border-0 inputGroupStyle" id="passwordInput" />
@@ -74,7 +74,7 @@
         </div>
 
         <div class="row mb-4 align-items-center">
-            <label class="col-md-3 col-form-label">Bekräfta lösenord*</label>
+            <label class="col-md-3 col-form-label">Bekräfta lösenord</label>
             <div class="col-md-9">
                 <div class="input-group">
                     <input asp-for="ConfirmPassword" type="password" class="form-control border-0 inputGroupStyle" id="confirmPasswordInput" />
