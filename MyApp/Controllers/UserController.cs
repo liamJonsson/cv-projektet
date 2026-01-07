@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Serialization;
-using System.IO;
 using MyApp.InputModels;
 using MyApp.Models;
+using System.IO;
+using System.Xml.Serialization;
+using static System.Collections.Specialized.BitVector32;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace MyApp.Controllers
@@ -325,6 +327,8 @@ namespace MyApp.Controllers
         {
             //Hämtar användaren man har klickat sig in på
             var selectedUser = await _context.Users.Where(u => u.Id == id)
+                .Include(u => u.ParticipatingProjects)
+                .ThenInclude(p => p.Project)
                 .FirstOrDefaultAsync();
 
             //Om användaren inte existerar kommer ett felmeddelande returneras
@@ -333,19 +337,27 @@ namespace MyApp.Controllers
                 return Content("Ett fel uppstod då profilen du besöker inte kunde hittas");
             }
 
-            //Om användaren man klickat sig in på inte har några skills kommer en tom lista
-            //returneras till Partial View så att ett meddelande kan visas som säger att inga liknande användare kunde hittas
-            if (string.IsNullOrWhiteSpace(selectedUser.Skills))
+            var selectedUserCodeLanguages = selectedUser.ParticipatingProjects
+                .Select(cl => cl.Project.CodeLanguage)
+                .Where(l => !string.IsNullOrEmpty(l))
+                .Distinct()
+                .ToList();
+
+            if (!selectedUserCodeLanguages.Any())
             {
                 return PartialView("_SimilarUsers", new List<User>());
             }
 
+
             //Hämtar max 3 användare med liknande skills som personen man har klickat sig in på
             //som inte har avvaktiverat sitt konto samt har en offentlig profil om man själv inte är inloggad
+
             var userMatches = await _context.Users
+                .Include(u => u.ParticipatingProjects)
+                .ThenInclude(p => p.Project)
                 .Where(u => u.Id != id && u.Deactivated == false)
-                .Where(u => u.Skills.Contains(selectedUser.Skills))
-                .Where(u => User.Identity.IsAuthenticated || u.Visibility == true)                
+                .Where(u => u.ParticipatingProjects.Any(p => selectedUserCodeLanguages.Contains(p.Project.CodeLanguage)))
+                .Where(u => User.Identity.IsAuthenticated || u.Visibility == true)
                 .Take(3)
                 .ToListAsync();
 

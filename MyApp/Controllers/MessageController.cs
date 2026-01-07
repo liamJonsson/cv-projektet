@@ -66,7 +66,7 @@ namespace MyApp.Controllers
                 TempData["Sent"] = "Meddelandet har skickats";
 
             }
-            return RedirectToAction("Profile", "User", new { id = message.ReceiverId}, "message-section");
+            return RedirectToAction("Profile", "User", new { id = message.ReceiverId});
         }
 
         [Authorize]

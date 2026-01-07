@@ -3,26 +3,32 @@
 @if (Model != null && Model.Any())
 {
 	<div>
-		<h5>Användare med liknande kompetenser:</h5>
-		@foreach (var user in Model)
-		{
-			<div>
-				<h6>@user.Name</h6>
+		<div class="mt-4">
+			<h5>Andra användare som har arbetat med samma programmeringsspråk i projekt :</h5>
+		</div>
 
-				<div style="width: 90%; text-align: right;">
-					<a asp-controller="User"
-					   asp-action="Profile"
-					   asp-route-id="@user.Id"
-					   class="btn btn-light">
-						Se profil
-					</a>
+		<div class="justify-content-center">
+			@foreach (var user in Model)
+			{
+				<div class="d-flex jusitfy-content-between rounded mt-4" style="background-color: #dcdcdc">
+					<h6>@user.Name</h6>
+
+					<div style="width: 90%; text-align: right;"> @* Ta bort style här *@
+						<a asp-controller="User"
+						   asp-action="Profile"
+						   asp-route-id="@user.Id"
+						   class="btn btn-light">
+							Se profil
+						</a>
+					</div>
 				</div>
-
-			</div>
-		}
+			}
+		</div>
 	</div>
 }
 else
 {
-	<p>Inga liknande användare kunde hittas baserat på denna användares kompetenser</p>
+	<div class="mt-4">
+		<p>Inga liknande användare kunde hittas baserat på denna användares kompetenser</p>
+	</div>
 }
