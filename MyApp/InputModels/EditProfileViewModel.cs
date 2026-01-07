@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using MyApp.Models;
 namespace MyApp.InputModels
 {
     public class EditProfileViewModel
@@ -65,5 +65,7 @@ namespace MyApp.InputModels
 
         public bool RemoveProfileImage { get; set; }
         public bool RemoveCvImage { get; set; }
+
+        public ICollection<ProjectUser> ParticipatingProjects { get; set; }
     }
 }
