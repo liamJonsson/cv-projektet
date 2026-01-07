@@ -7,9 +7,9 @@
     {
         <div class="row mb-3">
             <div class="col-12">
-                <div class="alert alert-success alert-dismissible show text-center border-0" role="alert" style="border-radius: 6px; padding: 10px;">
+                <div class="alert alert-success alert-dismissible show text-center border-0 sucess-message" role="alert">
                     @ViewBag.SuccessMessage
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;  font-size: 0.8rem; padding: 0.5rem;"></button>
+                    <button type="button" class="btn-close close-button" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div> 
         </div>
@@ -21,7 +21,7 @@
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Titel*</label>
             <div class="col-md-9">
-                <input asp-for="Title" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                <input asp-for="Title" class="form-control border-0 ourBackgroundColor" style="height: 45px;" />
                 <span asp-validation-for="Title" class="text-danger small"></span>
             </div>
         </div>
@@ -29,11 +29,11 @@
         <div class="row mb-3 align-items-start">
             <label class="col-md-3 col-form-label">Beskrivning*</label>
             <div class="col-md-9">
-                <textarea asp-for="Description" class="form-control border-0" style="background-color: #dcdcdc;" rows="4"></textarea>
+                <textarea asp-for="Description" class="form-control border-0 ourBackgroundColor" rows="4"></textarea>
                 <span asp-validation-for="Description" class="text-danger small"></span>
             </div>
         </div>
-
+        @*Härifrån*@
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Programmeringsspråk*</label>
             <div class="col-md-9">
