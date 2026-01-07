@@ -337,22 +337,24 @@ namespace MyApp.Controllers
                 return Content("Ett fel uppstod då profilen du besöker inte kunde hittas");
             }
 
+            //Hämtar den valda användarens programmeringsspråk
             var selectedUserCodeLanguages = selectedUser.ParticipatingProjects
                 .Select(cl => cl.Project.CodeLanguage)
                 .Where(l => !string.IsNullOrEmpty(l))
                 .Distinct()
                 .ToList();
 
+            //Om den valda användaren inte har några programmeringsspråk returneras en tom lista till partail view
             if (!selectedUserCodeLanguages.Any())
             {
                 return PartialView("_SimilarUsers", new List<User>());
             }
 
-
-            //Hämtar max 3 användare med liknande skills som personen man har klickat sig in på
-            //som inte har avvaktiverat sitt konto samt har en offentlig profil om man själv inte är inloggad
+            //Hämtar max 3 användare som har samma programmeringsspråk som personen man har klickat sig in på har
+            //som inte har avvaktiverat sina konto samt har en offentlig profil om man själv inte är inloggad.
 
             var userMatches = await _context.Users
+                .Include(u => u.Address)
                 .Include(u => u.ParticipatingProjects)
                 .ThenInclude(p => p.Project)
                 .Where(u => u.Id != id && u.Deactivated == false)
@@ -364,7 +366,6 @@ namespace MyApp.Controllers
             //En partial view returneras med de liknande användarna istället för en hel vy så att sidan
             //inte behöver laddas om
             return PartialView("_SimilarUsers", userMatches);
-
         }
 
         // Hjälpmetod för att spara bildfiler
