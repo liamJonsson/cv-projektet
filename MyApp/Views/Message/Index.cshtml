@@ -1,7 +1,5 @@
 ﻿@model IEnumerable<MyApp.Models.Message>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
 <div class="container mt-5">
 	<h2 class="text-center mb-5"> Mina meddelanden</h2>
 
@@ -9,9 +7,9 @@
 	{
 		<div class="row mb-3">
 			<div class="col-12">
-				<div class="alert alert-success alert-dismissible show text-center border-0 mx-auto" role="alert" style="border-radius: 6px; padding: 10px; width: 60%;">
+				<div class="alert alert-success alert-dismissible show text-center border-0 mx-auto sucess-message" role="alert">
 					@TempData["SuccessMessage"]
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;  font-size: 0.8rem; padding: 0.5rem;"></button>
+					<button type="button" class="btn-close close-button" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
 			</div>
 		</div>
@@ -41,14 +39,14 @@
 					Från: @message.SenderName
 				</h4>
 								
-				<div class="p-2 rounded d-flex justify-content-between" style="background-color: #dcdcdc;">
+				<div class="p-2 rounded d-flex justify-content-between ourBackgroundColor">
 					<p class="px-2" style="font-weight: @fontWeight; color: @textColor;"> @message.Text</p>
 
 					<div class="d-flex align-items-center gap-3">
 						<form asp-action="UpdateRead" method="post">
 							<input type="hidden" name="messageId" value="@message.MessageId"/>
 
-							<button type="submit" class="btn p-0 border-0 d-flex gap-2" style="background: transparent; cursor: pointer;">
+							<button type="submit" class="btn p-0 border-0 d-flex gap-2 btn-link btn btn-link p-0 border-0 d-flex gap-2 text-decoration-none text-reset">
 								@if(message.Read)
 								{
 									<i class="bi bi-check-square-fill"></i>
@@ -62,7 +60,7 @@
 						</form>
 						@* Delete-knapp *@
 						<button type="button" class="btn p-0 border-0 text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@message.MessageId" title="Ta bort">
-							<i class="bi bi-trash-fill" style="font-size: 1.2rem;"></i>
+							<i class="bi bi-trash-fill fs-5"></i>
 						</button>
 					</div>
 				</div>

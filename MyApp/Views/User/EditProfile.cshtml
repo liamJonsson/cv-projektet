@@ -11,9 +11,9 @@
         <input type="hidden" asp-for="CurrentCvImage" />
         <div class="row mb-5">
             <div class="col-12 d-flex flex-column align-items-center mb-4">
-                <div class="position-relative" style="width: 150px; height: 150px;">
-                    <img src="~/images/@currentProfilePic" class="rounded-circle img-fluid shadow-sm" style="width: 100%; height: 100%; object-fit: cover;" alt="Profilbild">
-                    <label for="profileImageInput" class="btn btn-secondary btn-sm rounded-circle position-absolute bottom-0 end-0 shadow" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <div class="position-relative editProfilePictureBox">
+                    <img src="~/images/@currentProfilePic" class="rounded-circle img-fluid shadow-sm profilePictures" alt="Profilbild">
+                    <label for="profileImageInput" class="btn btn-secondary btn-sm rounded-circle position-absolute bottom-0 end-0 shadow d-flex align-items-center justify-content-center editProfilePictureLabel">
                         <i class="bi bi-plus-lg text-white"></i>
                     </label>
                     <input asp-for="NewProfileImageFile" id="profileImageInput" class="d-none" accept="image/*" />
@@ -35,8 +35,8 @@
                     <label class="col-sm-4 fw-bold">Namn</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input asp-for="Name" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                            <input asp-for="Name" class="form-control border-0 inputGroupStyle"/>
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
                         <span asp-validation-for="Name" class="text-danger small"></span>
                     </div>
@@ -45,8 +45,8 @@
                     <label class="col-sm-4 fw-bold">Telefonnummer</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input asp-for="PhoneNumber" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                            <input asp-for="PhoneNumber" class="form-control border-0 inputGroupStyle" />
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                     </div>
@@ -55,8 +55,8 @@
                     <label class="col-sm-4 fw-bold">Mailadress</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input asp-for="Email" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                            <input asp-for="Email" class="form-control border-0 inputGroupStyle" />
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
                         <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
@@ -65,8 +65,8 @@
                     <label class="col-sm-4 fw-bold">Adress</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input asp-for="HomeAddress" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                            <input asp-for="HomeAddress" class="form-control border-0 inputGroupStyle" />
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
                     </div>
                 </div>
@@ -74,8 +74,8 @@
                     <label class="col-sm-4 fw-bold">Användarnamn</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input asp-for="UserName" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                            <input asp-for="UserName" class="form-control border-0 inputGroupStyle" />
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
                         <span asp-validation-for="UserName" class="text-danger small"></span>
                     </div>
@@ -85,7 +85,7 @@
                     <label asp-for="CurrentPassword" class="control-label">Nuvarande lösenord</label>
                     <div class="input-group">
                         <input asp-for="CurrentPassword" class="form-control" type="password" id="currentPass" />
-                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('currentPass', 'iconCurrent')">
+                        <button class="btn btn-outline-secondary ourBackgroundColor" type="button" onclick="togglePassword('currentPass', 'iconCurrent')">
                             <i class="bi bi-eye" id="iconCurrent"></i>
                         </button>
                     </div>
@@ -95,8 +95,8 @@
                 <div class="form-group mb-3">
                     <label asp-for="NewPassword" class="control-label">Nytt lösenord</label>
                     <div class="input-group">
-                        <input asp-for="NewPassword" class="form-control" type="password" id="newPass" />
-                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('newPass', 'iconNew')">
+                        <input asp-for="NewPassword" class="form-control ourBackgroundColor" type="password" id="newPass" />
+                        <button class="btn btn-outline-secondary ourBackgroundColor" type="button" onclick="togglePassword('newPass', 'iconNew')">
                             <i class="bi bi-eye" id="iconNew"></i>
                         </button>
                     </div>
@@ -105,8 +105,8 @@
                 <div class="form-group mb-3">
                     <label asp-for="ConfirmPassword" class="control-label">Bekräfta nytt lösenord</label>
                     <div class="input-group">
-                        <input asp-for="ConfirmPassword" class="form-control" type="password" id="confirmPass" />
-                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('confirmPass', 'iconConfirm')">
+                        <input asp-for="ConfirmPassword" class="form-control ourBackgroundColor" type="password" id="confirmPass" />
+                        <button class="btn btn-outline-secondary ourBackgroundColor" type="button" onclick="togglePassword('confirmPass', 'iconConfirm')">
                             <i class="bi bi-eye" id="iconConfirm"></i>
                         </button>
                     </div>
@@ -117,7 +117,7 @@
                 <div class="row mb-4 align-items-center">
                     <label class="col-sm-4 fw-bold">Synlighet</label>
                     <div class="col-sm-8">
-                        <select asp-for="Visibility" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;">
+                        <select asp-for="Visibility" class="form-control border-0 inputGroupStyle">
                             <option value="true">Offentlig</option>
                             <option value="false">Privat</option>
                         </select>
@@ -139,21 +139,21 @@
                     <label class="col-sm-3 fw-bold">Postnr</label>
                     <div class="col-sm-3">
                         <div class="input-group">
-                            <input asp-for="ZipCode" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
+                            <input asp-for="ZipCode" class="form-control border-0 inputGroupStyle" />
                         </div>
                     </div>
                     <label class="col-sm-2 text-end fw-bold">Ort</label>
                     <div class="col-sm-4">
                         <div class="input-group">
-                            <input asp-for="City" class="form-control border-0" style="background-color: #dcdcdc; height: 45px;" />
-                            <span class="input-group-text border-0 text-dark" style="background-color: #dcdcdc; height: 45px;"><i class="bi bi-pencil-square"></i></span>
+                            <input asp-for="City" class="form-control border-0 inputGroupStyle" />
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <h3 class="text-center mt-5 mb-3">Mitt CV</h3>
-        <div class="p-4 rounded position-relative" style="background-color: #dcdcdc;">
+        <div class="p-4 rounded position-relative ourBackgroundColor">
             <div class="row">
                 <div class="col-md-4">
                     <h5 class="fw-bold">Kompetenser</h5>
@@ -169,15 +169,14 @@
                 </div>
             </div>
             <div class="mt-4 d-flex flex-column align-items-start">
-                <div class="position-relative rounded-circle overflow-visible shadow-sm" style="width: 100px; height: 100px; background-color: #6c6c6c;">
+                <div class="position-relative rounded-circle overflow-visible shadow-sm ourBackgroundColor cvPicture">
                     @{
                         var cvImgToShow = string.IsNullOrEmpty(Model.CurrentCvImage) ? "default.jpg" : Model.CurrentCvImage;
                     }
-                    <img src="~/images/@cvImgToShow" asp-append-version="true" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;" />
+                    <img src="~/images/@cvImgToShow" asp-append-version="true" class="rounded-circle profilePictures" />
 
-                    <label for="cvImageInput" class="btn btn-secondary btn-sm rounded-circle position-absolute shadow-sm"
-                           style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; bottom: 0; right: 0;">
-                        <i class="bi bi-plus-lg text-white" style="font-size: 0.9rem;"></i>
+                    <label for="cvImageInput" class="btn btn-secondary btn-sm rounded-circle position-absolute shadow-sm d-flex align-items-center justify-content-center editProfileCvPictureLabel">
+                        <i class="bi bi-plus-lg text-white"></i>
                     </label>
                     <input asp-for="NewCvImageFile" id="cvImageInput" class="d-none" accept="image/*" />
                 </div>
@@ -196,7 +195,7 @@
             </div>
         </div> <h3 class="text-center mt-5 mb-3">Mina projekt</h3>
         <div class="row">
-            <div class="col-12 text-center text-muted p-4 rounded" style="background-color: #f8f9fa;">
+            <div class="col-12 text-center text-muted p-4 rounded ourBackgroundColor">
             </div>
         </div>
     </form>

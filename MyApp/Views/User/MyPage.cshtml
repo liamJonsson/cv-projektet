@@ -29,68 +29,76 @@
         <div class="col-md-6">
             <div class="mb-3 row">
                 <label class="col-sm-4 fw-bold">Namn</label>
-                <div class="col-sm-8 py-2 rounded" style="background-color: #dcdcdc;">@Model.Name</div>
+                <div class="col-sm-8 py-2 rounded ourBackgroundColor">@Model.Name</div>
             </div>
             <div class="mb-3 row">
                 <label class="col-sm-4 fw-bold">Telefonnummer</label>
-                <div class="col-sm-8 py-2 rounded" style="background-color: #dcdcdc;">@Model.PhoneNumber</div>
+                <div class="col-sm-8 py-2 rounded ourBackgroundColor">@Model.PhoneNumber</div>
             </div>
             <div class="mb-3 row">
                 <label class="col-sm-4 fw-bold">Mailadress</label>
-                <div class="col-sm-8 py-2 rounded" style="background-color: #dcdcdc;">@Model.Email</div>
+                <div class="col-sm-8 py-2 rounded ourBackgroundColor">@Model.Email</div>
             </div>
             <div class="mb-3 row">
                 <label class="col-sm-4 fw-bold">Adress</label>
-                <div class="col-sm-8 py-2 rounded" style="background-color: #dcdcdc;">@Model.Address?.HomeAddress</div>
+                <div class="col-sm-8 py-2 rounded ourBackgroundColor">@Model.Address?.HomeAddress</div>
             </div>
             <div class="mb-3 row">
                 <label class="col-sm-4 fw-bold">Postnummer</label>
-                <div class="col-sm-8 py-2 rounded" style="background-color: #dcdcdc;">@Model.Address?.ZipCode</div>
+                <div class="col-sm-8 py-2 rounded ourBackgroundColor">@Model.Address?.ZipCode</div>
             </div>
             <div class="mb-3 row">
                 <label class="col-sm-4 fw-bold">Ort</label>
-                <div class="col-sm-8 py-2 rounded" style="background-color: #dcdcdc;">@Model.Address?.City</div>
+                <div class="col-sm-8 py-2 rounded ourBackgroundColor">@Model.Address?.City</div>
             </div>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-items-start">
-            <div style="width: 300px; height: 300px; background-color: #6c6c6c; overflow: hidden;" class="rounded shadow-sm">
+            <div class="rounded shadow-sm profilePicture">
                 @{
                     var profilePicName = string.IsNullOrEmpty(Model.ProfileImage) ? "default.jpg" : Model.ProfileImage;
                 }
-                <img src="~/images/@profilePicName" style="width: 100%; height: 100%; object-fit: cover;" alt="Profilbild" />
+                <img src="~/images/@profilePicName" class="profilePictures" alt="Profilbild" />
             </div>
         </div>
     </div>
     <h3 class="text-center mt-5 mb-4">CV</h3>
-    <div class="p-4 rounded" style="background-color: #dcdcdc;">
+    <div class="p-4 rounded ourBackgroundColor">
         <div class="row">
             <div class="col-md-4 d-flex flex-column mb-3">
                 <div>
                     <h5 class="fw-bold">Kompetenser</h5>
-                    <p class="text-break" style="white-space: pre-line; line-height: 1.8;">
+                    <p class="text-break cvInformation">
                         @(Model.Skills ?? "Inga kompetenser angivna.")</p>
                 </div>
                 <div class="mt-auto pt-3">
-                    <div class="rounded-circle overflow-hidden shadow-sm" style="width: 130px; height: 130px; background-color: #6c6c6c;">
+                    <div class="rounded-circle overflow-hidden shadow-sm ourBackgroundColor cvPicture">
                         @{
                             var imageToShow = string.IsNullOrEmpty(Model.CvImage) ? "default.jpg" : Model.CvImage;
                         }
-                        <img src="~/images/@imageToShow" style="width: 100%; height: 100%; object-fit: cover;" alt="CV Bild" />
+                        <img src="~/images/@imageToShow" class="profilePictures" alt="CV Bild" />
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
                 <h5 class="fw-bold">Utbildning</h5>
-                <<p class="text-break" style="white-space: pre-line; line-height: 1.8;">
+                <p class="text-break cvInformation">
                     @(Model.Education ?? "Ingen utbildning angiven.")</p>
             </div>
 
             <div class="col-md-4 mb-5">
                 <h5 class="fw-bold">Tidigare erfarenhet</h5>
-                <<p class="text-break" style="white-space: pre-line; line-height: 1.8;">
+                <p class="text-break cvInformation">
                     @(Model.Experience ?? "Ingen erfarenhet angiven.")</p>
             </div>
         </div>
+    </div>
+    @*   En div som innehåller knappen "Hitta liknande användare" och diven som som visar matchande användare *@
+    <div class="d-flex justify-content-center mt-5">
+        <button id="btnFindSimilarUsers" class="btn btn-secondary px-5 py-3" onclick="loadSimilarUsers()">
+            <i class="bi-people-fill"></i> Hitta liknande användare
+        </button>
+        @* En div där liknande användare kommer synas *@
+        <div id="similarUsers"></div>
     </div>
     <h3 class="text-center mt-5 mb-4">Projekt</h3>
     <div class="row">
@@ -99,7 +107,7 @@
             @foreach (var projUser in Model.ParticipatingProjects)
             {
                 <div class="col-md-6 mb-4">
-                    <div class="p-4 rounded h-100 d-flex flex-column justify-content-center align-items-center text-center" style="background-color: #dcdcdc;">
+                    <div class="p-4 rounded h-100 d-flex flex-column justify-content-center align-items-center text-center ourBackgroundColor">
                         <h5 class="fw-bold">@projUser.Project.Title</h5>
                         <p class="small text-muted">@projUser.Project.Description</p>
                         <div class="mt-auto w-100 pt-3 border-top border-secondary">
@@ -131,9 +139,9 @@
                 {
                     <div class="row mb-3 mt-3">
                         <div class="col-12">
-                            <div class="alert alert-success alert-dismissible show text-center border-0 mx-auto" role="alert" style="border-radius: 6px; padding: 10px;">
+                            <div class="alert alert-success alert-dismissible show text-center border-0 mx-auto sucess-message" role="alert">
                                 @TempData["Sent"]
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;  font-size: 0.8rem; padding: 0.5rem;"></button>
+                                <button type="button" class="btn-close close-button" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </div>
                     </div>
@@ -146,7 +154,7 @@
                     }
                     <div class="mb-3">
                         <label>Från</label>
-                        <input type="text" name="SenderName" class="form-control border-0" style="background-color: #dcdcdc;"
+                        <input type="text" name="SenderName" class="form-control border-0 ourBackgroundColor"
                                value="@(User.Identity.IsAuthenticated ? ((ViewBag.LoggedInUser as User)?.Name) : "")"
                                @Html.Raw(User.Identity.IsAuthenticated ? "readonly=\"readonly\"" : "placeholder=\"Skriv ditt namn här...\"")
                                                       data - val = "true" data - val - required = "Namn krävs" />
@@ -154,7 +162,7 @@
                     </div>
                     <div class="mb-3">
                         <label>Meddelande</label>
-                        <textarea name="Text" class="form-control border-0" rows="5" style="background-color: #dcdcdc;" 
+                        <textarea name="Text" class="form-control border-0 ourBackgroundColor" rows="5" 
                         placeholder="Skriv ditt meddelande här..."
                         data-val="true" data-val-required="Meddelande får inte vara tomt"></textarea>
                         <span class="text-danger" data-valmsg-for="Text" data-valmsg-replace="true"></span>
@@ -163,9 +171,6 @@
                         <button type="submit" class="btn btn-secondary">Skicka</button>
                     </div>
                 </form>
-                @section Scripts{
-                   <partial name="_ValidationScriptsPartial" />
-                }
             </div>
         </div>
     }
@@ -178,3 +183,18 @@
         </form>
     </div>
 </div>
+@section Scripts {
+    @*Gör att skicka-meddelanden formulärets felmeddelanden visas direkt 
+    utan att sidan laddas om, om användaren inte fyllt i det som måste vara ifyllt *@
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        //Denna funktion körs när man klickar på "Hitta liknande användare" kanppen
+        function loadSimilarUsers() {
+            //Diven med id "similarUsers" laddas med HTMLkod från vår partial view(_SimilarUsers.cshtml)
+            //genom att anoropa FindSimilarUsers i UserControllern. Detta gör att innehållet syns direkt på sidan
+            //utan att hela webbläsaren behöver laddas om tack vare AJAX (.load)
+            $("#similarUsers").load("/User/FindSimilarUsers?id=@Model.Id")
+        }
+    </script>
+}
