@@ -7,7 +7,7 @@ namespace MyApp.Models
     {
         //Name
         [Required(ErrorMessage = "Vänligen ange ett namn.")]
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "Namnet får max vara 100 tecken.")]
 
         public string Name { get; set; }
         //Profile image
