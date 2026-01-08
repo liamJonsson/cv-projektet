@@ -19,12 +19,12 @@ namespace MyApp.Models
         [Required(ErrorMessage = "Vänligen fyll i ditt namn när du ej är inloggad.")]
         public string SenderName { get; set; } = string.Empty;
 
-        // Foreign keys
-        public int? SenderId { get; set; }
-        public virtual User Sender { get; set; }
+            //Foreign keys
+            public int? SenderId { get; set; }
+            public virtual User? Sender { get; set; }
 
-        [Required]
-        public int ReceiverId { get; set; }
-        public virtual User Receiver { get; set; }
+            [Required]
+            public int ReceiverId { get; set; }
+            public virtual User? Receiver { get; set; }
+        }
     }
-}
