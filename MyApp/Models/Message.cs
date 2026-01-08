@@ -4,19 +4,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MyApp.Models
 {
     public class Message
-        {
-            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-            public int MessageId { get; set; }
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int MessageId { get; set; }
 
-            [Required(ErrorMessage = "Vänligen skriv ett meddelande.")]
-            public string Text { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Vänligen skriv ett meddelande.")]
+        [StringLength(2000, ErrorMessage = "Meddelandet får max vara 2000 tecken.")]
+        public string Text { get; set; } = string.Empty;
 
-            public DateTime SentAt { get; set; }
+        public DateTime SentAt { get; set; } = DateTime.Now;
 
-            public bool Read { get; set; } = false;
+        public bool Read { get; set; } = false;
 
-            [Required(ErrorMessage = "Vänligen fyll i ditt namn när du ej är inloggad.")]
-            public string SenderName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Vänligen fyll i ditt namn när du ej är inloggad.")]
+        public string SenderName { get; set; } = string.Empty;
 
             //Foreign keys
             public int? SenderId { get; set; }

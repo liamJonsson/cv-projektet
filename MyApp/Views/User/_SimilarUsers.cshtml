@@ -11,12 +11,12 @@
 			@foreach (var user in Model)
 			{
 				<div class="col-md-6">
-					<div class="d-flex justify-content-between rounded p-3 mt-4" style="background-color: #dcdcdc">
+					<div class="d-flex justify-content-between rounded p-3 mt-4 ourBackgroundColor">
 						<h6 class="text-nowrap m-auto">@user.Name,&nbsp;&nbsp;@user.Address.City </h6>
 
 						<div class="homepageWidth text-end">
 							<a asp-controller="User"
-								asp-action="Profile"
+								asp-action="ViewProfile"
 								asp-route-id="@user.Id"
 								class="btn btn-light">
 								Se profil
