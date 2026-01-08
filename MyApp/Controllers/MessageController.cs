@@ -54,17 +54,16 @@ namespace MyApp.Controllers
         {
             message.SentAt = DateTime.Now;
 
+            //SentAt måste ignoreras från ModelState då SentAt sätts efter ModelState sätts
             ModelState.Remove("SentAt");
-            ModelState.Remove("Sender");
-            ModelState.Remove("Receiver");
 
             if (ModelState.IsValid)
             {
                 _context.Messages.Add(message);
                 await _context.SaveChangesAsync();
-                //"Meddelandet har skickats" läggs till i lådan "Sent"
                 TempData["SuccessMessage"] = "Meddelandet har skickats.";
             }
+            //Ett anonymt objekt med id skickas med så att rätt profilsida visas(den man var på) när ett meddelande har skickats
             return RedirectToAction("Profile", "User", new { id = message.ReceiverId});
         }
 

@@ -247,6 +247,16 @@ body {
         width: 60%;
     }
 
+    .message-read {
+        font-weight: normal;
+        color: gray;
+    }
+
+    .message-unread{
+        font-weight: bold;
+        color: black;
+    }
+
     /*Project - Add*/
     .sucess-message {
         border-radius: 6px;

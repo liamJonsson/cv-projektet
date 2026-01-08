@@ -373,8 +373,8 @@ namespace MyApp.Controllers
                 return PartialView("_SimilarUsers", new List<User>());
             }
 
-            //Hämtar max 3 användare som har samma programmeringsspråk som personen man har klickat sig in på har
-            //som inte har avvaktiverat sina konto samt har en offentlig profil om man själv inte är inloggad.
+            //Hämtar max 3 användare som har arbetat med samma programmeringsspråk som personen man har klickat sig in på har
+            //gjort. Användarna som har hämtats har inte avaktiverat sina konto samt hämtar enbart offentliga profiler om man själv ej är inloggad.
 
             var userMatches = await _context.Users
                 .Include(u => u.Address)
