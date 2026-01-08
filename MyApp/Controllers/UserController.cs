@@ -240,11 +240,8 @@ namespace MyApp.Controllers
             }
 
             var userId = _userManager.GetUserId(User);
-
             var userToUpdate = await _context.Users
                 .Include(u => u.Address)
-                .Include(u => u.ParticipatingProjects)
-                .ThenInclude(pu => pu.Project)
                 .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
 
             if (userToUpdate != null)
@@ -252,38 +249,32 @@ namespace MyApp.Controllers
                 var existingUserWithEmail = await _userManager.FindByEmailAsync(model.Email);
                 if (existingUserWithEmail != null && existingUserWithEmail.Id != userToUpdate.Id)
                 {
-                    ModelState.AddModelError("Email", "Denna e-postadress används redan av ett annat konto.");
+                    ModelState.AddModelError("Email", "Denna e-postadress används redan.");
                 }
 
                 var existingUserWithName = await _userManager.FindByNameAsync(model.UserName);
                 if (existingUserWithName != null && existingUserWithName.Id != userToUpdate.Id)
                 {
-                    ModelState.AddModelError("UserName", "Användarnamnet är tyvärr upptaget.");
+                    ModelState.AddModelError("UserName", "Användarnamnet är upptaget.");
                 }
 
                 if (!string.IsNullOrEmpty(model.PhoneNumber))
                 {
                     var existingUserWithPhone = await _context.Users
                         .FirstOrDefaultAsync(u => u.PhoneNumber == model.PhoneNumber && u.Id != userToUpdate.Id);
-
                     if (existingUserWithPhone != null)
-                    {
-                        ModelState.AddModelError("PhoneNumber", "Detta telefonnummer är redan registrerat.");
-                    }
+                        ModelState.AddModelError("PhoneNumber", "Telefonnumret används redan.");
                 }
-                if (!string.IsNullOrEmpty(model.CurrentPassword))
-                {
-                    var passwordCheck = await _userManager.CheckPasswordAsync(userToUpdate, model.CurrentPassword);
-                    if (!passwordCheck)
-                    {
-                        ModelState.AddModelError("CurrentPassword", "Felaktigt nuvarande lösenord.");
-                    }
-                }
+
                 if (!ModelState.IsValid)
                 {
                     model.CurrentProfileImage = userToUpdate.ProfileImage;
                     model.CurrentCvImage = userToUpdate.CvImage;
-                    model.ParticipatingProjects = userToUpdate.ParticipatingProjects;
+                    model.ParticipatingProjects = await _context.ProjectUsers
+                        .Include(pu => pu.Project)
+                        .Where(pu => pu.UserId == userToUpdate.Id)
+                        .ToListAsync();
+
                     return View(model);
                 }
                 userToUpdate.Name = model.Name;
@@ -309,7 +300,6 @@ namespace MyApp.Controllers
                 {
                     userToUpdate.ProfileImage = "default.jpg";
                 }
-
                 if (model.NewCvImageFile != null)
                 {
                     string newFileName = await UploadFile(model.NewCvImageFile);
@@ -319,24 +309,19 @@ namespace MyApp.Controllers
                 {
                     userToUpdate.CvImage = "default.jpg";
                 }
+                // Lösenordsbyte
                 if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.NewPassword))
                 {
                     var changePasswordResult = await _userManager.ChangePasswordAsync(userToUpdate, model.CurrentPassword, model.NewPassword);
                     if (!changePasswordResult.Succeeded)
                     {
                         foreach (var error in changePasswordResult.Errors)
-                        {
                             ModelState.AddModelError(string.Empty, error.Description);
-                        }
                         return View(model);
                     }
                 }
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Din profil har uppdaterats!";
-                if (submitButton == "SaveCv")
-                {
-                    return RedirectToAction("MyPage", "User", null, "cv-section");
-                }
                 return RedirectToAction("MyPage");
             }
             return View(model);
