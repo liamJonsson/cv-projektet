@@ -1,12 +1,25 @@
 ﻿@model IEnumerable<MyApp.Models.User>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
+        <div id="liveToast" class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+}
 
 <div class="d-flex justify-content-center my-5 homepageWidth">
     <form asp-action="search" method="get">
         <label class="fs-5" for="search">Hitta användare</label>
         @* Andra border color på input fältet när man klickat i den samt ändra storleken på fältet *@
-        <input class="ms-2 border-0 ourBackgroundColor" style="width: 400px;" type="search" id="search" name="query" placeholder="Sök användare..." />
+        <input class="ms-2 border-0 ourBackgroundColor rounded p-2" style="width: 400px;" type="search" id="search" name="query" placeholder="Sök användare..." />
         @*Flytta på sökikonen*@
-        <button class="ms-2 border-0" type="submit" aria-label="Sök">
+        <button class="ms-2 border-0 rounded" type="submit" aria-label="Sök">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 14 14">
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
             </svg>
@@ -68,7 +81,7 @@
         </div>
         <div class="homepageWidth text-end">
             <a asp-controller="User"
-                   asp-action="Profile"
+                   asp-action="ViewProfile"
                    asp-route-id="@user.Id"
                    class="btn ourBackgroundColor">
                     Se profil

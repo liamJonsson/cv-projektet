@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
-
+using MyApp.Models;
 namespace MyApp.InputModels
 {
     public class EditProfileViewModel
@@ -8,12 +7,12 @@ namespace MyApp.InputModels
         // Vanlig data
         [Required(ErrorMessage = "Du måste ange ett namn.")]
         [StringLength(50, ErrorMessage = "Namnet får vara max 50 tecken.")]
-        [Display(Name = "Namn")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ\s-]+$", ErrorMessage = "Namnet får endast innehålla bokstäver.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Telefonnummer krävs.")]
         [Phone(ErrorMessage = "Ogiltigt telefonnummer.")]
-        [Display(Name = "Telefonnummer")]
+        [StringLength(20, MinimumLength = 10, ErrorMessage = "Telefonnumret måste vara mellan 10 och 20 tecken.")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "E-postadress krävs.")]
@@ -24,28 +23,28 @@ namespace MyApp.InputModels
         public string HomeAddress { get; set; }
 
         [Required(ErrorMessage = "Postnummer krävs.")]
+        [RegularExpression(@"^\d{3}\s?\d{2}$", ErrorMessage = "Ange ett giltigt postnummer (5 siffror).")]
         public string ZipCode { get; set; }
 
         [Required(ErrorMessage = "Ort krävs.")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ\s-]+$", ErrorMessage = "Ort får endast innehålla bokstäver.")]
         public string City { get; set; }
 
         [Required(ErrorMessage = "Användarnamn krävs.")]
         [StringLength(20, MinimumLength = 3, ErrorMessage = "Måste vara mellan 3 och 20 tecken.")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ\s-]+$", ErrorMessage = "Användarnamnet får endast innehålla bokstäver.")]
         public string UserName { get; set; }
         public bool Visibility { get; set; }
 
         // Lösenord
 
         [DataType(DataType.Password)]
-        [Display(Name = "Nuvarande lösenord")]
         public string? CurrentPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Nytt lösenord")]
         public string? NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Bekräfta nytt lösenord")]
         [Compare("NewPassword", ErrorMessage = "Lösenorden matchar inte.")]
         public string? ConfirmPassword { get; set; }
 
@@ -66,5 +65,7 @@ namespace MyApp.InputModels
 
         public bool RemoveProfileImage { get; set; }
         public bool RemoveCvImage { get; set; }
+
+        public ICollection<ProjectUser> ParticipatingProjects { get; set; }
     }
 }

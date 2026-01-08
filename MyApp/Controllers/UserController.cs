@@ -135,6 +135,29 @@ namespace MyApp.Controllers
             return View(user);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ViewProfile(int id)
+        {
+            var userProfile = await _context.Users.FindAsync(id);
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            var loggedInUserId = _userManager.GetUserId(User);
+            bool isOwner = loggedInUserId != null && int.Parse(loggedInUserId) == userProfile.Id;
+
+            // Räkna endast om man tittar på någon annans profil
+            if (!isOwner)
+            {
+                userProfile.ProfileViews++;
+                await _context.SaveChangesAsync();
+            }
+
+            // Skicka vidare till profilsidan
+            return RedirectToAction("Profile", new { id });
+        }
+
         // Visa andras profiler
         [AllowAnonymous]
         [HttpGet("User/Profile/{id}")]
@@ -150,28 +173,13 @@ namespace MyApp.Controllers
             {
                 return NotFound();
             }
-           
-            if(User.Identity?.IsAuthenticated == true)
+
+            if (User.Identity?.IsAuthenticated == true)
             {
                 var currentUser = await _userManager.GetUserAsync(User);
                 ViewBag.LoggedInUser = currentUser;
             }
-            var loggedInUserId = _userManager.GetUserId(User);
-            bool isOwner = false;
-            if (loggedInUserId != null)
-            {
-                isOwner = int.Parse(loggedInUserId) == userProfile.Id;
-            }
-            string refererUrl = Request.Headers["Referer"].ToString();
-            string currentPath = Request.Path.ToString(); 
 
-            // Om referer innehåller nuvarande sökväg så är det en refresh
-            bool isRefresh = !string.IsNullOrEmpty(refererUrl) && refererUrl.Contains(currentPath);
-            if (!isOwner && !isRefresh)
-            {
-                userProfile.ProfileViews++;
-                await _context.SaveChangesAsync();
-            }
             bool isLoggedOut = !User.Identity.IsAuthenticated;
             bool isPrivate = userProfile.Visibility == false;
 
@@ -179,6 +187,7 @@ namespace MyApp.Controllers
             {
                 return RedirectToAction("Login");
             }
+
             return View("MyPage", userProfile);
         }
 
@@ -188,6 +197,8 @@ namespace MyApp.Controllers
             var userId = _userManager.GetUserId(User);
             var user = await _context.Users
                 .Include(u => u.Address)
+                .Include(u => u.ParticipatingProjects)
+                .ThenInclude(pu => pu.Project)
                 .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
 
             if (user == null) return NotFound();
@@ -209,19 +220,24 @@ namespace MyApp.Controllers
                 Education = user.Education,
                 Experience = user.Experience,
                 CurrentProfileImage = user.ProfileImage,
-                CurrentCvImage = user.CvImage
+                CurrentCvImage = user.CvImage,
+
+                // Projekt
+                ParticipatingProjects = user.ParticipatingProjects
             };
             return View(model);
         }
 
         // Sparar och tar emot ändringarna
         [HttpPost]
-        public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+        public async Task<IActionResult> EditProfile(EditProfileViewModel model, string submitButton)
         {
             var userId = _userManager.GetUserId(User);
 
             var userToUpdate = await _context.Users
                 .Include(u => u.Address)
+                .Include(u => u.ParticipatingProjects)
+                .ThenInclude(pu => pu.Project)
                 .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
 
             if (userToUpdate != null)
@@ -248,10 +264,19 @@ namespace MyApp.Controllers
                         ModelState.AddModelError("PhoneNumber", "Detta telefonnummer är redan registrerat.");
                     }
                 }
+                if (!string.IsNullOrEmpty(model.CurrentPassword))
+                {
+                    var passwordCheck = await _userManager.CheckPasswordAsync(userToUpdate, model.CurrentPassword);
+                    if (!passwordCheck)
+                    {
+                        ModelState.AddModelError("CurrentPassword", "Felaktigt nuvarande lösenord.");
+                    }
+                }
                 if (!ModelState.IsValid)
                 {
                     model.CurrentProfileImage = userToUpdate.ProfileImage;
                     model.CurrentCvImage = userToUpdate.CvImage;
+                    model.ParticipatingProjects = userToUpdate.ParticipatingProjects;
                     return View(model);
                 }
                 userToUpdate.Name = model.Name;
@@ -300,6 +325,11 @@ namespace MyApp.Controllers
                     }
                 }
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Din profil har uppdaterats!";
+                if (submitButton == "SaveCv")
+                {
+                    return RedirectToAction("MyPage", "User", null, "cv-section");
+                }
                 return RedirectToAction("MyPage");
             }
             return View(model);
@@ -445,6 +475,22 @@ namespace MyApp.Controllers
                 var content = stream.ToArray();
                 return File(content, "application/xml", $"Profil_{user.UserName}.xml");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LeaveProject(int projectId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var projectUser = await _context.ProjectUsers
+                .FirstOrDefaultAsync(pu => pu.ProjectId == projectId && pu.UserId == user.Id);
+
+            if (projectUser != null)
+            {
+                _context.ProjectUsers.Remove(projectUser);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Du har lämnat projektet.";
+            }
+            return RedirectToAction("EditProfile");
         }
     }
 
