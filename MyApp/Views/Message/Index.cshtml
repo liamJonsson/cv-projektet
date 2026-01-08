@@ -27,28 +27,33 @@
 	{
 		@foreach (var message in Model)
 		{
-			var fontWeight = "bold";
-			var textColor = "black";
+			var textStyle = "";
 
+			//Beroende på om meddelandet är läst eller inte får avsändarens namn samt datum 
+			//olika utseende genom css klasser
 			if (message.Read)
 			{
-					fontWeight = "normal";
-					textColor = "gray";
+				textStyle = "message-read";
+			}
+			else
+			{
+				textStyle = "message-unread";
 			}
 
 			<div class="mb-4 mx-auto" style="width: 60%;">		
-				<h4 style="font-weight: @fontWeight; color: @textColor;"> 
+				<h4 class="@textStyle"> 
 					Från: @message.SenderName
 				</h4>
 								
-				<div class="p-2 rounded d-flex justify-content-between ourBackgroundColor">
-					<p class="px-2" style="font-weight: @fontWeight; color: @textColor;"> @message.Text</p>
+				<div class="p-3 rounded d-flex justify-content-between ourBackgroundColor">
+					<p class="px-1 my-auto"> @message.Text</p>
 
 					<div class="d-flex align-items-center gap-3">
-						<form asp-action="UpdateRead" method="post">
-							<input type="hidden" name="messageId" value="@message.MessageId"/>
-
-							<button type="submit" class="btn p-0 border-0 d-flex gap-2 btn-link btn btn-link p-0 border-0 d-flex gap-2 text-decoration-none text-reset">
+					@* Lägger in en knapp i formuläret och knappen innehåller olika ikoner (tom/icheckad checkbox) beroende på om meddelandet är läst eller inte. 
+					Om meddelandet är oläst är ikonen en tom checkbox och när denna trycks på skickas formuläret till controllern, meddelandet sätts till läst samt 
+					slutligen ändras ikonen här view till en ifylld checkbox och vice versa *@
+						<form asp-action="UpdateRead" asp-route-messageId="@message.MessageId" method="post">
+							<button type="submit" class="btn d-flex p-0 border-0  gap-2 text-decoration-none text-reset">
 								@if(message.Read)
 								{
 									<i class="bi bi-check-square-fill"></i>
@@ -57,7 +62,7 @@
 								{
 									<i class="bi bi-square"></i>
 								}
-								<span style="cursor: pointer; color: @textColor;">Läst</span>
+								<span>Läst</span>
 							</button>
 						</form>
 						@* Delete-knapp *@
@@ -66,7 +71,7 @@
 						</button>
 					</div>
 				</div>
-				<p style=" color: @textColor;">
+				<p class="@textStyle">
 					@message.SentAt.ToString("yyyy-MM-dd HH:mm")
 				</p>
 
