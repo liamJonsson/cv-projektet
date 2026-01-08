@@ -4,39 +4,41 @@ namespace MyApp.InputModels
 {
     public class RegisterInputModel
     {
-        [Required(ErrorMessage = "Namn krävs")]
-        [StringLength(50, ErrorMessage = "Namnet får vara max 50 tecken.")]
-        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ\s-]+$", ErrorMessage = "Namnet får endast innehålla bokstäver.")]
+        [Required(ErrorMessage = "Namn krävs.")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ ]*$", ErrorMessage = "Endast bokstäver tillåtet.")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Telefonnummer krävs")]
-        [Phone(ErrorMessage = "Ogiltigt telefonnummer.")]
-        [StringLength(20, MinimumLength = 10, ErrorMessage = "Telefonnumret måste vara mellan 10 och 20 tecken.")]
+        [Required(ErrorMessage = "Telefonnummer krävs.")]
+        [StringLength(12, ErrorMessage = "Max 12 tecken tillåtet.")]
+        [RegularExpression(@"^[0-9+]$", ErrorMessage = "Endast siffror tillåtet.")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Mailadress krävs")]
-        [EmailAddress(ErrorMessage = "Ogiltig mailadress")]
+        [Required(ErrorMessage = "Mailadress krävs.")]
+        [EmailAddress(ErrorMessage = "Ogiltig mailadress.")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Adress krävs")]
+        [Required(ErrorMessage = "Adress krävs.")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ0-9 ]*$", ErrorMessage = "Endast bokstäver och siffror tillåtet.")]
         public string HomeAddress { get; set; }
 
-        [Required(ErrorMessage = "Postnummer krävs")]
-        [RegularExpression(@"^\d{3}\s?\d{2}$", ErrorMessage = "Ange ett giltigt postnummer (5 siffror).")]
+        [Required(ErrorMessage = "Postnummer krävs.")]
+        [StringLength(6, ErrorMessage = "Max 6 tecken tillåtet.")]
+        [RegularExpression(@"^[0-9 ]*$", ErrorMessage = "Endast siffror tillåtet.")]
         public string ZipCode { get; set; }
 
-        [Required(ErrorMessage = "Ort krävs")]
-        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ\s-]+$", ErrorMessage = "Ort får endast innehålla bokstäver.")]
+        [Required(ErrorMessage = "Ort krävs.")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ ]*$", ErrorMessage = "Endast bokstäver tillåtet.")]
         public string City { get; set; }
 
-        [Required(ErrorMessage = "Användarnamn krävs")]
+        [Required(ErrorMessage = "Användarnamn krävs.")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ0-9._-]*$", ErrorMessage = "Innehåller otillåtna tecken.")]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Lösenord krävs")]
+        [Required(ErrorMessage = "Lösenord krävs.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Bekräfta lösenordet")]
+        [Required(ErrorMessage = "Bekräfta lösenordet.")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Lösenorden matchar inte.")]
         public string ConfirmPassword { get; set; }
