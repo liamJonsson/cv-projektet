@@ -11,7 +11,7 @@ namespace MyApp.InputModels
 
         [Required(ErrorMessage = "Telefonnummer krävs.")]
         [StringLength(12, ErrorMessage = "Max 12 tecken tillåtet.")]
-        [RegularExpression(@"^[0-9+]$", ErrorMessage = "Endast siffror tillåtet.")]
+        [RegularExpression(@"^[0-9+]*$", ErrorMessage = "Endast siffror tillåtet.")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Mailadress krävs.")]
