@@ -52,7 +52,14 @@
 
 @section Scripts {
     @{
-        // Denna rad aktiverar validering direkt i webbläsaren
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            var input = $("#CodeLanguage");
+            input.on("input", function () { 
+                $(this).valid(); 
+            });
+        });
+    </script>
 }

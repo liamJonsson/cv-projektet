@@ -57,26 +57,47 @@
             <ul>
                 @foreach (var participant in project.Participants)
                 {
-                    @if (isLoggedIn || (participant.User != null && participant.User.Visibility))
-                    {
-                        <li>@participant.User?.Name</li>
-                    }
+                    <li>
+                        @if (isLoggedIn || (participant.User != null && participant.User.Visibility))
+                        {
+                            @* Visa namnet om man är inloggad ELLER om deltagaren är offentlig *@
+                            @participant.User?.Name
+                        }
+                        else
+                        {
+                            @* Visa detta om man är utloggad OCH deltagaren är privat *@
+                            <span class="text-muted"><i>Privat deltagare</i></span>
+                        }
+                    </li>
                 }
             </ul>
 
-            <div class="project-card-footer">
-                <span>Skapad av: @project.Creator?.Name</span>
+            <p>
+                <strong>Skapad av:</strong>
+                @if (isLoggedIn || (project.Creator != null && project.Creator.Visibility))
+                {
+                    @* Visa namnet om man är inloggad ELLER om skaparen är offentlig *@
+                    @project.Creator?.Name
+                }
+                else
+                {
+                    @* Visa detta endast om man är utloggad OCH skaparen är privat *@
+                    <span class="text-muted"><i>Privat användare</i></span>
+                }
+            </p>
 
                 @if (isLoggedIn)
                 {
-                    if (isParticipant)
-                    {
-                        <button class="project-leave-btn" type="button" onclick="showLeaveBox('@project.ProjectId')">-</button>
-                    }
-                    else
-                    {
-                        <button class="project-join-btn" type="button" onclick="showJoinBox('@project.ProjectId')">+</button>
-                    }
+                    <div class="project-action-wrapper">
+                        @if (isParticipant)
+                        {
+                            <button class="project-leave-btn" type="button" onclick="showLeaveBox('@project.ProjectId')"> - </button>
+                        }
+                        else
+                        {
+                            <button class="project-join-btn" type="button" onclick="showJoinBox('@project.ProjectId')"> + </button>
+                        }
+                    </div>
                 }
             </div>
 
@@ -100,7 +121,7 @@
                     <button type="button" class="btn-cancel" onclick="hideLeaveBox('@project.ProjectId')">Avbryt</button>
                 </div>
             </div>
-        </div> @* Stänger project-card *@
+        
     }
 </div> @* Stänger projects-grid *@
 
