@@ -239,6 +239,14 @@ namespace MyApp.Controllers
                 ModelState.Remove("ConfirmPassword");
             }
 
+            if (submitButton == "SaveProfile")
+            {
+                // Om användaren klickade "Spara uppgifter" (Profil), ignorera fel i CV-delen
+                ModelState.Remove("Skills");
+                ModelState.Remove("Education");
+                ModelState.Remove("Experience");
+                ModelState.Remove("NewCvImageFile");
+            }
             var userId = _userManager.GetUserId(User);
 
             var userToUpdate = await _context.Users
@@ -271,6 +279,8 @@ namespace MyApp.Controllers
                         ModelState.AddModelError("PhoneNumber", "Detta telefonnummer är redan registrerat.");
                     }
                 }
+
+                // Lösenordskontroll
                 if (!string.IsNullOrEmpty(model.CurrentPassword))
                 {
                     var passwordCheck = await _userManager.CheckPasswordAsync(userToUpdate, model.CurrentPassword);
@@ -286,39 +296,49 @@ namespace MyApp.Controllers
                     model.ParticipatingProjects = userToUpdate.ParticipatingProjects;
                     return View(model);
                 }
-                userToUpdate.Name = model.Name;
-                userToUpdate.PhoneNumber = model.PhoneNumber;
-                userToUpdate.Email = model.Email;
-                userToUpdate.UserName = model.UserName;
-                userToUpdate.Visibility = model.Visibility;
-                userToUpdate.Skills = model.Skills;
-                userToUpdate.Education = model.Education;
-                userToUpdate.Experience = model.Experience;
+                if (submitButton == "SaveProfile")
+                {
+                    userToUpdate.Name = model.Name;
+                    userToUpdate.PhoneNumber = model.PhoneNumber;
+                    userToUpdate.Email = model.Email;
+                    userToUpdate.UserName = model.UserName;
+                    userToUpdate.Visibility = model.Visibility;
 
-                if (userToUpdate.Address == null) userToUpdate.Address = new Address();
-                userToUpdate.Address.HomeAddress = model.HomeAddress;
-                userToUpdate.Address.ZipCode = model.ZipCode;
-                userToUpdate.Address.City = model.City;
+                    if (userToUpdate.Address == null) userToUpdate.Address = new Address();
+                    userToUpdate.Address.HomeAddress = model.HomeAddress;
+                    userToUpdate.Address.ZipCode = model.ZipCode;
+                    userToUpdate.Address.City = model.City;
 
-                if (model.NewProfileImageFile != null)
-                {
-                    string newFileName = await UploadFile(model.NewProfileImageFile);
-                    userToUpdate.ProfileImage = newFileName;
-                }
-                else if (model.RemoveProfileImage)
-                {
-                    userToUpdate.ProfileImage = "default.jpg";
+                    if (model.NewProfileImageFile != null)
+                    {
+                        string newFileName = await UploadFile(model.NewProfileImageFile);
+                        userToUpdate.ProfileImage = newFileName;
+                    }
+                    else if (model.RemoveProfileImage)
+                    {
+                        userToUpdate.ProfileImage = "default.jpg";
+                    }
                 }
 
-                if (model.NewCvImageFile != null)
+                // Spara CV-data om det var den knappen
+                if (submitButton == "SaveCv")
                 {
-                    string newFileName = await UploadFile(model.NewCvImageFile);
-                    userToUpdate.CvImage = newFileName;
+                    userToUpdate.Skills = model.Skills;
+                    userToUpdate.Education = model.Education;
+                    userToUpdate.Experience = model.Experience;
+
+                    if (model.NewCvImageFile != null)
+                    {
+                        string newFileName = await UploadFile(model.NewCvImageFile);
+                        userToUpdate.CvImage = newFileName;
+                    }
+                    else if (model.RemoveCvImage)
+                    {
+                        userToUpdate.CvImage = "default.jpg";
+                    }
                 }
-                else if (model.RemoveCvImage)
-                {
-                    userToUpdate.CvImage = "default.jpg";
-                }
+
+                // Hantera lösenordsbyte (om det är ifyllt)
                 if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.NewPassword))
                 {
                     var changePasswordResult = await _userManager.ChangePasswordAsync(userToUpdate, model.CurrentPassword, model.NewPassword);
@@ -331,14 +351,18 @@ namespace MyApp.Controllers
                         return View(model);
                     }
                 }
+
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Din profil har uppdaterats!";
+
                 if (submitButton == "SaveCv")
                 {
                     return RedirectToAction("MyPage", "User", null, "cv-section");
                 }
-                return RedirectToAction("MyPage");
+
+                return RedirectToAction("EditProfile");
             }
+
             return View(model);
         }
 
