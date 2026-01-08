@@ -135,6 +135,29 @@ namespace MyApp.Controllers
             return View(user);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ViewProfile(int id)
+        {
+            var userProfile = await _context.Users.FindAsync(id);
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            var loggedInUserId = _userManager.GetUserId(User);
+            bool isOwner = loggedInUserId != null && int.Parse(loggedInUserId) == userProfile.Id;
+
+            // Räkna endast om man tittar på någon annans profil
+            if (!isOwner)
+            {
+                userProfile.ProfileViews++;
+                await _context.SaveChangesAsync();
+            }
+
+            // Skicka vidare till profilsidan
+            return RedirectToAction("Profile", new { id });
+        }
+
         // Visa andras profiler
         [AllowAnonymous]
         [HttpGet("User/Profile/{id}")]
@@ -150,29 +173,13 @@ namespace MyApp.Controllers
             {
                 return NotFound();
             }
-           
-            if(User.Identity?.IsAuthenticated == true)
+
+            if (User.Identity?.IsAuthenticated == true)
             {
                 var currentUser = await _userManager.GetUserAsync(User);
                 ViewBag.LoggedInUser = currentUser;
             }
-            var loggedInUserId = _userManager.GetUserId(User);
-            bool isOwner = false;
-            if (loggedInUserId != null)
-            {
-                isOwner = int.Parse(loggedInUserId) == userProfile.Id;
-            }
-            // Refresh hantering
-            string referer = Request.Headers["Referer"].ToString();
-            string currentUrlPart = $"/User/Profile/{id}";
-            bool isRefresh = !string.IsNullOrEmpty(referer) && referer.Contains(currentUrlPart);
 
-            // Räkna bara om det INTE är ägaren OCH INTE är en refresh
-            if (!isOwner && !isRefresh)
-            {
-                userProfile.ProfileViews++;
-                await _context.SaveChangesAsync();
-            }
             bool isLoggedOut = !User.Identity.IsAuthenticated;
             bool isPrivate = userProfile.Visibility == false;
 
@@ -180,6 +187,7 @@ namespace MyApp.Controllers
             {
                 return RedirectToAction("Login");
             }
+
             return View("MyPage", userProfile);
         }
 
