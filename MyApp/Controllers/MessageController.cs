@@ -63,10 +63,9 @@ namespace MyApp.Controllers
                 _context.Messages.Add(message);
                 await _context.SaveChangesAsync();
                 //"Meddelandet har skickats" läggs till i lådan "Sent"
-                TempData["Sent"] = "Meddelandet har skickats";
-
+                TempData["SuccessMessage"] = "Meddelandet har skickats.";
             }
-            return RedirectToAction("Profile", "User", new { id = message.ReceiverId}, "message-section");
+            return RedirectToAction("Profile", "User", new { id = message.ReceiverId});
         }
 
         [Authorize]

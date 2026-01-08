@@ -92,14 +92,17 @@
             </div>
         </div>
     </div>
+
     @*   En div som innehåller knappen "Hitta liknande användare" och diven som som visar matchande användare *@
-    <div class="d-flex justify-content-center mt-5">
+    <div class="text-center mt-5">
         <button id="btnFindSimilarUsers" class="btn btn-secondary px-5 py-3" onclick="loadSimilarUsers()">
             <i class="bi-people-fill"></i> Hitta liknande användare
         </button>
-        @* En div där liknande användare kommer synas *@
+
+        @* Diven där liknande användare kommer synas *@
         <div id="similarUsers"></div>
     </div>
+
     <h3 class="text-center mt-5 mb-4">Projekt</h3>
     <div class="row">
         @if (Model.ParticipatingProjects != null && Model.ParticipatingProjects.Any())
@@ -133,25 +136,30 @@
     @if (!isOwner)
     {
         <div class="row mt-5 justify-content-center">
-            <div id="message-section" class="col-md-8">
+            <div class="col-md-8">
                 <h3 class="text-center mb-4">Skicka meddelande</h3>
-                @if (TempData["Sent"] != null)
+                @if (TempData["SuccessMessage"] != null)
                 {
-                    <div class="row mb-3 mt-3">
-                        <div class="col-12">
-                            <div class="alert alert-success alert-dismissible show text-center border-0 mx-auto sucess-message" role="alert">
-                                @TempData["Sent"]
-                                <button type="button" class="btn-close close-button" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
+                        <div id="liveToast" class="toast align-items-center text-white bg-success border-0 @(TempData["SuccessMessage"] != null ? "show" : "hide")" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
                         </div>
                     </div>
                 }
+
                 <form asp-controller="Message" asp-action="Send" method="post">
                     <input type="hidden" name="ReceiverId" value="@Model.Id" />
+
                     @if (User.Identity.IsAuthenticated)
                     {
                         <input type="hidden" name="SenderId" value="@((ViewBag.LoggedInUser as User)?.Id)" />
                     }
+
                     <div class="mb-3">
                         <label>Från</label>
                         <input type="text" name="SenderName" class="form-control border-0 ourBackgroundColor"
@@ -160,6 +168,7 @@
                                                       data-val="true" data-val-required="Namn krävs" />
                         <span class="text-danger" data-valmsg-for="SenderName" data-valmsg-replace="true"></span>
                     </div>
+
                     <div class="mb-3">
                         <label>Meddelande</label>
                         <textarea name="Text" class="form-control border-0 ourBackgroundColor" rows="5" 
@@ -167,6 +176,7 @@
                         data-val="true" data-val-required="Meddelande får inte vara tomt"></textarea>
                         <span class="text-danger" data-valmsg-for="Text" data-valmsg-replace="true"></span>
                     </div>
+
                     <div class="text-end">
                         <button type="submit" class="btn btn-secondary">Skicka</button>
                     </div>
@@ -183,6 +193,7 @@
         </form>
     </div>
 </div>
+
 @section Scripts {
     @*Gör att skicka-meddelanden formulärets felmeddelanden visas direkt 
     utan att sidan laddas om, om användaren inte fyllt i det som måste vara ifyllt *@

@@ -63,7 +63,7 @@ namespace MyApp.Controllers
 
             //Rensa formuläret och ladda om sidan
             ModelState.Clear();
-            ViewBag.SuccessMessage = "Projektet har lagts till!";
+            TempData["SuccessMessage"] = "Projektet har skapats.";
             return View(new Project());
         }
 
