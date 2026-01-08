@@ -22,6 +22,9 @@ namespace MyApp.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            //Vi använder Entity Framework för att hämta projekt från databasen.
+            //1. .Include(p => p.Creator) hämtar information om den som skapade projektet.
+            // 2. .Include(p => p.Participants).ThenInclude(pu => pu.User) hämtar listan på deltagare
             var projects = _context.Projects
                 .Where(p => p.CreatorId != null) // Ändrat till null-koll om det är en sträng
                 .Include(p => p.Creator)
@@ -70,10 +73,12 @@ namespace MyApp.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
+            // Find(di) hjälper att hitta primärnyckel  
             var project = _context.Projects.Find(id);
+            //Felhantring - om id inte hittas eller om man skriver fel i Url så returnerar den NotFound  
             if (project == null) return NotFound();
 
-            ViewBag.Creators = new SelectList(_context.Users, "Id", "Name", project.CreatorId);
+           // ViewBag.Creators = new SelectList(_context.Users, "Id", "Name", project.CreatorId);
             return View(project);
         }
 
