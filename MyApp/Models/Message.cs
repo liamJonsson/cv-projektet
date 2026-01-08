@@ -17,7 +17,6 @@ namespace MyApp.Models
         public bool Read { get; set; } = false;
 
         [Required(ErrorMessage = "Vänligen fyll i ditt namn när du ej är inloggad.")]
-        [StringLength(100)]
         public string SenderName { get; set; } = string.Empty;
 
         // Foreign keys
