@@ -230,7 +230,7 @@ namespace MyApp.Controllers
 
         // Sparar och tar emot ändringarna
         [HttpPost]
-        public async Task<IActionResult> EditProfile(EditProfileViewModel model, string? submitButton)
+        public async Task<IActionResult> EditProfile(EditProfileViewModel model)
         {
             if (string.IsNullOrEmpty(model.CurrentPassword) && string.IsNullOrEmpty(model.NewPassword))
             {
@@ -238,43 +238,40 @@ namespace MyApp.Controllers
                 ModelState.Remove("NewPassword");
                 ModelState.Remove("ConfirmPassword");
             }
-
             var userId = _userManager.GetUserId(User);
             var userToUpdate = await _context.Users
                 .Include(u => u.Address)
+                .Include(u => u.ParticipatingProjects)
+                .ThenInclude(pu => pu.Project)
                 .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
-
             if (userToUpdate != null)
             {
                 var existingUserWithEmail = await _userManager.FindByEmailAsync(model.Email);
                 if (existingUserWithEmail != null && existingUserWithEmail.Id != userToUpdate.Id)
                 {
-                    ModelState.AddModelError("Email", "Denna e-postadress används redan.");
+                    ModelState.AddModelError("Email", "Denna e-postadress används redan av ett annat konto.");
                 }
-
                 var existingUserWithName = await _userManager.FindByNameAsync(model.UserName);
                 if (existingUserWithName != null && existingUserWithName.Id != userToUpdate.Id)
                 {
-                    ModelState.AddModelError("UserName", "Användarnamnet är upptaget.");
+                    ModelState.AddModelError("UserName", "Användarnamnet är tyvärr upptaget.");
                 }
-
                 if (!string.IsNullOrEmpty(model.PhoneNumber))
                 {
                     var existingUserWithPhone = await _context.Users
                         .FirstOrDefaultAsync(u => u.PhoneNumber == model.PhoneNumber && u.Id != userToUpdate.Id);
-                    if (existingUserWithPhone != null)
-                        ModelState.AddModelError("PhoneNumber", "Telefonnumret används redan.");
-                }
 
+                    if (existingUserWithPhone != null)
+                    {
+                        ModelState.AddModelError("PhoneNumber", "Detta telefonnummer är redan registrerat.");
+                    }
+                }
                 if (!ModelState.IsValid)
                 {
+                    // Återställ data så vyn ser snygg ut även vid fel
                     model.CurrentProfileImage = userToUpdate.ProfileImage;
                     model.CurrentCvImage = userToUpdate.CvImage;
-                    model.ParticipatingProjects = await _context.ProjectUsers
-                        .Include(pu => pu.Project)
-                        .Where(pu => pu.UserId == userToUpdate.Id)
-                        .ToListAsync();
-
+                    model.ParticipatingProjects = userToUpdate.ParticipatingProjects; // (NYTT: Behåll listan vid fel)
                     return View(model);
                 }
                 userToUpdate.Name = model.Name;
@@ -307,20 +304,24 @@ namespace MyApp.Controllers
                 }
                 else if (model.RemoveCvImage)
                 {
-                    userToUpdate.CvImage = "default.jpg";
+                    userToUpdate.CvImage = "default.jpg"; // (Ändrade från null till default.jpg för att vara konsekvent)
                 }
-                // Lösenordsbyte
                 if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.NewPassword))
                 {
                     var changePasswordResult = await _userManager.ChangePasswordAsync(userToUpdate, model.CurrentPassword, model.NewPassword);
                     if (!changePasswordResult.Succeeded)
                     {
                         foreach (var error in changePasswordResult.Errors)
+                        {
                             ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        // Återställ projektlista vid lösenordsfel också
+                        model.ParticipatingProjects = userToUpdate.ParticipatingProjects;
                         return View(model);
                     }
                 }
                 await _context.SaveChangesAsync();
+                // (NYTT: Success Message)
                 TempData["SuccessMessage"] = "Din profil har uppdaterats!";
                 return RedirectToAction("MyPage");
             }
