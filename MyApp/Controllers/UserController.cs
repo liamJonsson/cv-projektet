@@ -232,6 +232,7 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProfile(EditProfileViewModel model)
         {
+            ModelState.Remove("ParticipatinngProjects");
             if (string.IsNullOrEmpty(model.CurrentPassword) && string.IsNullOrEmpty(model.NewPassword))
             {
                 ModelState.Remove("CurrentPassword");
@@ -268,10 +269,9 @@ namespace MyApp.Controllers
                 }
                 if (!ModelState.IsValid)
                 {
-                    // Återställ data så vyn ser snygg ut även vid fel
                     model.CurrentProfileImage = userToUpdate.ProfileImage;
                     model.CurrentCvImage = userToUpdate.CvImage;
-                    model.ParticipatingProjects = userToUpdate.ParticipatingProjects; // (NYTT: Behåll listan vid fel)
+                    model.ParticipatingProjects = userToUpdate.ParticipatingProjects;
                     return View(model);
                 }
                 userToUpdate.Name = model.Name;
@@ -304,7 +304,7 @@ namespace MyApp.Controllers
                 }
                 else if (model.RemoveCvImage)
                 {
-                    userToUpdate.CvImage = "default.jpg"; // (Ändrade från null till default.jpg för att vara konsekvent)
+                    userToUpdate.CvImage = "default.jpg";
                 }
                 if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.NewPassword))
                 {
@@ -321,7 +321,6 @@ namespace MyApp.Controllers
                     }
                 }
                 await _context.SaveChangesAsync();
-                // (NYTT: Success Message)
                 TempData["SuccessMessage"] = "Din profil har uppdaterats!";
                 return RedirectToAction("MyPage");
             }
