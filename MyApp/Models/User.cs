@@ -7,6 +7,8 @@ namespace MyApp.Models
     {
         //Name
         [Required(ErrorMessage = "Vänligen ange ett namn.")]
+        [StringLength(100)]
+
         public string Name { get; set; }
         //Profile image
         [DataType(DataType.ImageUrl)]
