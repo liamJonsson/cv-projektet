@@ -232,6 +232,13 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProfile(EditProfileViewModel model, string? submitButton)
         {
+            if (string.IsNullOrEmpty(model.CurrentPassword) && string.IsNullOrEmpty(model.NewPassword))
+            {
+                ModelState.Remove("CurrentPassword");
+                ModelState.Remove("NewPassword");
+                ModelState.Remove("ConfirmPassword");
+            }
+
             var userId = _userManager.GetUserId(User);
 
             var userToUpdate = await _context.Users
@@ -475,22 +482,6 @@ namespace MyApp.Controllers
                 var content = stream.ToArray();
                 return File(content, "application/xml", $"Profil_{user.UserName}.xml");
             }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> LeaveProject(int projectId)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            var projectUser = await _context.ProjectUsers
-                .FirstOrDefaultAsync(pu => pu.ProjectId == projectId && pu.UserId == user.Id);
-
-            if (projectUser != null)
-            {
-                _context.ProjectUsers.Remove(projectUser);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Du har lämnat projektet.";
-            }
-            return RedirectToAction("EditProfile");
         }
     }
 
