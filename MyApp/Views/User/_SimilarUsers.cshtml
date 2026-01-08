@@ -14,8 +14,7 @@
 					<div class="d-flex justify-content-between rounded p-3 mt-4" style="background-color: #dcdcdc">
 						<h6 class="text-nowrap m-auto">@user.Name,&nbsp;&nbsp;@user.Address.City </h6>
 
-						<div style="width: 90%; text-align: right;">
-							@* Ta bort style här *@
+						<div class="homepageWidth text-end">
 							<a asp-controller="User"
 								asp-action="Profile"
 								asp-route-id="@user.Id"

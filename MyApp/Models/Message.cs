@@ -20,10 +20,10 @@ namespace MyApp.Models
 
             //Foreign keys
             public int? SenderId { get; set; }
-            public virtual User Sender { get; set; }
+            public virtual User? Sender { get; set; }
 
             [Required]
             public int ReceiverId { get; set; }
-            public virtual User Receiver { get; set; }
+            public virtual User? Receiver { get; set; }
         }
     }
