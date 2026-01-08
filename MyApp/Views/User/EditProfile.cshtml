@@ -22,17 +22,15 @@
     <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="CurrentProfileImage" />
         <input type="hidden" asp-for="CurrentCvImage" />
+
         <div class="row mb-5">
             <div class="col-12 d-flex flex-column align-items-center mb-4">
                 <div class="position-relative editProfilePictureBox">
                     <img id="profileImagePreview" src="~/images/@currentProfilePic" class="rounded-circle shadow-sm profilePictures" alt="Profilbild">
-
                     <label for="profileImageInput" class="btn btn-secondary btn-sm rounded-circle position-absolute bottom-0 end-0 shadow d-flex align-items-center justify-content-center editProfilePictureLabel">
                         <i class="bi bi-plus-lg text-white"></i>
                     </label>
-
-                    <input asp-for="NewProfileImageFile" id="profileImageInput" class="d-none" accept="image/*"
-                           onchange="previewImage(this, 'profileImagePreview')" />
+                    <input asp-for="NewProfileImageFile" id="profileImageInput" class="d-none" accept="image/*" onchange="previewImage(this, 'profileImagePreview')" />
                 </div>
                 @if (Model.CurrentProfileImage != "default.jpg" && !string.IsNullOrEmpty(Model.CurrentProfileImage))
                 {
@@ -50,7 +48,7 @@
                     <label class="col-sm-4 fw-bold">Namn</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input asp-for="Name" class="form-control border-0 inputGroupStyle"/>
+                            <input asp-for="Name" class="form-control border-0 inputGroupStyle" />
                             <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
                         <span asp-validation-for="Name" class="text-danger small"></span>
@@ -134,25 +132,23 @@
                         <select asp-for="Visibility" class="form-select border-0 inputGroupStyle">
                             <option value="true">Offentlig</option>
                             <option value="false">Privat</option>
-                        </select>  
+                        </select>
                     </div>
                 </div>
                 <div class="col-sm-8 offset-sm-4 position-relative">
-                    <button type="button" class="btn btn-link text-danger text-decoration-underline p-0 small"
-                            onclick="toggleDeactivateBox()">
+                    <button type="button" class="btn btn-link text-danger text-decoration-underline p-0 small" onclick="toggleDeactivateBox()">
                         Avaktivera konto
                     </button>
                     <div id="deactivate-box" class="join-confirm-box shadow" style="display:none; position: absolute; bottom: 100%; left: 0; z-index: 1000; width: 250px; background: white; padding: 15px; border-radius: 5px; border: 1px solid #ddd;">
                         <p class="mb-2 fw-bold text-dark">Är du säker?</p>
                         <p class="small text-muted mb-3" style="line-height: 1.2;">Din profil döljs och du loggas ut.</p>
                         <div class="confirm-actions d-flex gap-2 justify-content-start">
-                            <form asp-action="DeactivateAccount" method="post">
-                                <button type="submit" class="btn btn-danger btn-sm">Ja</button>
+                            <button type="submit" asp-action="DeactivateAccount" class="btn btn-danger btn-sm">Ja</button>
                             <button type="button" class="btn btn-secondary btn-sm" onclick="toggleDeactivateBox()">Nej</button>
                         </div>
                     </div>
                 </div>
-                <button type="submit" name="submitButton" value="SaveProfile" class="btn btn-secondary px-4 py-2">Spara uppgifter</button>
+                <button type="submit" class="btn btn-secondary px-4 py-2 mt-3">Spara uppgifter</button>
             </div>
             <div class="col-md-6">
                 <div class="row mb-3 align-items-center">
@@ -189,6 +185,7 @@
                     <textarea asp-for="Experience" class="form-control bg-transparent border-0" rows="10" placeholder="Skriv din erfarenhet..."></textarea>
                 </div>
             </div>
+
             <div class="mt-4 d-flex flex-column align-items-start">
                 <div class="position-relative rounded-circle overflow-visible shadow-sm ourBackgroundColor cvPicture">
                     @{
@@ -200,8 +197,7 @@
                         <i class="bi bi-plus-lg text-white"></i>
                     </label>
 
-                    <input asp-for="NewCvImageFile" id="cvImageInput" class="d-none" accept="image/*"
-                           onchange="previewImage(this, 'cvImagePreview')" />
+                    <input asp-for="NewCvImageFile" id="cvImageInput" class="d-none" accept="image/*" onchange="previewImage(this, 'cvImagePreview')" />
                 </div>
                 @if (!string.IsNullOrEmpty(Model.CurrentCvImage) && Model.CurrentCvImage != "default.jpg")
                 {
@@ -213,11 +209,12 @@
                 }
             </div>
             <div class="text-end mt-3">
-                <button type="submit" name="submitButton" value="SaveCv" class="btn btn-secondary btn-sm">Spara uppgifter</button>
+                <button type="submit" class="btn btn-secondary btn-sm">Spara uppgifter</button>
             </div>
         </div>
-        </form>
-        <hr class="my-5" />
+
+    </form>
+    <hr class="my-5" />
         <h3 class="text-center mt-5 mb-4">Mina Projekt</h3>
         <div class="row">
             @if (Model.ParticipatingProjects != null && Model.ParticipatingProjects.Any())
