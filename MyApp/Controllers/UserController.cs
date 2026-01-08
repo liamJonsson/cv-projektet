@@ -230,7 +230,7 @@ namespace MyApp.Controllers
 
         // Sparar och tar emot ändringarna
         [HttpPost]
-        public async Task<IActionResult> EditProfile(EditProfileViewModel model, string submitButton)
+        public async Task<IActionResult> EditProfile(EditProfileViewModel model, string? submitButton)
         {
             var userId = _userManager.GetUserId(User);
 
