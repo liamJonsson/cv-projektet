@@ -19,7 +19,6 @@
 }
 <div class="container mt-5">
     <h2 class="text-center mb-5">Mina uppgifter</h2>
-    <div asp-validation-summary="All" class="alert alert-danger"></div>
     <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="CurrentProfileImage" />
         <input type="hidden" asp-for="CurrentCvImage" />

@@ -72,18 +72,19 @@
                 }
             </ul>
 
-            <div class="project-card-footer">
-                <span>
-                    Skapad av:
-                    @if (project.Creator != null && project.Creator.Visibility)
-                    {
-                        @project.Creator.Name
-                    }
-                    else
-                    {
-                        <span class="text-muted"><i>Privat användare</i></span>
-                    }
-                </span>
+            <p>
+                <strong>Skapad av:</strong>
+                @if (isLoggedIn || (project.Creator != null && project.Creator.Visibility))
+                {
+                    @* Visa namnet om man är inloggad ELLER om skaparen är offentlig *@
+                    @project.Creator?.Name
+                }
+                else
+                {
+                    @* Visa detta endast om man är utloggad OCH skaparen är privat *@
+                    <span class="text-muted"><i>Privat användare</i></span>
+                }
+            </p>
 
                 @if (isLoggedIn)
                 {
@@ -120,7 +121,7 @@
                     <button type="button" class="btn-cancel" onclick="hideLeaveBox('@project.ProjectId')">Avbryt</button>
                 </div>
             </div>
-        </div> @* Stänger project-card *@
+        
     }
 </div> @* Stänger projects-grid *@
 
