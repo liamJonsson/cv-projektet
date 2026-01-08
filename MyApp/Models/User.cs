@@ -6,7 +6,9 @@ namespace MyApp.Models
     public class User : IdentityUser<int>
     {
         //Name
-        [Required(ErrorMessage = "Vänligen ange ett namn.")]
+        [Required(ErrorMessage = "Vänligen ange ett namn.")
+        [StringLength(100)]
+
         public string Name { get; set; }
         //Profile image
         [DataType(DataType.ImageUrl)]
