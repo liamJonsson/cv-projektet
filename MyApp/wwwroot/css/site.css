@@ -60,21 +60,21 @@ body {
 
 .edit-project-btn {
     font-size: 12px;
-    color: #555;
+    color: #000;
     text-decoration: none;
     padding: 4px 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: #fff;
+    background-color: #f5f5f5;
     flex-shrink: 0;
     margin-left: 10px;
+    border: double;
 }
 
     .edit-project-btn:hover {
-        background-color: #f0f0f0;
-        color: #000;
+        background-color: #000;
+        color: #f5f5f5;
     }
-
 /* PLUS-KNAPPEN  */
 .project-join-btn {
     position: absolute;
@@ -85,13 +85,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #d3d3d3;
-    border: none;
+    background-color: #d4edda;
+    color: #155724;
     border-radius: 4px 0 0 0;
     font-size: 24px;
     line-height: 1;
     padding: 0;
     cursor: pointer;
+    border: none;
 }
 
     .project-join-btn:hover {
