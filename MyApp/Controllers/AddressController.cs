@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyApp.Data;
 using MyApp.Models;
 
 namespace MyApp.Controllers

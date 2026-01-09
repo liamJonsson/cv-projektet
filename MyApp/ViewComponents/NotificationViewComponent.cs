@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyApp.Models;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using MyApp.Data;
 
 namespace MyApp.ViewComponents
 {

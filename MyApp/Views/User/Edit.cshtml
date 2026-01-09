@@ -159,6 +159,7 @@
                             <input asp-for="ZipCode" class="form-control border-0 inputGroupStyle" />
                             <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
+                        <span asp-validation-for="ZipCode" class="text-danger"></span>
                     </div>
                     <label class="col-sm-2 text-end fw-bold">Ort</label>
                     <div class="col-sm-4">
@@ -166,6 +167,7 @@
                             <input asp-for="City" class="form-control border-0 inputGroupStyle" />
                             <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
+                        <span asp-validation-for="City" class="text-danger"></span>
                     </div>
                 </div>
             </div>

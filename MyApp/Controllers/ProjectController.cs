@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MyApp.Data;
 using MyApp.Models;
 using System.Security.Claims;
 
@@ -62,12 +63,10 @@ namespace MyApp.Controllers
             _context.Projects.Add(project); //Lägger till projektet i Entity Framework
             await _context.SaveChangesAsync(); //Sparar till databasen, SQL insert 
 
-            ModelState.Clear();
 
             //Rensa formuläret och ladda om sidan
-            ModelState.Clear();
             TempData["SuccessMessage"] = "Projektet har skapats.";
-            return View(new Project());
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

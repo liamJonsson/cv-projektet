@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyApp.Models;
+using MyApp.Data;
 
 #nullable disable
 
-namespace MyApp.Migrations
+namespace MyApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260102100611_UpdateSeedDataMessage")]
-    partial class UpdateSeedDataMessage
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,11 +165,13 @@ namespace MyApp.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("HomeAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
@@ -218,7 +217,8 @@ namespace MyApp.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("MessageId");
 
@@ -280,17 +280,11 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipFile")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProjectId");
@@ -306,10 +300,8 @@ namespace MyApp.Migrations
                             CodeLanguage = "C#",
                             CreatorId = 1,
                             Description = "En enkel konsolapplikation.",
-                            EndDate = new DateTime(2025, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartDate = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Mitt Första C# Projekt",
-                            ZipFile = "console.zip"
+                            Title = "Mitt Första C# Projekt"
                         },
                         new
                         {
@@ -317,10 +309,8 @@ namespace MyApp.Migrations
                             CodeLanguage = "JavaScript",
                             CreatorId = 2,
                             Description = "En snygg frontend-app.",
-                            EndDate = new DateTime(2025, 12, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartDate = new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "React Frontend",
-                            ZipFile = "react.zip"
+                            Title = "React Frontend"
                         });
                 });
 
@@ -405,7 +395,8 @@ namespace MyApp.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -426,6 +417,9 @@ namespace MyApp.Migrations
 
                     b.Property<string>("ProfileImage")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProfileViews")
+                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -472,10 +466,11 @@ namespace MyApp.Migrations
                             Name = "Lisa Skarf",
                             NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
                             NormalizedUserName = "LISASKARF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHUhRQOfEi/0hTfMuG+BW4ooAQShd1J2N3/0PFUOWxZIKhrFNJOTA41RWBPvZ2Ukag==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIpSxyP/6fZ291fhEaPXcsGm4m40l761SKxLeBziNO6VEbp7dwlXLEt4qFRAlw2ViQ==",
                             PhoneNumber = "0720204584",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
+                            ProfileViews = 0,
                             SecurityStamp = "11111111-1111-1111-1111-111111111111",
                             TwoFactorEnabled = false,
                             UserName = "lisaskarf",
@@ -495,10 +490,11 @@ namespace MyApp.Migrations
                             Name = "Liam Jonsson",
                             NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
                             NormalizedUserName = "LIAMJONSSON",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMN0S17/BkBUBALTo4IvhNTAIX8BldRDHscmFxtzruMFIV+TTNc55W1f5cQ2XjY0xg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEHfZLRjsCJ3ZuZGh6PAtIAdOKdLhUiFhlZmdVNsU233Pk6DXqKtzdT6Nzrt+gvI7w==",
                             PhoneNumber = "0737528105",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
+                            ProfileViews = 0,
                             SecurityStamp = "33333333-3333-3333-3333-333333333333",
                             TwoFactorEnabled = false,
                             UserName = "liamjonsson",
