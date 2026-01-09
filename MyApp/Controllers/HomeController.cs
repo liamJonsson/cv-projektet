@@ -38,10 +38,18 @@ namespace MyApp.Controllers
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                //Här byggs frågan på med ett where villkor
-                users = users.Where(u => u.Name.Contains(query));
+                // Dela upp söksträngen där mellanslag förekommer, tar bort tomma ord, alltså mellanslag"
+                var terms = query
+                    .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var term in terms)
+                {
+                    users = users.Where(u =>
+                        u.Name.Contains(term) ||
+                        (u.Skills != null && u.Skills.Contains(term))
+                    );
+                }
             }
-            //Och här körs faktiskt databasen, inte innan alls
             return View("Index", users.ToList());
         }
 
