@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyApp.Models;
+using MyApp.Data;
 
 #nullable disable
 
-namespace MyApp.Migrations
+namespace MyApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260102103654_AddProfileViews")]
-    partial class AddProfileViews
+    [Migration("20260109161427_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -168,11 +168,13 @@ namespace MyApp.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("HomeAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
@@ -218,7 +220,8 @@ namespace MyApp.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("MessageId");
 
@@ -280,17 +283,11 @@ namespace MyApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipFile")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProjectId");
@@ -306,10 +303,8 @@ namespace MyApp.Migrations
                             CodeLanguage = "C#",
                             CreatorId = 1,
                             Description = "En enkel konsolapplikation.",
-                            EndDate = new DateTime(2025, 12, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartDate = new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Mitt Första C# Projekt",
-                            ZipFile = "console.zip"
+                            Title = "Mitt Första C# Projekt"
                         },
                         new
                         {
@@ -317,10 +312,8 @@ namespace MyApp.Migrations
                             CodeLanguage = "JavaScript",
                             CreatorId = 2,
                             Description = "En snygg frontend-app.",
-                            EndDate = new DateTime(2025, 12, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StartDate = new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "React Frontend",
-                            ZipFile = "react.zip"
+                            Title = "React Frontend"
                         });
                 });
 
@@ -405,7 +398,8 @@ namespace MyApp.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -475,7 +469,7 @@ namespace MyApp.Migrations
                             Name = "Lisa Skarf",
                             NormalizedEmail = "LISA.SKARF@EXAMPLE.COM",
                             NormalizedUserName = "LISASKARF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM8FYG55np8cDoTCPfnLlSPleegc+Mr2mk37wBT8tZZtFEdHgxDUlxryM2Y4vlGPiA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIpSxyP/6fZ291fhEaPXcsGm4m40l761SKxLeBziNO6VEbp7dwlXLEt4qFRAlw2ViQ==",
                             PhoneNumber = "0720204584",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",
@@ -499,7 +493,7 @@ namespace MyApp.Migrations
                             Name = "Liam Jonsson",
                             NormalizedEmail = "LIAM.JONSSON@EXAMPLE.COM",
                             NormalizedUserName = "LIAMJONSSON",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM2TBTSHr9B7sXLGgqB42FjJ/r80y+JNjlG3N+JTZTJxhw+XViJLLDRN8ez+HZbRfw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEHfZLRjsCJ3ZuZGh6PAtIAdOKdLhUiFhlZmdVNsU233Pk6DXqKtzdT6Nzrt+gvI7w==",
                             PhoneNumber = "0737528105",
                             PhoneNumberConfirmed = false,
                             ProfileImage = "default.jpg",

@@ -24,7 +24,7 @@
 
 @if (isLoggedIn)
 {
-    <a asp-action="Add" class="btn btn-outline-secondary mb-3">
+    <a asp-action="Add" class="btn btn-secondary my-3">
         Skapa projekt +
     </a>
 }
@@ -37,16 +37,18 @@
         var isCreator = isLoggedIn && project.Creator?.Id.ToString() == currentUserId;
         var isParticipant = isLoggedIn && project.Participants.Any(p => p.UserId.ToString() == currentUserId);
 
-        <div class="project-card">
+        <div class="project-card ourBackgroundColor rounded">
             <div class="project-card-header">
                 <div>
-                    <span class="label">Titel:</span>
-                    <span class="project-title">@project.Title</span>
+                    <span class="label"><strong>Titel:</strong></span>
+                    <span>@project.Title</span>
                 </div>
 
                 @if (isCreator)
                 {
-                    <a asp-action="Edit" asp-route-id="@project.ProjectId" class="edit-project-btn">Redigera</a>
+                    <a asp-action="Edit" asp-route-id="@project.ProjectId" class="btn btn-light">
+                        <i class="bi bi-pencil"></i>
+                    </a>
                 }
             </div>
 

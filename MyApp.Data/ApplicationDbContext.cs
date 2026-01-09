@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using MyApp.Models;
 using System.Threading.Tasks;
 
-namespace MyApp.Models
+namespace MyApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {

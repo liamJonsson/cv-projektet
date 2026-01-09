@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyApp.Data;
 using MyApp.InputModels;
 using MyApp.Models;
 using System.IO;
@@ -33,10 +34,24 @@ namespace MyApp.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            var users = _userManager.Users.Include(u => u.Address).ToList();
-            return View(users);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var user = await _context.Users
+                .Include(u => u.Address)
+                .Include(u => u.ParticipatingProjects)
+                    .ThenInclude(pu => pu.Project)
+                .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
         }
 
         // Registrera
@@ -116,26 +131,6 @@ namespace MyApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> MyPage()
-        {
-            var userId = _userManager.GetUserId(User);
-            if (userId == null)
-            {
-                return RedirectToAction("Login");
-            }
-            var user = await _context.Users
-                .Include(u => u.Address)
-                .Include(u => u.ParticipatingProjects)
-                    .ThenInclude(pu => pu.Project)
-                .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
-        }
-
-        [HttpGet]
         public async Task<IActionResult> ViewProfile(int id)
         {
             var userProfile = await _context.Users.FindAsync(id);
@@ -188,11 +183,11 @@ namespace MyApp.Controllers
                 return RedirectToAction("Login");
             }
 
-            return View("MyPage", userProfile);
+            return View("Index", userProfile);
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditProfile()
+        public async Task<IActionResult> Edit()
         {
             var userId = _userManager.GetUserId(User);
             var user = await _context.Users
@@ -230,7 +225,7 @@ namespace MyApp.Controllers
 
         // Sparar och tar emot ändringarna
         [HttpPost]
-        public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+        public async Task<IActionResult> Edit(EditProfileViewModel model)
         {
             ModelState.Remove("ParticipatinngProjects");
             if (string.IsNullOrEmpty(model.CurrentPassword) && string.IsNullOrEmpty(model.NewPassword))
@@ -322,7 +317,7 @@ namespace MyApp.Controllers
                 }
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Din profil har uppdaterats!";
-                return RedirectToAction("MyPage");
+                return RedirectToAction("Index");
             }
             return View(model);
         }

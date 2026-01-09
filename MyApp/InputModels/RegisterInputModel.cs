@@ -9,8 +9,8 @@ namespace MyApp.InputModels
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Telefonnummer krävs.")]
-        [StringLength(12, ErrorMessage = "Max 12 tecken tillåtet.")]
-        [RegularExpression(@"^[0-9+]$", ErrorMessage = "Endast siffror tillåtet.")]
+        [StringLength(16, ErrorMessage = "Max 16 tecken tillåtet.")]
+        [RegularExpression(@"^[0-9+ ]*$", ErrorMessage = "Endast siffror tillåtet.")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Mailadress krävs.")]
@@ -22,8 +22,8 @@ namespace MyApp.InputModels
         public string HomeAddress { get; set; }
 
         [Required(ErrorMessage = "Postnummer krävs.")]
-        [StringLength(6, ErrorMessage = "Max 6 tecken tillåtet.")]
-        [RegularExpression(@"^[0-9 ]*$", ErrorMessage = "Endast siffror tillåtet.")]
+        [StringLength(5, ErrorMessage = "Max 5 tecken tillåtet.")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Endast siffror tillåtet.")]
         public string ZipCode { get; set; }
 
         [Required(ErrorMessage = "Ort krävs.")]
