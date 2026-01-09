@@ -19,7 +19,7 @@
 }
 <div class="container mt-5">
     <h2 class="text-center mb-5">Mina uppgifter</h2>
-    <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="CurrentProfileImage" />
         <input type="hidden" asp-for="CurrentCvImage" />
 
@@ -81,6 +81,7 @@
                             <input asp-for="HomeAddress" class="form-control border-0 inputGroupStyle" />
                             <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
                         </div>
+                        <span asp-validation-for="HomeAddress" class="text-danger small"></span>
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">
@@ -98,7 +99,7 @@
                 <div class="form-group mb-3">
                     <label asp-for="CurrentPassword" class="control-label">Nuvarande lösenord</label>
                     <div class="input-group">
-                        <input asp-for="CurrentPassword" class="form-control" type="password" id="currentPass" />
+                        <input asp-for="CurrentPassword" class="form-control ourBackgroundColor" type="password" id="currentPass" />
                         <button class="btn btn-outline-secondary ourBackgroundColor" type="button" onclick="togglePassword('currentPass', 'iconCurrent')">
                             <i class="bi bi-eye" id="iconCurrent"></i>
                         </button>
