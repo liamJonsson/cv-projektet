@@ -169,12 +169,6 @@ namespace MyApp.Controllers
                 return NotFound();
             }
 
-            if (User.Identity?.IsAuthenticated == true)
-            {
-                var currentUser = await _userManager.GetUserAsync(User);
-                ViewBag.LoggedInUser = currentUser;
-            }
-
             bool isLoggedOut = !User.Identity.IsAuthenticated;
             bool isPrivate = userProfile.Visibility == false;
 
@@ -345,10 +339,9 @@ namespace MyApp.Controllers
             //Hämtar användaren man har klickat sig in på
             var selectedUser = await _context.Users.Where(u => u.Id == id)
                 .Include(u => u.ParticipatingProjects)
-                .ThenInclude(p => p.Project)
+                .ThenInclude(pu => pu.Project)
                 .FirstOrDefaultAsync();
 
-            //Om användaren inte existerar kommer ett felmeddelande returneras
             if (selectedUser == null)
             {
                 return Content("Ett fel uppstod då profilen du besöker inte kunde hittas");
@@ -356,8 +349,8 @@ namespace MyApp.Controllers
 
             //Hämtar den valda användarens programmeringsspråk
             var selectedUserCodeLanguages = selectedUser.ParticipatingProjects
-                .Select(cl => cl.Project.CodeLanguage)
-                .Where(l => !string.IsNullOrEmpty(l))
+                .Select(pu => pu.Project.CodeLanguage)
+                .Where(codeLang => !string.IsNullOrEmpty(codeLang))
                 .Distinct()
                 .ToList();
 
@@ -368,22 +361,19 @@ namespace MyApp.Controllers
             }
 
             //Hämtar max 3 användare som har arbetat med samma programmeringsspråk som personen man har klickat sig in på har
-            //gjort. Användarna som har hämtats har inte avaktiverat sina konto samt hämtar enbart offentliga profiler om man själv ej är inloggad.
-
+            //gjort. Användarna som har hämtas har inte avaktiverat sina konto samt hämtar enbart offentliga profiler om man själv ej är inloggad
             var userMatches = await _context.Users
                 .Include(u => u.Address)
                 .Include(u => u.ParticipatingProjects)
-                .ThenInclude(p => p.Project)
-                .Where(u => u.Id != id && u.Deactivated == false)
-                .Where(u => u.ParticipatingProjects.Any(p => selectedUserCodeLanguages.Contains(p.Project.CodeLanguage)))
-                .Where(u => User.Identity.IsAuthenticated || u.Visibility == true)
+                .ThenInclude(pu => pu.Project)
+                .Where(u => u.Id != id && u.Deactivated == false && (User.Identity.IsAuthenticated || u.Visibility == true))
+                .Where(u => u.ParticipatingProjects.Any(pu => selectedUserCodeLanguages.Contains(pu.Project.CodeLanguage)))
                 .Take(3)
                 .ToListAsync();
 
-            //En partial view returneras med de liknande användarna istället för en hel vy så att sidan
-            //inte behöver laddas om
             return PartialView("_SimilarUsers", userMatches);
         }
+
 
         // Hjälpmetod för att spara bildfiler
         private async Task<string> UploadFile(IFormFile file)

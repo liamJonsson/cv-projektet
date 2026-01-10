@@ -1,0 +1,37 @@
+﻿@model MyApp.Models.Message
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+
+
+@* Om användaren är inloggad hämtas dennes namn och id och sätts i som meddelandets avsändare
+och avsändarid *@
+ @if (User.Identity.IsAuthenticated)
+{
+    var loggedInUser = await UserManager.GetUserAsync(User);
+    Model.SenderName = loggedInUser.Name;
+	Model.SenderId = loggedInUser.Id;
+}
+
+<form asp-controller="Message" asp-action="Send" method="post">
+    <input type="hidden" asp-for="ReceiverId" />
+    <input type="hidden" asp-for="SenderId" />
+
+    <div class="mb-3">
+        <label>Från</label>
+        <input asp-for="SenderName" class="form-control border-0 ourBackgroundColor"
+               placeholder="@(User.Identity.IsAuthenticated ? null : "Skriv ditt namn här...")"
+			   readonly="@(User.Identity.IsAuthenticated ? "readonly" : null)" />
+        <span asp-validation-for="SenderName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Meddelande</label>
+        <textarea asp-for="Text" class="form-control border-0 ourBackgroundColor" rows="5"
+                  placeholder="Skriv ditt meddelande här..."></textarea>
+        <span asp-validation-for= "Text" class="text-danger"></span>
+    </div>
+
+    <div class="text-end">
+        <button type="submit" class="btn btn-secondary">Skicka</button>
+    </div>
+</form>

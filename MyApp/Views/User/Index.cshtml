@@ -164,36 +164,9 @@
                         </div>
                     </div>
                 }
-
-                <form asp-controller="Message" asp-action="Send" method="post">
-                    <input type="hidden" name="ReceiverId" value="@Model.Id" />
-
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <input type="hidden" name="SenderId" value="@((ViewBag.LoggedInUser as User)?.Id)" />
-                    }
-
-                    <div class="mb-3">
-                        <label>Från</label>
-                        <input type="text" name="SenderName" class="form-control border-0 ourBackgroundColor"
-                               value="@(User.Identity.IsAuthenticated ? ((ViewBag.LoggedInUser as User)?.Name) : "")"
-                               @Html.Raw(User.Identity.IsAuthenticated ? "readonly=\"readonly\"" : "placeholder=\"Skriv ditt namn här...\"")
-                                                      data-val="true" data-val-required="Namn krävs" />
-                        <span class="text-danger" data-valmsg-for="SenderName" data-valmsg-replace="true"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Meddelande</label>
-                        <textarea name="Text" class="form-control border-0 ourBackgroundColor" rows="5" 
-                        placeholder="Skriv ditt meddelande här..."
-                        data-val="true" data-val-required="Meddelande får inte vara tomt"></textarea>
-                        <span class="text-danger" data-valmsg-for="Text" data-valmsg-replace="true"></span>
-                    </div>
-
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-secondary">Skicka</button>
-                    </div>
-                </form>
+                @* Då profilsidan hanterar user-data används en partial view för meddelandeformuläret
+				så att Data Annotations och validering fungerar som det ska *@
+                <partial name="_SendMessage" model='new Message { ReceiverId = Model.Id }' />
             </div>
         </div>
     }
