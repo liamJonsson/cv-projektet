@@ -18,7 +18,7 @@ namespace MyApp.Models
         public DateTime? StartDate { get; set; }
 
         [Required(ErrorMessage = "Vänligen fyll i ett programmeringsspråk.")]
-        [RegularExpression(@"^[a-zA-Z0-9\+#åäöÅÄÖéÉüÜ]*$", ErrorMessage = "Max 1 ord tillåtet.")]
+        [RegularExpression(@"^[a-zA-Z0-9\+#åäöÅÄÖéÉüÜ]*$", ErrorMessage = "Innehåller otillåtna tecken.")]
         public string CodeLanguage { get; set; } = string.Empty;
 
         //Foreign key
