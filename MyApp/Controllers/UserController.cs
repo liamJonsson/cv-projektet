@@ -8,8 +8,7 @@ using MyApp.InputModels;
 using MyApp.Models;
 using System.IO;
 using System.Xml.Serialization;
-using static System.Collections.Specialized.BitVector32;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 
 namespace MyApp.Controllers
@@ -87,7 +86,7 @@ namespace MyApp.Controllers
                     ProfileImage = "default.jpg",
                     Visibility = true,
                     Deactivated = false,
-                    Cv = "", // Databasen kräver ett värde
+                    Cv = "", // Databasen kräver ett värde -- kanske ta bort? 
                     EmailConfirmed = true
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -124,6 +123,7 @@ namespace MyApp.Controllers
         }
 
         // Logga ut
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
@@ -221,7 +221,6 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditProfileViewModel model)
         {
-            ModelState.Remove("ParticipatinngProjects");
             if (string.IsNullOrEmpty(model.CurrentPassword) && string.IsNullOrEmpty(model.NewPassword))
             {
                 ModelState.Remove("CurrentPassword");
@@ -254,6 +253,14 @@ namespace MyApp.Controllers
                     if (existingUserWithPhone != null)
                     {
                         ModelState.AddModelError("PhoneNumber", "Detta telefonnummer är redan registrerat.");
+                    }
+                }
+                if (!string.IsNullOrEmpty(model.CurrentPassword))
+                {
+                    var isPasswordCorrect = await _userManager.CheckPasswordAsync(userToUpdate, model.CurrentPassword);
+                    if (!isPasswordCorrect)
+                    {
+                        ModelState.AddModelError("CurrentPassword", "Felaktigt nuvarande lösenord.");
                     }
                 }
                 if (!ModelState.IsValid)
@@ -317,18 +324,26 @@ namespace MyApp.Controllers
         }
 
         // Avaktivera konto
-        [HttpGet]
+
+        [HttpPost]
         public async Task<IActionResult> DeactivateAccount()
         {
             var userId = _userManager.GetUserId(User);
+            if (userId == null) return RedirectToAction("Index", "Home");
+            
             var user = await _context.Users.FindAsync(int.Parse(userId));
-
             if (user != null)
             {
                 user.Deactivated = true;
                 user.Visibility = false;
+
                 await _context.SaveChangesAsync();
+
+                // Logga ut användaren
                 await _signInManager.SignOutAsync();
+
+                // Meddelande till startsidan
+                TempData["SuccessMessage"] = "Ditt konto har avaktiverats.";
             }
             return RedirectToAction("Index", "Home");
         }
@@ -466,7 +481,7 @@ namespace MyApp.Controllers
         public string Education { get; set; }
         public string Experience { get; set; }
 
-        public string Street { get; set; }
+        public string Homeadress { get; set; }
         public string ZipCode { get; set; }
         public string City { get; set; }
         public List<ProjectXmlDto> Projects { get; set; } = new List<ProjectXmlDto>();

@@ -137,17 +137,10 @@
                     </div>
                 </div>
                 <div class="col-sm-8 offset-sm-4 position-relative">
-                    <button type="button" class="btn btn-link text-danger text-decoration-underline p-0 small" onclick="toggleDeactivateBox()">
+                    <button type="button" class="btn btn-link text-danger text-decoration-underline p-0 small"
+                            data-bs-toggle="modal" data-bs-target="#deactivateModal">
                         Avaktivera konto
                     </button>
-                    <div id="deactivate-box" class="join-confirm-box shadow" style="display:none; position: absolute; bottom: 100%; left: 0; z-index: 1000; width: 250px; background: white; padding: 15px; border-radius: 5px; border: 1px solid #ddd;">
-                        <p class="mb-2 fw-bold text-dark">Är du säker?</p>
-                        <p class="small text-muted mb-3" style="line-height: 1.2;">Din profil döljs och du loggas ut.</p>
-                        <div class="confirm-actions d-flex gap-2 justify-content-start">
-                            <button type="submit" asp-action="DeactivateAccount" class="btn btn-danger btn-sm">Ja</button>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleDeactivateBox()">Nej</button>
-                        </div>
-                    </div>
                 </div>
                 <button type="submit" class="btn btn-secondary px-4 py-2 mt-3">Spara uppgifter</button>
             </div>
@@ -240,20 +233,32 @@
                 <div class="col-12 text-center text-muted fst-italic">Inga projekt kopplade ännu.</div>
             }
         </div>
+    <div class="modal fade" id="deactivateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Avaktivera konto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Är du säker på att du vill avaktivera ditt konto? Din profil kommer att döljas och du loggas ut.</p>
+                    <p class="small text-muted">Du kan aktivera det igen genom att logga in.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
+                    <form asp-action="DeactivateAccount" method="post">
+                        <button type="submit" class="btn btn-danger">Ja, avaktivera.</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
-        function toggleDeactivateBox() {
-            var box = document.getElementById('deactivate-box');
-            if (box.style.display === 'none') {
-                box.style.display = 'block';
-            } else {
-                box.style.display = 'none';
-            }
-        }
+    <script>       
         function togglePassword(fieldId, iconId) {
             var field = document.getElementById(fieldId);
             var icon = document.getElementById(iconId);
