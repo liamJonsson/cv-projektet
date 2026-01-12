@@ -33,10 +33,11 @@ namespace MyApp.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        // Min profil
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User); 
             if (userId == null)
             {
                 return RedirectToAction("Login");
@@ -63,6 +64,8 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterInputModel model)
         {
+            // Manuell validering för att se till så att E-post, Användarnamn och Telefonnummer är unika.
+            // Identity hanterar detta också, men vi gör det här för att ge tydligare felmeddelanden direkt.
             if (ModelState.IsValid)
             {
                 var existingUserWithEmail = await _userManager.FindByEmailAsync(model.Email);
@@ -92,7 +95,7 @@ namespace MyApp.Controllers
                 {
                     return View(model);
                 }
-
+                // Vi Skapar Adress först då User-tabellen har en Foreign Key till Address
                 var newAddress = new Address
                 {
                     HomeAddress = model.HomeAddress,
@@ -102,6 +105,8 @@ namespace MyApp.Controllers
 
                 _context.Addresses.Add(newAddress);
                 await _context.SaveChangesAsync(); // Adress får ett ID från databasen
+                
+                // Här mappar vi input-modellen till vår databas-modell (User) och kopplar adressen.
                 var user = new User
                 {
                     // Identity
@@ -115,14 +120,16 @@ namespace MyApp.Controllers
                     ProfileImage = "default.jpg",
                     Visibility = true,
                     Deactivated = false,
-                    Cv = "", // Databasen kräver ett värde -- kanske ta bort? 
+                    Cv = "",
                     EmailConfirmed = true
                 };
 
+                // Skapar användaren via Identity-systemet som hanterar lösenordshashningen
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
+                    // Logga in användaren direkt vid lyckad registrering
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -145,12 +152,14 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
+            // Försöker logga in användaren
             var result = await _signInManager.PasswordSignInAsync(username, password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(username);
-                
-                if (user != null && user.Deactivated) // Om användaren var avaktiverad, återaktivera kontot
+
+                // Om användaren var avaktiverad, återaktivera kontot
+                if (user != null && user.Deactivated)
                 {
                     user.Deactivated = false;
 
@@ -171,6 +180,7 @@ namespace MyApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // Profilvisning
         [HttpGet]
         public async Task<IActionResult> ViewProfile(int id)
         {
@@ -195,7 +205,7 @@ namespace MyApp.Controllers
         }
 
         // Visa andras profiler
-        [AllowAnonymous]
+        [AllowAnonymous] // Tillåter åtkomst även för icke-inloggade (om profilen är publik)
         [HttpGet("User/Profile/{id}")]
         public async Task<IActionResult> Profile(int id)
         {
@@ -205,11 +215,12 @@ namespace MyApp.Controllers
                     .ThenInclude(pu => pu.Project)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
+            //Om kontot är avaktiverat ska det inte gå att nå via direktlänk
             if (userProfile == null)
             {
                 return NotFound();
             }
-
+            // Om profilen är Privat krävs inloggning
             bool isLoggedOut = !User.Identity.IsAuthenticated;
             bool isPrivate = userProfile.Visibility == false;
 
@@ -232,6 +243,8 @@ namespace MyApp.Controllers
                 .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
 
             if (user == null) return NotFound();
+
+            // Mapper databasmodellen till vår ViewModel för redigering
             var model = new EditProfileViewModel
             {
                 Name = user.Name,
@@ -262,6 +275,7 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditProfileViewModel model)
         {
+            // Om lösenordsfälten är tomma, anta att användaren inte vill byta lösenord.
             if (string.IsNullOrEmpty(model.CurrentPassword) && string.IsNullOrEmpty(model.NewPassword))
             {
                 ModelState.Remove("CurrentPassword");
@@ -274,6 +288,8 @@ namespace MyApp.Controllers
                 .Include(u => u.ParticipatingProjects)
                 .ThenInclude(pu => pu.Project)
                 .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            
+            // Samma säkerhetskontroll som i Register-metoden
             if (userToUpdate != null)
             {
                 var existingUserWithEmail = await _userManager.FindByEmailAsync(model.Email);
@@ -296,6 +312,7 @@ namespace MyApp.Controllers
                         ModelState.AddModelError("PhoneNumber", "Detta telefonnummer är redan registrerat.");
                     }
                 }
+                // Om användaren försöker byta lösenord, verifiera nuvarande lösenord
                 if (!string.IsNullOrEmpty(model.CurrentPassword))
                 {
                     var isPasswordCorrect = await _userManager.CheckPasswordAsync(userToUpdate, model.CurrentPassword);
@@ -306,11 +323,13 @@ namespace MyApp.Controllers
                 }
                 if (!ModelState.IsValid)
                 {
+                    // Återställ bildreferenserna vid fel så att vyn inte kraschar eller visar tomt.
                     model.CurrentProfileImage = userToUpdate.ProfileImage;
                     model.CurrentCvImage = userToUpdate.CvImage;
                     model.ParticipatingProjects = userToUpdate.ParticipatingProjects;
                     return View(model);
                 }
+                // Uppdatera användardata
                 userToUpdate.Name = model.Name;
                 userToUpdate.PhoneNumber = model.PhoneNumber;
                 userToUpdate.Email = model.Email;
@@ -320,11 +339,13 @@ namespace MyApp.Controllers
                 userToUpdate.Education = model.Education;
                 userToUpdate.Experience = model.Experience;
 
+                // Uppdatera Adress 
                 if (userToUpdate.Address == null) userToUpdate.Address = new Address();
                 userToUpdate.Address.HomeAddress = model.HomeAddress;
                 userToUpdate.Address.ZipCode = model.ZipCode;
                 userToUpdate.Address.City = model.City;
 
+                // Filuppladdning för Profilbild
                 if (model.NewProfileImageFile != null)
                 {
                     string newFileName = await UploadFile(model.NewProfileImageFile);
@@ -334,6 +355,7 @@ namespace MyApp.Controllers
                 {
                     userToUpdate.ProfileImage = "default.jpg";
                 }
+                // Filuppladdning för CV-bild
                 if (model.NewCvImageFile != null)
                 {
                     string newFileName = await UploadFile(model.NewCvImageFile);
@@ -343,6 +365,7 @@ namespace MyApp.Controllers
                 {
                     userToUpdate.CvImage = "default.jpg";
                 }
+                // Genomför lösenordsbyte via Identity
                 if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.NewPassword))
                 {
                     var changePasswordResult = await _userManager.ChangePasswordAsync(userToUpdate, model.CurrentPassword, model.NewPassword);
@@ -365,7 +388,6 @@ namespace MyApp.Controllers
         }
 
         // Avaktivera konto
-
         [HttpPost]
         public async Task<IActionResult> DeactivateAccount()
         {
@@ -376,7 +398,6 @@ namespace MyApp.Controllers
             if (user != null)
             {
                 user.Deactivated = true;
-                user.Visibility = false;
 
                 await _context.SaveChangesAsync();
 
@@ -415,8 +436,8 @@ namespace MyApp.Controllers
                 return PartialView("_SimilarUsers", new List<User>());
             }
 
-            //Hämtar max 3 användare som har arbetat med samma programmeringsspråk som personen man har klickat sig in på har
-            //gjort. Användarna som har hämtas har inte avaktiverat sina konto samt hämtar enbart offentliga profiler om man själv ej är inloggad
+            //Hämtar max 3 aktiva användare som har arbetat med samma programmeringsspråk som personen man har klickat sig in på har gjort
+            //Hämtar enbart offentliga profiler om man själv ej är inloggad
             var userMatches = await _context.Users
                 .Include(u => u.Address)
                 .Include(u => u.ParticipatingProjects)
@@ -438,6 +459,8 @@ namespace MyApp.Controllers
             if (file != null)
             {
                 string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+
+                // Använder GUID för att garantera att filnamnet är unikt och undvika överskrivning
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
@@ -461,11 +484,15 @@ namespace MyApp.Controllers
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null) return NotFound();
+
+            // Säkerhetskoll vid export
             bool isLoggedOut = !User.Identity.IsAuthenticated;
             if (user.Visibility == false && isLoggedOut)
             {
-                return Forbid(); // Eller NotFound()
+                return NotFound();
             }
+
+            // Mappa till DTO (Data Transfer Object) för att kontrollera exakt vilken data som exponeras i filen
             var exportData = new ProfileXmlDto
             {
                 Name = user.Name,
@@ -497,6 +524,7 @@ namespace MyApp.Controllers
             {
                 var settings = new System.Xml.XmlWriterSettings
                 {
+                    // Gör XML:en läsbar för människor
                     Indent = true,             
                     Encoding = System.Text.Encoding.UTF8
                 };
@@ -511,7 +539,7 @@ namespace MyApp.Controllers
         }
     }
 
-    // För XML-exporten
+    // DTO-klasser För XML-exporten
     public class ProfileXmlDto
     {
         public string Name { get; set; }
@@ -528,7 +556,6 @@ namespace MyApp.Controllers
         public string City { get; set; }
         public List<ProjectXmlDto> Projects { get; set; } = new List<ProjectXmlDto>();
     }
-
     public class ProjectXmlDto
     {
         public string Title { get; set; }
