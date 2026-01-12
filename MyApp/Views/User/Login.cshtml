@@ -9,7 +9,8 @@
 
         <form asp-action="Login" method="post">
 
-            @if (ViewBag.ErrorMessage != null)
+          @*Här visas alla felmeddelanden om det finns några *@  
+          @if (ViewBag.ErrorMessage != null)
             {
                 <div class="alert alert-danger text-center">
                     @ViewBag.ErrorMessage
@@ -47,6 +48,8 @@
         </form>
     </div>
 </div>
+
+@* Funktion för att visa/dölja lösenord *@
 <script>
     function toggleLoginPassword() {
         var passwordInput = document.getElementById("loginPassword");

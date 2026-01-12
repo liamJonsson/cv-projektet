@@ -97,9 +97,11 @@
     </form>
 </div>
 @section Scripts {
+    @* Laddar in script som hanterar validering av formulär *@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+        @* Funktion för att visa/dölja lösenord *@
         function togglePassword(inputId) {
             var input = document.getElementById(inputId);
             if (input.type === "password") {
