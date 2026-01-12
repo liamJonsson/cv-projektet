@@ -72,33 +72,32 @@ namespace MyApp.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            // Find(di) hjälper att hitta primärnyckel  
+            // Find(id) hjälper att hitta primärnyckel  
             var project = _context.Projects.Find(id);
             //Felhantring - om id inte hittas eller om man skriver fel i Url så returnerar den NotFound  
             if (project == null) return NotFound();
 
-           // ViewBag.Creators = new SelectList(_context.Users, "Id", "Name", project.CreatorId);
             return View(project);
         }
 
         [HttpPost]
         public IActionResult Edit(Project project)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) // kontrollerar om det finns valideringsfel 
             {
                 return View(project);
             }
 
-            var dbProject = _context.Projects.FirstOrDefault(p => p.ProjectId == project.ProjectId);
+            var dbProject = _context.Projects.FirstOrDefault(p => p.ProjectId == project.ProjectId);// hämtar projekt id  från databasen för att  ändra på rätt rad
 
-            if (dbProject != null)
+            if (dbProject != null) 
             {
                 dbProject.Title = project.Title;
                 dbProject.Description = project.Description;
                 dbProject.CodeLanguage = project.CodeLanguage;
-                dbProject.StartDate = project.StartDate; // Lägg till denna rad!
+                dbProject.StartDate = project.StartDate; 
 
-                _context.SaveChanges();
+                _context.SaveChanges(); // sparar ändringarna i databasen
                 TempData["SuccessMessage"] = "Projektet har uppdaterats!";
             }
 
@@ -127,7 +126,7 @@ namespace MyApp.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize] // endast inloggade användare får gå med
         public async Task<IActionResult> JoinProject(int id)
         {
             // 1. Hämta ID som en sträng från Identity
@@ -138,7 +137,7 @@ namespace MyApp.Controllers
                 return Challenge();
             }
 
-            // 2. Konvertera strängen till en int
+            // Konvertera strängen till en int
             // Vi använder int.Parse eftersom vi vet att ID:t ska finnas om man är inloggad
             int userIdInt = int.Parse(userIdString);
 
@@ -170,13 +169,13 @@ namespace MyApp.Controllers
         public async Task<IActionResult> LeaveProject(int id)
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userIdString)) return Challenge();
+            if (string.IsNullOrEmpty(userIdString)) return Challenge(); // Om ID inte hittas, tvingas användaren logga in igen
 
             int userIdInt = int.Parse(userIdString);
 
             // Hitta kopplingen i databasen
             var projectUser = await _context.ProjectUsers
-                .FirstOrDefaultAsync(pu => pu.ProjectId == id && pu.UserId == userIdInt);
+                .FirstOrDefaultAsync(pu => pu.ProjectId == id && pu.UserId == userIdInt); // hittar rad där projektid och användarid matchar
 
             if (projectUser != null)
             {

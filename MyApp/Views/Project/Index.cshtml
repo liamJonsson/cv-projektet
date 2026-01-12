@@ -23,6 +23,7 @@
 }
 
 @if (isLoggedIn)
+@*om användaren är inloggad ska man kunna skapa projekt*@
 {
     <a asp-action="Add" class="btn btn-secondary my-3">
         Skapa projekt +
@@ -32,6 +33,8 @@
 
 
 <div class="projects-grid">
+
+    @*Loopar igenom alla projekt i listan från controllern*@
     @foreach (var project in Model)
     {
         var isCreator = isLoggedIn && project.Creator?.Id.ToString() == currentUserId;
