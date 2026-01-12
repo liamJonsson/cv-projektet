@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Redigera Profil";
+     // Om bildnamnet är tomt (null), använd "default.jpg". Annars använd det sparade namnet
     var currentProfilePic = string.IsNullOrEmpty(Model.CurrentProfileImage) ? "default.jpg" : Model.CurrentProfileImage;
 }
 @if (TempData["SuccessMessage"] != null)
@@ -17,6 +18,7 @@
         </div>
     </div>
 }
+
 <div class="container mt-5">
     <h2 class="text-center mb-5">Mina uppgifter</h2>
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
@@ -32,6 +34,7 @@
                     </label>
                     <input asp-for="NewProfileImageFile" id="profileImageInput" class="d-none" accept="image/*" onchange="previewImage(this, 'profileImagePreview')" />
                 </div>
+                @*  Kontroll för bild *@
                 @if (Model.CurrentProfileImage != "default.jpg" && !string.IsNullOrEmpty(Model.CurrentProfileImage))
                 {
                     <div class="mt-2">
@@ -42,6 +45,7 @@
                 }
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-6">
                 <div class="row mb-3 align-items-center">
@@ -54,6 +58,7 @@
                         <span asp-validation-for="Name" class="text-danger small"></span>
                     </div>
                 </div>
+
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-4 fw-bold">Telefonnummer</label>
                     <div class="col-sm-8">
@@ -64,6 +69,7 @@
                         <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                     </div>
                 </div>
+
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-4 fw-bold">Mailadress</label>
                     <div class="col-sm-8">
@@ -74,6 +80,7 @@
                         <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
                 </div>
+
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-4 fw-bold">Adress</label>
                     <div class="col-sm-8">
@@ -84,6 +91,7 @@
                         <span asp-validation-for="HomeAddress" class="text-danger small"></span>
                     </div>
                 </div>
+
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-4 fw-bold">Postnr</label>
                     <div class="col-sm-8">
@@ -94,6 +102,7 @@
                         <span asp-validation-for="ZipCode" class="text-danger"></span>
                     </div>
                 </div>
+
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-4 fw-bold">Ort</label>
                     <div class="col-sm-8">
@@ -104,6 +113,7 @@
                         <span asp-validation-for="City" class="text-danger"></span>
                     </div>
                 </div>
+
                 <div class="row mb-3 align-items-center">
                     <label class="col-sm-4 fw-bold">Användarnamn</label>
                     <div class="col-sm-8">
@@ -114,6 +124,7 @@
                         <span asp-validation-for="UserName" class="text-danger small"></span>
                     </div>
                 </div>
+
                 <hr class="my-4" />
                 <h5 class="mb-3">Byt lösenord</h5>
                 <div class="form-group mb-3">
@@ -126,6 +137,7 @@
                     </div>
                     <span asp-validation-for="CurrentPassword" class="text-danger"></span>
                 </div>
+
                 <div class="form-group mb-3">
                     <label asp-for="NewPassword" class="control-label">Nytt lösenord</label>
                     <div class="input-group">
@@ -136,6 +148,7 @@
                     </div>
                     <span asp-validation-for="NewPassword" class="text-danger"></span>
                 </div>
+
                 <div class="form-group mb-3">
                     <label asp-for="ConfirmPassword" class="control-label">Bekräfta nytt lösenord</label>
                     <div class="input-group">
@@ -146,6 +159,7 @@
                     </div>
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
+
                 <hr class="my-4" />
                 <div class="row mb-4 align-items-center">
                     <label class="col-sm-4 fw-bold">Synlighet</label>
@@ -156,7 +170,9 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="col-sm-8 offset-sm-4 position-relative">
+                    @* Knappen öppnar en Modal (popup) *@
                     <button type="button" class="btn btn-link text-danger text-decoration-underline p-0 small"
                             data-bs-toggle="modal" data-bs-target="#deactivateModal">
                         Avaktivera konto
@@ -185,6 +201,7 @@
 
             <div class="mt-4 d-flex flex-column align-items-start">
                 <div class="position-relative rounded-circle overflow-visible shadow-sm ourBackgroundColor cvPicture">
+                   @* Samma som logik här som för profilbilden *@
                     @{
                         var cvImgToShow = string.IsNullOrEmpty(Model.CurrentCvImage) ? "default.jpg" : Model.CurrentCvImage;
                     }
@@ -196,6 +213,7 @@
 
                     <input asp-for="NewCvImageFile" id="cvImageInput" class="d-none" accept="image/*" onchange="previewImage(this, 'cvImagePreview')" />
                 </div>
+                @* Samma logik här som för profilbilden *@
                 @if (!string.IsNullOrEmpty(Model.CurrentCvImage) && Model.CurrentCvImage != "default.jpg")
                 {
                     <div class="mt-2 ms-1">
@@ -209,11 +227,12 @@
                 <button type="submit" class="btn btn-secondary btn-sm">Spara uppgifter</button>
             </div>
         </div>
-
     </form>
+
     <hr class="my-5" />
         <h3 class="text-center mt-5 mb-4">Mina Projekt</h3>
         <div class="row">
+             @*Vi kollar först om listan 'ParticipatingProjects' existerar och om den innehåller några projekt*@
             @if (Model.ParticipatingProjects != null && Model.ParticipatingProjects.Any())
             {
                 @foreach (var projUser in Model.ParticipatingProjects)
@@ -234,7 +253,9 @@
                 <div class="col-12 text-center text-muted fst-italic">Inga projekt kopplade ännu.</div>
             }
         </div>
-    <div class="modal fade" id="deactivateModal" tabindex="-1" aria-hidden="true">
+
+        @* Modal för avaktivering *@
+        <div class="modal fade" id="deactivateModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -255,11 +276,13 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>       
+    <script>
+        // Funktion för att visa/dölja lösenord
         function togglePassword(fieldId, iconId) {
             var field = document.getElementById(fieldId);
             var icon = document.getElementById(iconId);
@@ -274,6 +297,7 @@
                 icon.classList.add("bi-eye");
             }
         }
+        // Läser in filen som användaren valt och visar den i webbläsaren innan uppladdning
         function previewImage(input, imgId) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
