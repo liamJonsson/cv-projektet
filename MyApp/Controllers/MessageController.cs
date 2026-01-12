@@ -27,10 +27,19 @@ namespace MyApp.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
 
             var userMessages = await _context.Messages
+                .Include(m => m.Sender)
                 .Where(m => m.ReceiverId == currentUser.Id)
                 .OrderByDescending(m => m.MessageId)
                 .ToListAsync();
 
+            foreach (var message in userMessages)
+            {
+                //Om avsändaren är avaktiverad så sätts avsändarnamnet till "Avaktiverad användare"
+                if (message.Sender?.Deactivated == true)
+                {
+                    message.SenderName = "[avaktiverad användare]";
+                }
+            }
             return View(userMessages);
         }
 
