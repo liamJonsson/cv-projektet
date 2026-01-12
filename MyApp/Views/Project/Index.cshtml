@@ -58,7 +58,11 @@
                 @foreach (var participant in project.Participants)
                 {
                     <li>
-                        @if (isLoggedIn || (participant.User != null && participant.User.Visibility))
+                        @if (participant.User != null && participant.User.Deactivated)
+                        {
+                            <span class="text-muted fst-italic">[Avaktiverad användare]</span>
+                        }
+                        else if (isLoggedIn || (participant.User != null && participant.User.Visibility))
                         {
                             @participant.User?.Name
                         }
@@ -72,7 +76,11 @@
 
             <p>
                 <strong>Skapad av:</strong>
-                @if (isLoggedIn || (project.Creator != null && project.Creator.Visibility))
+                @if (project.Creator != null && project.Creator.Deactivated)
+                {
+                    <span class="text-muted fst-italic">[Avaktiverad användare]</span>
+                }
+                else if (isLoggedIn || (project.Creator != null && project.Creator.Visibility))
                 {
                     @project.Creator?.Name
                 }
