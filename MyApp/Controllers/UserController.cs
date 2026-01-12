@@ -148,6 +148,15 @@ namespace MyApp.Controllers
             var result = await _signInManager.PasswordSignInAsync(username, password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
+                var user = await _userManager.FindByNameAsync(username);
+                
+                if (user != null && user.Deactivated) // Om användaren var avaktiverad, återaktivera kontot
+                {
+                    user.Deactivated = false;
+
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Välkommen tillbaka! Ditt konto har återaktiverats.";
+                }
                 return RedirectToAction("Index", "Home");
             }
             ViewBag.ErrorMessage = "Fel användarnamn eller lösenord.";
@@ -466,6 +475,7 @@ namespace MyApp.Controllers
                 Skills = user.Skills?.Trim(),
                 Education = user.Education?.Trim(),
                 Experience = user.Experience?.Trim(),
+                HomeAddress = user.Address?.HomeAddress,
                 ZipCode = user.Address?.ZipCode,
                 City = user.Address?.City
             };
@@ -513,7 +523,7 @@ namespace MyApp.Controllers
         public string Education { get; set; }
         public string Experience { get; set; }
 
-        public string Homeadress { get; set; }
+        public string HomeAddress { get; set; }
         public string ZipCode { get; set; }
         public string City { get; set; }
         public List<ProjectXmlDto> Projects { get; set; } = new List<ProjectXmlDto>();
