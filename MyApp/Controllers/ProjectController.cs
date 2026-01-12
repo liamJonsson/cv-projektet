@@ -42,29 +42,28 @@ namespace MyApp.Controllers
             return View();
         }
 
-        [Authorize] //Man måste vara inloggad för att komma åt Skapa projekt
-        [HttpPost] //Metoden körs när vi klickar Spara i gränssnittet 
+        [Authorize] 
+        [HttpPost]
         public async Task<IActionResult> Add(Project project)
         {
-            if (!ModelState.IsValid) //Om något är fel/tomt etc så går vi in i if-satsen
+            //Om något är fel/tomt i forumläret går vi in i if-satsen
+            if (!ModelState.IsValid) 
             {
-                return View(project); //Visa formuläret igen, inget sparas i databasen
+                return View(project);
             }
 
-            var user = await _userManager.GetUserAsync(User); //Hämta inloggad användare
+            var user = await _userManager.GetUserAsync(User); 
 
-            project.CreatorId = user.Id; //Sätter CreatodId på projektet till Id:t på personen som är inloggad
+            project.CreatorId = user.Id; 
 
-            project.Participants.Add(new ProjectUser //Lägger till skaparen i deltagar-listan
+            project.Participants.Add(new ProjectUser 
             {
                 UserId = user.Id
             });
 
-            _context.Projects.Add(project); //Lägger till projektet i Entity Framework
-            await _context.SaveChangesAsync(); //Sparar till databasen, SQL insert 
+            _context.Projects.Add(project); 
+            await _context.SaveChangesAsync(); 
 
-
-            //Rensa formuläret och ladda om sidan
             TempData["SuccessMessage"] = "Projektet har skapats.";
             return RedirectToAction("Index");
         }
