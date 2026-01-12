@@ -104,25 +104,6 @@ namespace MyApp.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult Delete(int id)
-        {
-            var project = _context.Projects.Find(id);
-            if (project == null) return NotFound();
-            return View(project);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var project = _context.Projects.Find(id);
-            if (project != null)
-            {
-                _context.Projects.Remove(project);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Index");
-        }
 
         [HttpPost]
         [Authorize] // endast inloggade användare får gå med
