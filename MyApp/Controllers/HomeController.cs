@@ -50,6 +50,9 @@ namespace MyApp.Controllers
                     );
                 }
             }
+
+            ViewData["SearchQuery"] = query;
+
             return View("Index", users.ToList());
         }
 
