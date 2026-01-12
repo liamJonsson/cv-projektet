@@ -12,7 +12,7 @@ namespace MyApp.Models
         [StringLength(2000, ErrorMessage = "Meddelandet får max vara 2000 tecken.")]
         public string Text { get; set; } = string.Empty;
 
-        public DateTime SentAt { get; set; } = DateTime.Now;
+        public DateTime SentAt { get; set; }
 
         public bool Read { get; set; } = false;
 

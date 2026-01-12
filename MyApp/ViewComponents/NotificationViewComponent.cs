@@ -19,20 +19,17 @@ namespace MyApp.ViewComponents
             _userManager = userManager;
         }
 
+        //Metoden tar fram antalet olästa meddeladen för den inloggade användaren
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            //Hämtar den inloggade användaren med "UserClaimsPrincipal" istället för "User" då man är i en ViewComponent
             var currentUser = await _userManager.GetUserAsync((ClaimsPrincipal)UserClaimsPrincipal);
-            
-            if (currentUser == null) 
-            {
-                return View(0);
-            }
-            var CurrentUserId = currentUser.Id;
 
             var unreadMessages = await _context.Messages
-                .Where(m => m.ReceiverId == CurrentUserId && !m.Read)
+                .Where(m => m.ReceiverId == currentUser.Id && m.Read == false)
                 .CountAsync();
 
+            //Antalet olästa meddelanden skickas till komponentens vy (Default.cshtml)
             return View(unreadMessages);
         }
 

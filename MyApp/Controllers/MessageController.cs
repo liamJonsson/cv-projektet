@@ -53,9 +53,16 @@ namespace MyApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Send(Message message)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                message.SenderId = currentUser.Id;
+                message.SenderName = currentUser.Name;
+            }
+
             message.SentAt = DateTime.Now;
 
-            //SentAt måste ignoreras från ModelState då SentAt sätts efter ModelState sätts
+            //SentAt måste ignoreras från ModelState då SentAt sätts efter ModelState sätts och SentAt inte får vara null
             ModelState.Remove("SentAt");
 
             if (ModelState.IsValid)

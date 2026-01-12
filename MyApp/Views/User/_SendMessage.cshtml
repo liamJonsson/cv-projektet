@@ -3,21 +3,21 @@
 @inject UserManager<User> UserManager
 
 
-@* Om användaren är inloggad hämtas dennes namn och id och sätts i som meddelandets avsändare
+@* Om användaren är inloggad hämtas dennes namn och id och sätts som meddelandets avsändare
 och avsändarid *@
  @if (User.Identity.IsAuthenticated)
 {
     var loggedInUser = await UserManager.GetUserAsync(User);
     Model.SenderName = loggedInUser.Name;
-	Model.SenderId = loggedInUser.Id;
 }
 
 <form asp-controller="Message" asp-action="Send" method="post">
     <input type="hidden" asp-for="ReceiverId" />
-    <input type="hidden" asp-for="SenderId" />
 
     <div class="mb-3">
         <label>Från</label>
+        @* Om användaren är inloggad kommer dennes namn visas i inputfältet, annars kommer "Skriv ditt namn här..." att visas. 
+        Om användaren är inloggad kommer dessutom inputfältet för namn inte gå att redigera *@
         <input asp-for="SenderName" class="form-control border-0 ourBackgroundColor"
                placeholder="@(User.Identity.IsAuthenticated ? null : "Skriv ditt namn här...")"
 			   readonly="@(User.Identity.IsAuthenticated ? "readonly" : null)" />
