@@ -28,7 +28,7 @@ namespace MyApp.InputModels
         public string ZipCode { get; set; }
 
         [Required(ErrorMessage = "Ort krävs.")]
-        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ0-9._-]*$", ErrorMessage = "Innehåller otillåtna tecken.")]
+        [RegularExpression(@"^[a-zA-ZåäöÅÄÖéÉ ]*$", ErrorMessage = "Endast bokstäver tillåtet.")]
         public string City { get; set; }
 
         [Required(ErrorMessage = "Användarnamn krävs.")]
@@ -46,6 +46,7 @@ namespace MyApp.InputModels
 
         [DataType(DataType.Password)]
         [Compare("NewPassword", ErrorMessage = "Lösenorden matchar inte.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,}$", ErrorMessage = "Lösenordet måste innehålla minst en stor bokstav, en liten bokstav, en siffra, ett specialtecken och vara minst sex tecken långt.")]
         public string? ConfirmPassword { get; set; }
 
         // CV-texter

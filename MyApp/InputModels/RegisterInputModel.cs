@@ -36,6 +36,7 @@ namespace MyApp.InputModels
 
         [Required(ErrorMessage = "Lösenord krävs.")]
         [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,}$", ErrorMessage = "Lösenordet måste innehålla minst en stor bokstav, en liten bokstav, en siffra, ett specialtecken och vara minst sex tecken långt.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Bekräfta lösenordet.")]

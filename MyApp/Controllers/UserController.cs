@@ -65,12 +65,41 @@ namespace MyApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingUserWithEmail = await _userManager.FindByEmailAsync(model.Email);
+                if (existingUserWithEmail != null)
+                {
+                    ModelState.AddModelError("Email", "Denna e-postadress används redan av ett annat konto.");
+                }
+
+                var existingUserWithName = await _userManager.FindByNameAsync(model.UserName);
+                if (existingUserWithName != null)
+                {
+                    ModelState.AddModelError("UserName", "Användarnamnet är tyvärr upptaget.");
+                }
+
+                if (!string.IsNullOrEmpty(model.PhoneNumber))
+                {
+                    var existingUserWithPhone = await _context.Users
+                        .FirstOrDefaultAsync(u => u.PhoneNumber == model.PhoneNumber);
+
+                    if (existingUserWithPhone != null)
+                    {
+                        ModelState.AddModelError("PhoneNumber", "Detta telefonnummer är redan registrerat.");
+                    }
+                }
+
+                if(!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
                 var newAddress = new Address
                 {
                     HomeAddress = model.HomeAddress,
                     ZipCode = model.ZipCode,
                     City = model.City
                 };
+
                 _context.Addresses.Add(newAddress);
                 await _context.SaveChangesAsync(); // Adress får ett ID från databasen
                 var user = new User
@@ -89,12 +118,15 @@ namespace MyApp.Controllers
                     Cv = "", // Databasen kräver ett värde -- kanske ta bort? 
                     EmailConfirmed = true
                 };
+
                 var result = await _userManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

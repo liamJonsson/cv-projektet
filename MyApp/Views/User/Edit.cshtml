@@ -85,6 +85,26 @@
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 fw-bold">Postnr</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input asp-for="ZipCode" class="form-control border-0 inputGroupStyle" />
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
+                        </div>
+                        <span asp-validation-for="ZipCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 fw-bold">Ort</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input asp-for="City" class="form-control border-0 inputGroupStyle" />
+                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
+                        </div>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
                     <label class="col-sm-4 fw-bold">Användarnamn</label>
                     <div class="col-sm-8">
                         <div class="input-group">
@@ -144,27 +164,8 @@
                 </div>
                 <button type="submit" class="btn btn-secondary px-4 py-2 mt-3">Spara uppgifter</button>
             </div>
-            <div class="col-md-6">
-                <div class="row mb-3 align-items-center">
-                    <label class="col-sm-3 fw-bold">Postnr</label>
-                    <div class="col-sm-3">
-                        <div class="input-group">
-                            <input asp-for="ZipCode" class="form-control border-0 inputGroupStyle" />
-                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
-                        </div>
-                        <span asp-validation-for="ZipCode" class="text-danger"></span>
-                    </div>
-                    <label class="col-sm-2 text-end fw-bold">Ort</label>
-                    <div class="col-sm-4">
-                        <div class="input-group">
-                            <input asp-for="City" class="form-control border-0 inputGroupStyle" />
-                            <span class="input-group-text border-0 text-dark inputGroupStyle"><i class="bi bi-pencil-square"></i></span>
-                        </div>
-                        <span asp-validation-for="City" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
         </div>
+
         <h3 id="cv-section" class="text-center mt-5 mb-3">Mitt CV</h3>
         <div class="p-4 rounded position-relative ourBackgroundColor">
             <div class="row">
