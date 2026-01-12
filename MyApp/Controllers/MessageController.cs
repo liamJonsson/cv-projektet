@@ -19,7 +19,6 @@ namespace MyApp.Controllers
             _userManager = userManager;
         }
 
-        // Visa användarens meddelanden
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -34,10 +33,10 @@ namespace MyApp.Controllers
 
             foreach (var message in userMessages)
             {
-                //Om avsändaren är avaktiverad så sätts avsändarnamnet till "Avaktiverad användare"
+                //Om avsändaren är avaktiverad så sätts avsändarnamnet till "[Avaktiverad användare]"
                 if (message.Sender?.Deactivated == true)
                 {
-                    message.SenderName = "[avaktiverad användare]";
+                    message.SenderName = "[Avaktiverad användare]";
                 }
             }
             return View(userMessages);
