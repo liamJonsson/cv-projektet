@@ -24,8 +24,8 @@ namespace MyApp.Controllers
         public IActionResult Index()
         {
             //Vi använder Entity Framework för att hämta projekt från databasen.
-            //1. .Include(p => p.Creator) hämtar information om den som skapade projektet.
-            // 2. .Include(p => p.Participants).ThenInclude(pu => pu.User) hämtar listan på deltagare
+            //.Include(p => p.Creator) hämtar information om den som skapade projektet.
+            //.Include(p => p.Participants).ThenInclude(pu => pu.User) hämtar listan på deltagare
             var projects = _context.Projects
                 .Where(p => p.CreatorId != null) // Ändrat till null-koll om det är en sträng
                 .Include(p => p.Creator)
