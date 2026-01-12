@@ -18,30 +18,33 @@ namespace MyApp.Controllers
         public IActionResult Index()
         {
             var users = _context.Users
-                //Gör att varje user får tillgång till ParticipatingProjects
+                .Where(u => u.Deactivated == false)
                 .Include(u => u.ParticipatingProjects)
-                //och därefter Projects i den tabellen
                     .ThenInclude(pp => pp.Project)
-                .ToList();
+                .AsQueryable();
 
-            return View(users);
+            bool isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+
+            if (!isLoggedIn)
+            {
+                users = users.Where(u => u.Visibility == true);
+            }
+
+            return View(users.ToList());
         }
 
         [HttpGet]
         public IActionResult Search(string query)
         {
             var users = _context.Users
+                .Where(u => u.Deactivated == false)
                 .Include(u => u.ParticipatingProjects)
                     .ThenInclude(pp => pp.Project)
-                //Denna gör så att databasen avvaktas med att köra tills att vi är klara med frågan
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                // Dela upp söksträngen där mellanslag förekommer, tar bort tomma ord, alltså mellanslag"
-                var terms = query
-                    .Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
+                var terms = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 foreach (var term in terms)
                 {
                     users = users.Where(u =>
@@ -49,6 +52,13 @@ namespace MyApp.Controllers
                         (u.Skills != null && u.Skills.Contains(term))
                     );
                 }
+            }
+
+            bool isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+
+            if (!isLoggedIn)
+            {
+                users = users.Where(u => u.Visibility == true);
             }
 
             ViewData["SearchQuery"] = query;

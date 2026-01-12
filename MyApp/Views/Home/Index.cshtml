@@ -27,66 +27,70 @@
     </form>
 </div>
 
+@if (ViewData["SearchQuery"] != null && !Model.Any())
+{
+    <div class="text-center mt-4">
+        <p class="fst-italic text-muted">Sökningen gav ingen träff</p>
+    </div>
+}
+
+
 @foreach (var user in Model)
 {
-    bool isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
-    @if (isLoggedIn || user.Visibility == true)
-    {
-        var latestProject = user.ParticipatingProjects
+    var latestProject = user.ParticipatingProjects
             .Where(pp => pp.Project != null)
             .OrderByDescending(pp => pp.Project.StartDate)
             .FirstOrDefault();
-    
-        <h3 class="m-2">@user.Name</h3>
-        <div class="d-flex justify-content-center mb-3 homepageWidth">
 
-            <div class="ourBackgroundColor rounded py-3 box-width" style="margin-right: 6%;">
-                <div class="mx-auto homepageWidth overflow-break">
-                    <h5>CV</h5>
-                    <div class="rounded h-100 d-flex flex-column">
-                        <h6 class="fw-bold">Kompetenser</h6>
-                        <p class="small text-muted">@user.Skills</p>
+    <h3 class="m-2">@user.Name</h3>
+    <div class="d-flex justify-content-center mb-3 homepageWidth">
 
-                        <div class="mt-auto w-100 py-2 border-top border-secondary"></div>
+        <div class="ourBackgroundColor rounded py-3 box-width" style="margin-right: 6%;">
+            <div class="mx-auto homepageWidth overflow-break">
+                <h5>CV</h5>
+                <div class="rounded h-100 d-flex flex-column">
+                    <h6 class="fw-bold">Kompetenser</h6>
+                    <p class="small text-muted">@user.Skills</p>
 
-                        <h6 class="fw-bold">Utbildningar</h6>
-                        <p class="small text-muted">@user.Education</p>
+                    <div class="mt-auto w-100 py-2 border-top border-secondary"></div>
 
-                        <div class="mt-auto w-100 py-2 border-top border-secondary"></div>
+                    <h6 class="fw-bold">Utbildningar</h6>
+                    <p class="small text-muted">@user.Education</p>
 
-                        <h6 class="fw-bold">Tidigare erfarenheter</h6>
-                        <p class="small text-muted">@user.Experience</p>
-                    </div>
+                    <div class="mt-auto w-100 py-2 border-top border-secondary"></div>
+
+                    <h6 class="fw-bold">Tidigare erfarenheter</h6>
+                    <p class="small text-muted">@user.Experience</p>
                 </div>
             </div>
-            <div class="ourBackgroundColor rounded py-3 box-width">
-                <div class="mx-auto homepageWidth overflow-break">
-                    <h5 class="text-center">Senaste projekt</h5>
-                    @if (latestProject != null)
-                    {
-                        <div class="p-4 rounded h-100 d-flex flex-column justify-content-center align-items-center text-center">
-                            <h5 class="fw-bold">@latestProject.Project.Title</h5>
-                            <p class="small text-muted">@latestProject.Project.Description</p>
-                            <div class="mt-auto w-100 pt-3 border-top border-secondary">
-                                <span class="badge bg-secondary">@latestProject.Project.CodeLanguage</span>
-                            </div>
+        </div>
+        <div class="ourBackgroundColor rounded py-3 box-width">
+            <div class="mx-auto homepageWidth overflow-break">
+                <h5 class="text-center">Senaste projekt</h5>
+                @if (latestProject != null)
+                {
+                    <div class="p-4 rounded h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                        <h5 class="fw-bold">@latestProject.Project.Title</h5>
+                        <p class="small text-muted">@latestProject.Project.Description</p>
+                        <div class="mt-auto w-100 pt-3 border-top border-secondary">
+                            <span class="badge bg-secondary">@latestProject.Project.CodeLanguage</span>
                         </div>
-                    }
-                    else
-                    {
-                        <p>Inga projekt ännu</p>
-                    }
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <p>Inga projekt ännu</p>
+                }
             </div>
         </div>
-        <div class="homepageWidth text-end">
-            <a asp-controller="User"
-                   asp-action="ViewProfile"
-                   asp-route-id="@user.Id"
-                   class="btn ourBackgroundColor">
-                    Se profil
-               </a>       
-        </div>
-    }
+    </div>
+    <div class="homepageWidth text-end">
+        <a asp-controller="User"
+           asp-action="ViewProfile"
+           asp-route-id="@user.Id"
+           class="btn ourBackgroundColor">
+            Se profil
+        </a>
+    </div>
 }
 
