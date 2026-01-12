@@ -350,11 +350,10 @@ namespace MyApp.Controllers
             //Hämtar den valda användarens programmeringsspråk
             var selectedUserCodeLanguages = selectedUser.ParticipatingProjects
                 .Select(pu => pu.Project.CodeLanguage)
-                .Where(codeLang => !string.IsNullOrEmpty(codeLang))
                 .Distinct()
                 .ToList();
 
-            //Om den valda användaren inte har några programmeringsspråk returneras en tom lista till partail view
+            //Om den valda användaren inte har några programmeringsspråk returneras en tom lista till partial view
             if (!selectedUserCodeLanguages.Any())
             {
                 return PartialView("_SimilarUsers", new List<User>());

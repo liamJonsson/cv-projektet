@@ -186,12 +186,13 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        //Denna funktion körs när man klickar på "Hitta liknande användare" kanppen
+        //Denna funktion körs när man klickar på "Hitta liknande användare" knappen
         function loadSimilarUsers() {
-            //Diven med id "similarUsers" laddas med HTMLkod från vår partial view(_SimilarUsers.cshtml)
+            //Diven, där id = similarUsers, laddas med HTMLkod från vår partial view(_SimilarUsers.cshtml)
             //genom att anoropa FindSimilarUsers i UserControllern. Detta gör att innehållet syns direkt på sidan
             //utan att hela webbläsaren behöver laddas om tack vare AJAX (.load)
-            $("#similarUsers").load("/User/FindSimilarUsers?id=@Model.Id")
+            $("#similarUsers").load("@Url.Action("FindSimilarUsers", "User", new { id = Model.Id })")
         }
     </script>
 }
+
