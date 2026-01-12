@@ -58,16 +58,21 @@
                 @foreach (var participant in project.Participants)
                 {
                     <li>
+
+                        @* Om deltagaren är avaktiverad står intemed namnet*@
                         @if (participant.User != null && participant.User.Deactivated)
                         {
                             <span class="text-muted fst-italic">[Avaktiverad användare]</span>
                         }
+
+                        @*Om man är inloggad ELLER om profilen är offentlig visas namnet *@
                         else if (isLoggedIn || (participant.User != null && participant.User.Visibility))
                         {
                             @participant.User?.Name
                         }
                         else
                         {
+                            @* annars visas "privat deltagare"*@
                             <span class="text-muted"><i>Privat deltagare</i></span>
                         }
                     </li>
@@ -76,14 +81,18 @@
 
             <p>
                 <strong>Skapad av:</strong>
+
+                @*Om skapraren har avaktiverat sin profil står detta "[Avaktiverad användare]"  *@
                 @if (project.Creator != null && project.Creator.Deactivated)
                 {
                     <span class="text-muted fst-italic">[Avaktiverad användare]</span>
                 }
+                @* Om man är inloggad ELLER skaparen är Inte privat visas namnet*@
                 else if (isLoggedIn || (project.Creator != null && project.Creator.Visibility))
                 {
                     @project.Creator?.Name
                 }
+                @*privata användare ska endast synas i inloggad läge*@
                 else
                 {
                     <span class="text-muted"><i>Privat användare</i></span>
@@ -101,7 +110,7 @@
                     }
                     else
                     {
-                        @**@
+                        
                         <button class="project-join-btn" type="button" data-bs-toggle="modal" data-bs-target="#joinModal-@project.ProjectId"> + </button>
                     }
                 </div>
