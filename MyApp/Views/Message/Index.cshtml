@@ -29,8 +29,7 @@
 		{
 			var textStyle = "";
 
-			//Beroende på om meddelandet är läst eller inte får avsändarens namn samt datum 
-			//olika utseende genom css klasser
+			//Beroende på om meddelandet är läst eller inte får avsändarens namn samt datum olika utseende genom css klasser
 			if (message.Read)
 			{
 				textStyle = "message-read";
@@ -49,9 +48,8 @@
 					<p class="px-1 my-auto"> @message.Text</p>
 
 					<div class="d-flex align-items-center gap-3">
-					@* Lägger in en knapp i formuläret och knappen innehåller olika ikoner (tom/icheckad checkbox) beroende på om meddelandet är läst eller inte. 
-					Om meddelandet är oläst är ikonen en tom checkbox och när denna trycks på skickas formuläret till controllern, meddelandet sätts till läst samt 
-					slutligen ändras ikonen här view till en ifylld checkbox och vice versa *@
+					@* Knappen i formuläret innehåller olika ikoner (tom/icheckad checkbox) beroende på om meddelandet är läst eller inte. 
+					När knappen (ikonen) klickas på körs UpdateRead metoden *@
 						<form asp-action="UpdateRead" asp-route-messageId="@message.MessageId" method="post">
 							<button type="submit" class="btn d-flex p-0 border-0  gap-2 text-decoration-none text-reset">
 								@if(message.Read)

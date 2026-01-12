@@ -7,6 +7,7 @@
 	</div>
 
 	<div class="row justify-content-center">
+		@* För varje användare i listan skrivs dess namn och stad ut samt en "knapp" som länkar till dess profil *@
 		@foreach (var user in Model)
 		{
 			<div class="col-md-6">
@@ -29,6 +30,7 @@
 }
 else
 {
+	//Om listan är tom visas följande meddelande
 	<div class="mt-4 fst-italic">
 		<p>Hittade inga användare som deltar i projekt med samma programmeringsspråk som denna användare.</p>
 	</div>

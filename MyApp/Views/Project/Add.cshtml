@@ -3,6 +3,7 @@
 <div class="container mt-5" style="max-width: 800px;">
     <h2 class ="text-center mb-5"> Skapa ett projekt</h2>
     
+    @* SuccessMessage när man lagt till projekt *@
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
@@ -17,9 +18,10 @@
         </div>
     }
 
-    <!-- Fyller i info om projektet -->
+    @* Fyller i info om projektet *@
     <form asp-action="Add" method="post">
-
+        
+        @* Titel *@
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Titel</label>
             <div class="col-md-9">
@@ -28,6 +30,7 @@
             </div>
         </div>
 
+        @* Beskrivning *@
         <div class="row mb-3 align-items-start">
             <label class="col-md-3 col-form-label">Beskrivning</label>
             <div class="col-md-9">
@@ -36,6 +39,7 @@
             </div>
         </div>
 
+        @* Programmeringsspråk *@
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Programmeringsspråk</label>
             <div class="col-md-9">
@@ -44,6 +48,7 @@
             </div>
         </div>
 
+        @* Startdatum *@
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Startdatum</label>
             <div class="col-md-9">
@@ -52,6 +57,7 @@
             </div>
         </div>
 
+        @* Skapare *@
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Skapad av:</label>
             <div class="col-md-9">
@@ -59,6 +65,7 @@
             </div>
         </div>
 
+        @* Spara-knapp *@
         <div class="row mt-5">
             <div class="col-12 text-center">
                 <button type="submit" class="btn px-5 py-2" style="background-color: #c0c0c0; border: none; font-size: 1.1rem;">Spara projekt</button>
@@ -75,10 +82,10 @@
     <script>
         $(document).ready(function () {
 
-            var input = $("#CodeLanguage"); // Hämta input-fältet för CodeLanguage
+            var input = $("#CodeLanguage");
 
-            input.on("input", function () { // Körs varje gång input-fältet ändras
-                $(this).valid(); // Körs ASP.NETS inbyggda validering vilket kollar om fältet är godkänt just nu, ska inte vänta tills man klickar utanför fältet
+            input.on("input", function () {
+                $(this).valid(); 
             });
         });
     </script>
