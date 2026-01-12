@@ -11,7 +11,7 @@
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
-        <div id="liveToast" class="toast align-items-center text-white bg-success border-0 @(TempData["SuccessMessage"] != null ? "show" : "hide")" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="liveToast" class="toast align-items-center text-white bg-success border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
                     <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
@@ -23,18 +23,13 @@
 }
 
 @if (isLoggedIn)
-@*om användaren är inloggad ska man kunna skapa projekt*@
 {
     <a asp-action="Add" class="btn btn-secondary my-3">
         Skapa projekt +
     </a>
 }
 
-
-
 <div class="projects-grid">
-
-    @*Loopar igenom alla projekt i listan från controllern*@
     @foreach (var project in Model)
     {
         var isCreator = isLoggedIn && project.Creator?.Id.ToString() == currentUserId;
@@ -65,12 +60,10 @@
                     <li>
                         @if (isLoggedIn || (participant.User != null && participant.User.Visibility))
                         {
-                            @* Visa namnet om man är inloggad ELLER om deltagaren är offentlig *@
                             @participant.User?.Name
                         }
                         else
                         {
-                            @* Visa detta om man är utloggad OCH deltagaren är privat *@
                             <span class="text-muted"><i>Privat deltagare</i></span>
                         }
                     </li>
@@ -81,86 +74,82 @@
                 <strong>Skapad av:</strong>
                 @if (isLoggedIn || (project.Creator != null && project.Creator.Visibility))
                 {
-                    @* Visa namnet om man är inloggad ELLER om skaparen är offentlig *@
                     @project.Creator?.Name
                 }
                 else
                 {
-                    @* Visa detta endast om man är utloggad OCH skaparen är privat *@
                     <span class="text-muted"><i>Privat användare</i></span>
                 }
             </p>
 
-                @if (isLoggedIn)
-                {
-                    <div class="project-action-wrapper">
-                        @if (isParticipant)
-                        {
-                            <button class="project-leave-btn" type="button" onclick="showLeaveBox('@project.ProjectId')"> - </button>
-                        }
-                        else
-                        {
-                            <button class="project-join-btn" type="button" onclick="showJoinBox('@project.ProjectId')"> + </button>
-                        }
+            @* Knappar för att gå med eller lämna *@
+            @if (isLoggedIn)
+            {
+                <div class="project-action-wrapper">
+                    @if (isParticipant)
+                    {
+                        @* Alla som är deltagare (inklusive skaparen) ska kunna gå med och ut ur projektet*@
+                        <button class="project-leave-btn" type="button" data-bs-toggle="modal" data-bs-target="#leaveModal-@project.ProjectId"> - </button>
+                    }
+                    else
+                    {
+                        @**@
+                        <button class="project-join-btn" type="button" data-bs-toggle="modal" data-bs-target="#joinModal-@project.ProjectId"> + </button>
+                    }
+                </div>
+            }
+        </div> @* Stänger project-card *@
+
+        @* MODAL FÖR ATT GÅ MED *@
+        <div class="modal fade" id="joinModal-@project.ProjectId" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gå med i projekt</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                }
-            </div>
-
-            @* BEKRÄFTELSE-BOXAR *@
-            <div id="join-box-@project.ProjectId" class="join-confirm-box" style="display:none;">
-                <p>Vill du vara med i projektet?</p>
-                <div class="confirm-actions">
-                    <form method="post" asp-action="JoinProject" asp-route-id="@project.ProjectId">
-                        <button type="submit" class="btn-yes">Ja</button>
-                    </form>
-                    <button type="button" class="btn-cancel" onclick="hideJoinBox('@project.ProjectId')">Avbryt</button>
+                    <div class="modal-body text-center">
+                        <p>Vill du gå med i projektet <strong>@project.Title</strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
+                        <form method="post" asp-action="JoinProject" asp-route-id="@project.ProjectId">
+                            <button type="submit" class="btn btn-success">Ja, gå med!</button>
+                        </form>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div id="leave-box-@project.ProjectId" class="join-confirm-box" style="display:none;">
-                <p>Vill du ta bort dig själv från projektet?</p>
-                <div class="confirm-actions">
-                    <form method="post" asp-action="LeaveProject" asp-route-id="@project.ProjectId">
-                        <button type="submit" class="btn-yes">Ja</button>
-                    </form>
-                    <button type="button" class="btn-cancel" onclick="hideLeaveBox('@project.ProjectId')">Avbryt</button>
+        @* MODAL FÖR ATT LÄMNA *@
+        <div class="modal fade" id="leaveModal-@project.ProjectId" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Lämna projekt</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Vill du verkligen lämna projektet <strong>@project.Title</strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
+                        <form method="post" asp-action="LeaveProject" asp-route-id="@project.ProjectId">
+                            <button type="submit" class="btn btn-danger">Ja, lämna projektet.</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        
+        </div>
     }
-</div> @* Stänger projects-grid *@
+</div>
 
 @section Scripts {
     <script>
-        function showJoinBox(projectId) {
-            document.querySelectorAll('.join-confirm-box').forEach(box => box.style.display = 'none');
-            var box = document.getElementById('join-box-' + projectId);
-            if (box) { box.style.display = 'block'; }
-        }
-
-        function hideJoinBox(projectId) {
-            var box = document.getElementById('join-box-' + projectId);
-            if (box) { box.style.display = 'none'; }
-        }
-
-        function showLeaveBox(projectId) {
-            document.querySelectorAll('.join-confirm-box').forEach(box => box.style.display = 'none');
-            var box = document.getElementById('leave-box-' + projectId);
-            if (box) { box.style.display = 'block'; }
-        }
-
-        function hideLeaveBox(projectId) {
-            var box = document.getElementById('leave-box-' + projectId);
-            if (box) { box.style.display = 'none'; }
-        }
-
         function closeAlert() {
-            var alertBox = document.getElementById('successAlert');
+            var alertBox = document.getElementById('liveToast');
             if (alertBox) { alertBox.style.display = 'none'; }
         }
-
-        setTimeout(function() {
-            closeAlert();
-        }, 5000);
+        setTimeout(closeAlert, 5000);
     </script>
 }
