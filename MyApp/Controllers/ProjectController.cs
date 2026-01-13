@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Data;
 using MyApp.Models;
@@ -106,28 +105,28 @@ namespace MyApp.Controllers
 
 
         [HttpPost]
-        [Authorize] // endast inloggade användare får gå med
+        [Authorize] 
         public async Task<IActionResult> JoinProject(int id)
         {
-            // 1. Hämta ID som en sträng från Identity
+            // Hämta ID som en sträng från Identity
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userIdString))
             {
                 return Challenge();
             }
-
+            
             // Konvertera strängen till en int
             // Vi använder int.Parse eftersom vi vet att ID:t ska finnas om man är inloggad
             int userIdInt = int.Parse(userIdString);
 
-            // 3. Kontrollera om kopplingen redan finns (nu med int mot int)
+            // Kontrollera om kopplingen redan finns (nu med int mot int)
             var exists = await _context.ProjectUsers
                 .AnyAsync(pu => pu.ProjectId == id && pu.UserId == userIdInt);
 
             if (!exists)
             {
-                // 4. Skapa kopplingen
+                // Skapa kopplingen
                 var projectUser = new ProjectUser
                 {
                     ProjectId = id,
@@ -144,7 +143,7 @@ namespace MyApp.Controllers
         }
     
 
-    [HttpPost]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> LeaveProject(int id)
         {
@@ -168,7 +167,5 @@ namespace MyApp.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
     }
-
 }

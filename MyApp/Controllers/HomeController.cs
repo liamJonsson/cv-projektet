@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Data;
-using MyApp.Models;
 
 namespace MyApp.Controllers
 {
@@ -32,7 +31,9 @@ namespace MyApp.Controllers
                 users = users.Where(u => u.Visibility == true);
             }
             //Här returneras users som en lista asynkront
-            return View(await users.ToListAsync());
+            var userList = await users.ToListAsync();
+
+            return View(userList);
         }
 
         [HttpGet]
@@ -46,9 +47,10 @@ namespace MyApp.Controllers
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                /*terms blir en lista av orden som sökningen består av, varje ord splittras
+                /* terms blir en lista av orden som sökningen består av, varje ord splittras
                 vid mellanslag*/
                 var terms = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
                 //För varje ord i terms kollas en användares namn och skills
                 foreach (var term in terms)
                 {

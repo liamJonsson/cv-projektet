@@ -1,6 +1,7 @@
 ﻿@model List<MyApp.Models.Project>
 @using MyApp.Models
 @using System.Security.Claims
+
 @{
     var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
     var isLoggedIn = User.Identity.IsAuthenticated;
@@ -52,8 +53,8 @@
 
             <p><strong>Beskrivning:</strong><br />@project.Description</p>
             <p><strong>Programmeringsspråk:</strong> @project.CodeLanguage</p>
-
             <p><strong>Deltagare:</strong></p>
+
             <ul>
                 @foreach (var participant in project.Participants)
                 {
@@ -70,6 +71,7 @@
                         {
                             @participant.User?.Name
                         }
+
                         else
                         {
                             @* annars visas "privat deltagare"*@
@@ -87,11 +89,13 @@
                 {
                     <span class="text-muted fst-italic">[Avaktiverad användare]</span>
                 }
+
                 @* Om man är inloggad ELLER skaparen är Inte privat visas namnet*@
                 else if (isLoggedIn || (project.Creator != null && project.Creator.Visibility))
                 {
                     @project.Creator?.Name
                 }
+
                 @*privata användare ska endast synas i inloggad läge*@
                 else
                 {
@@ -108,6 +112,7 @@
                         @* Alla som är deltagare (inklusive skaparen) ska kunna gå med och ut ur projektet*@
                         <button class="project-leave-btn" type="button" data-bs-toggle="modal" data-bs-target="#leaveModal-@project.ProjectId"> - </button>
                     }
+
                     else
                     {
                         

@@ -13,7 +13,7 @@ namespace MyApp.Models
         public string HomeAddress { get; set; }
 
         [Required(ErrorMessage = "Postnummer är obligatoriskt.")]
-        [RegularExpression(@"^\d{3}\s?\d{2}$", ErrorMessage = "Postnummer ska vara i formatet 12345 eller 123 45.")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Endast siffror tillåtet.")]
         public string ZipCode { get; set; }
 
         [Required(ErrorMessage = "Ort är obligatorisk.")]

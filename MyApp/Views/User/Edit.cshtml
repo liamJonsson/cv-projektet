@@ -5,6 +5,7 @@
      // Om bildnamnet är tomt (null), använd "default.jpg". Annars använd det sparade namnet
     var currentProfilePic = string.IsNullOrEmpty(Model.CurrentProfileImage) ? "default.jpg" : Model.CurrentProfileImage;
 }
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
@@ -21,6 +22,7 @@
 
 <div class="container mt-5">
     <h2 class="text-center mb-5">Mina uppgifter</h2>
+
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="CurrentProfileImage" />
         <input type="hidden" asp-for="CurrentCvImage" />
@@ -34,6 +36,7 @@
                     </label>
                     <input asp-for="NewProfileImageFile" id="profileImageInput" class="d-none" accept="image/*" onchange="previewImage(this, 'profileImagePreview')" />
                 </div>
+
                 @*  Kontroll för bild *@
                 @if (Model.CurrentProfileImage != "default.jpg" && !string.IsNullOrEmpty(Model.CurrentProfileImage))
                 {
@@ -189,10 +192,12 @@
                     <h5 class="fw-bold">Kompetenser</h5>
                     <textarea asp-for="Skills" class="form-control bg-transparent border-0" rows="10" placeholder="Skriv dina kompetenser..."></textarea>
                 </div>
+
                 <div class="col-md-4">
                     <h5 class="fw-bold">Utbildning</h5>
                     <textarea asp-for="Education" class="form-control bg-transparent border-0" rows="10" placeholder="Skriv din utbildning..."></textarea>
                 </div>
+
                 <div class="col-md-4">
                     <h5 class="fw-bold">Tidigare erfarenhet</h5>
                     <textarea asp-for="Experience" class="form-control bg-transparent border-0" rows="10" placeholder="Skriv din erfarenhet..."></textarea>
@@ -213,6 +218,7 @@
 
                     <input asp-for="NewCvImageFile" id="cvImageInput" class="d-none" accept="image/*" onchange="previewImage(this, 'cvImagePreview')" />
                 </div>
+
                 @* Samma logik här som för profilbilden *@
                 @if (!string.IsNullOrEmpty(Model.CurrentCvImage) && Model.CurrentCvImage != "default.jpg")
                 {
@@ -223,6 +229,7 @@
                     </div>
                 }
             </div>
+
             <div class="text-end mt-3">
                 <button type="submit" class="btn btn-secondary btn-sm">Spara uppgifter</button>
             </div>
@@ -231,6 +238,7 @@
 
     <hr class="my-5" />
         <h3 class="text-center mt-5 mb-4">Mina Projekt</h3>
+       
         <div class="row">
              @*Vi kollar först om listan 'ParticipatingProjects' existerar och om den innehåller några projekt*@
             @if (Model.ParticipatingProjects != null && Model.ParticipatingProjects.Any())
@@ -248,6 +256,7 @@
                     </div>
                 }
             }
+
             else
             {
                 <div class="col-12 text-center text-muted fst-italic">Inga projekt kopplade ännu.</div>
@@ -281,6 +290,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
     <script>
         // Funktion för att visa/dölja lösenord
         function togglePassword(fieldId, iconId) {
@@ -305,7 +315,6 @@
                 reader.onload = function(e) {
                     document.getElementById(imgId).src = e.target.result;
                 }
-
                 reader.readAsDataURL(input.files[0]);
             }
         }

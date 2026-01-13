@@ -8,19 +8,24 @@ namespace MyApp.Models
         //Name
         [Required(ErrorMessage = "Vänligen ange ett namn.")]
         [StringLength(100, ErrorMessage = "Namnet får max vara 100 tecken.")]
-
         public string Name { get; set; }
+
         //Profile image
         [DataType(DataType.ImageUrl)]
         public string? ProfileImage { get; set; }
-        //CV - Filename for the CV
-        public string Cv { get; set; }
+
         public string? CvImage { get; set; }
+
         public string? Skills { get; set; }
+
         public string? Education { get; set; }
+
         public string? Experience { get; set; } 
+
         public bool Visibility { get; set; } = false;
+
         public bool Deactivated { get; set; } = false;
+
         public int ProfileViews { get; set; } = 0;
 
         //Foreign key - AdressId

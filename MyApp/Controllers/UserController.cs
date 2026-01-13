@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Data;
 using MyApp.InputModels;
 using MyApp.Models;
-using System.IO;
 using System.Xml.Serialization;
 
 
@@ -38,19 +36,23 @@ namespace MyApp.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User); 
+
             if (userId == null)
             {
                 return RedirectToAction("Login");
             }
+
             var user = await _context.Users
                 .Include(u => u.Address)
                 .Include(u => u.ParticipatingProjects)
                     .ThenInclude(pu => pu.Project)
                 .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+
             if (user == null)
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
@@ -69,12 +71,14 @@ namespace MyApp.Controllers
             if (ModelState.IsValid)
             {
                 var existingUserWithEmail = await _userManager.FindByEmailAsync(model.Email);
+
                 if (existingUserWithEmail != null)
                 {
                     ModelState.AddModelError("Email", "Denna e-postadress används redan av ett annat konto.");
                 }
 
                 var existingUserWithName = await _userManager.FindByNameAsync(model.UserName);
+
                 if (existingUserWithName != null)
                 {
                     ModelState.AddModelError("UserName", "Användarnamnet är tyvärr upptaget.");
@@ -120,7 +124,6 @@ namespace MyApp.Controllers
                     ProfileImage = "default.jpg",
                     Visibility = true,
                     Deactivated = false,
-                    Cv = "",
                     EmailConfirmed = true
                 };
 
@@ -139,6 +142,7 @@ namespace MyApp.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+
             return View(model);
         }
 
@@ -154,6 +158,7 @@ namespace MyApp.Controllers
         {
             // Försöker logga in användaren
             var result = await _signInManager.PasswordSignInAsync(username, password, isPersistent: false, lockoutOnFailure: false);
+
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(username);
@@ -166,8 +171,10 @@ namespace MyApp.Controllers
                     await _context.SaveChangesAsync();
                     TempData["SuccessMessage"] = "Välkommen tillbaka! Ditt konto har återaktiverats.";
                 }
+
                 return RedirectToAction("Index", "Home");
             }
+
             ViewBag.ErrorMessage = "Fel användarnamn eller lösenord.";
             return View();
         }
@@ -185,6 +192,7 @@ namespace MyApp.Controllers
         public async Task<IActionResult> ViewProfile(int id)
         {
             var userProfile = await _context.Users.FindAsync(id);
+
             if (userProfile == null)
             {
                 return NotFound();
@@ -205,7 +213,7 @@ namespace MyApp.Controllers
         }
 
         // Visa andras profiler
-        [AllowAnonymous] // Tillåter åtkomst även för icke-inloggade (om profilen är publik)
+        [AllowAnonymous] 
         [HttpGet("User/Profile/{id}")]
         public async Task<IActionResult> Profile(int id)
         {
@@ -268,6 +276,7 @@ namespace MyApp.Controllers
                 // Projekt
                 ParticipatingProjects = user.ParticipatingProjects
             };
+
             return View(model);
         }
 
@@ -282,6 +291,7 @@ namespace MyApp.Controllers
                 ModelState.Remove("NewPassword");
                 ModelState.Remove("ConfirmPassword");
             }
+
             var userId = _userManager.GetUserId(User);
             var userToUpdate = await _context.Users
                 .Include(u => u.Address)
@@ -293,15 +303,19 @@ namespace MyApp.Controllers
             if (userToUpdate != null)
             {
                 var existingUserWithEmail = await _userManager.FindByEmailAsync(model.Email);
+
                 if (existingUserWithEmail != null && existingUserWithEmail.Id != userToUpdate.Id)
                 {
                     ModelState.AddModelError("Email", "Denna e-postadress används redan av ett annat konto.");
                 }
+
                 var existingUserWithName = await _userManager.FindByNameAsync(model.UserName);
+
                 if (existingUserWithName != null && existingUserWithName.Id != userToUpdate.Id)
                 {
                     ModelState.AddModelError("UserName", "Användarnamnet är tyvärr upptaget.");
                 }
+
                 if (!string.IsNullOrEmpty(model.PhoneNumber))
                 {
                     var existingUserWithPhone = await _context.Users
@@ -316,11 +330,13 @@ namespace MyApp.Controllers
                 if (!string.IsNullOrEmpty(model.CurrentPassword))
                 {
                     var isPasswordCorrect = await _userManager.CheckPasswordAsync(userToUpdate, model.CurrentPassword);
+
                     if (!isPasswordCorrect)
                     {
                         ModelState.AddModelError("CurrentPassword", "Felaktigt nuvarande lösenord.");
                     }
                 }
+
                 if (!ModelState.IsValid)
                 {
                     // Återställ bildreferenserna vid fel så att vyn inte kraschar eller visar tomt.
@@ -351,24 +367,29 @@ namespace MyApp.Controllers
                     string newFileName = await UploadFile(model.NewProfileImageFile);
                     userToUpdate.ProfileImage = newFileName;
                 }
+
                 else if (model.RemoveProfileImage)
                 {
                     userToUpdate.ProfileImage = "default.jpg";
                 }
+
                 // Filuppladdning för CV-bild
                 if (model.NewCvImageFile != null)
                 {
                     string newFileName = await UploadFile(model.NewCvImageFile);
                     userToUpdate.CvImage = newFileName;
                 }
+
                 else if (model.RemoveCvImage)
                 {
                     userToUpdate.CvImage = "default.jpg";
                 }
+                
                 // Genomför lösenordsbyte via Identity
                 if (!string.IsNullOrEmpty(model.CurrentPassword) && !string.IsNullOrEmpty(model.NewPassword))
                 {
                     var changePasswordResult = await _userManager.ChangePasswordAsync(userToUpdate, model.CurrentPassword, model.NewPassword);
+
                     if (!changePasswordResult.Succeeded)
                     {
                         foreach (var error in changePasswordResult.Errors)
@@ -377,13 +398,17 @@ namespace MyApp.Controllers
                         }
                         // Återställ projektlista vid lösenordsfel också
                         model.ParticipatingProjects = userToUpdate.ParticipatingProjects;
+
                         return View(model);
                     }
                 }
+
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Din profil har uppdaterats!";
+
                 return RedirectToAction("Index");
             }
+
             return View(model);
         }
 
@@ -395,6 +420,7 @@ namespace MyApp.Controllers
             if (userId == null) return RedirectToAction("Index", "Home");
             
             var user = await _context.Users.FindAsync(int.Parse(userId));
+
             if (user != null)
             {
                 user.Deactivated = true;
@@ -407,6 +433,7 @@ namespace MyApp.Controllers
                 // Meddelande till startsidan
                 TempData["SuccessMessage"] = "Ditt konto har avaktiverats.";
             }
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -469,6 +496,7 @@ namespace MyApp.Controllers
                     await file.CopyToAsync(fileStream);
                 }
             }
+
             return uniqueFileName;
         }
 
@@ -487,6 +515,7 @@ namespace MyApp.Controllers
 
             // Säkerhetskoll vid export
             bool isLoggedOut = !User.Identity.IsAuthenticated;
+
             if (user.Visibility == false && isLoggedOut)
             {
                 return NotFound();
@@ -506,6 +535,7 @@ namespace MyApp.Controllers
                 ZipCode = user.Address?.ZipCode,
                 City = user.Address?.City
             };
+
             if (user.ParticipatingProjects != null)
             {
                 foreach (var projUser in user.ParticipatingProjects)
@@ -518,6 +548,7 @@ namespace MyApp.Controllers
                     });
                 }
             }
+
             var serializer = new XmlSerializer(typeof(ProfileXmlDto));
 
             using (var stream = new MemoryStream())
@@ -533,6 +564,7 @@ namespace MyApp.Controllers
                 {
                     serializer.Serialize(writer, exportData);
                 }
+
                 var content = stream.ToArray();
                 return File(content, "application/xml", $"Profil_{user.UserName}.xml");
             }

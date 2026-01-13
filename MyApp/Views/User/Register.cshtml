@@ -16,6 +16,7 @@
                 <span asp-validation-for="Name" class="text-danger small"></span>
             </div>
         </div>
+
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Telefonnummer</label>
             <div class="col-md-9">
@@ -23,6 +24,7 @@
                 <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
             </div>
         </div>
+
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Mailadress</label>
             <div class="col-md-9">
@@ -30,6 +32,7 @@
                 <span asp-validation-for="Email" class="text-danger small"></span>
             </div>
         </div>
+
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Adress</label>
             <div class="col-md-9">
@@ -37,18 +40,21 @@
                 <span asp-validation-for="HomeAddress" class="text-danger small"></span>
             </div>
         </div>
+
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Postnummer</label>
             <div class="col-md-3">
                 <input asp-for="ZipCode" class="form-control border-0 inputGroupStyle"/>
                 <span asp-validation-for="ZipCode" class="text-danger small"></span>
             </div>
+
             <label class="col-md-1 col-form-label text-md-end">Ort</label>
             <div class="col-md-5">
                 <input asp-for="City" class="form-control border-0 inputGroupStyle" />
                 <span asp-validation-for="City" class="text-danger small"></span>
             </div>
         </div>
+
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Användarnamn</label>
             <div class="col-md-9">
@@ -59,6 +65,7 @@
 
         <div class="row mb-3 align-items-center">
             <label class="col-md-3 col-form-label">Lösenord</label>
+
             <div class="col-md-9">
                 <div class="input-group">
                     <input asp-for="Password" type="password" class="form-control border-0 inputGroupStyle" id="passwordInput" />
@@ -96,6 +103,7 @@
         </div>
     </form>
 </div>
+
 @section Scripts {
     @* Laddar in script som hanterar validering av formulär *@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -104,9 +112,14 @@
         @* Funktion för att visa/dölja lösenord *@
         function togglePassword(inputId) {
             var input = document.getElementById(inputId);
-            if (input.type === "password") {
+
+            if (input.type === "password") 
+            {
                 input.type = "text";
-            } else {
+            } 
+
+            else 
+            {
                 input.type = "password";
             }
         }

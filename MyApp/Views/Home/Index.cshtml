@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<MyApp.Models.User>
+
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
@@ -43,8 +44,8 @@
             .FirstOrDefault();
 
     <h3 class="m-2">@user.Name</h3>
-    <div class="d-flex justify-content-center mb-3 homepageWidth">
 
+    <div class="d-flex justify-content-center mb-3 homepageWidth">
         <div class="ourBackgroundColor rounded py-3 box-width" style="margin-right: 6%;">
             <div class="mx-auto homepageWidth overflow-break">
                 <h5>CV</h5>
@@ -64,9 +65,12 @@
                 </div>
             </div>
         </div>
+
         <div class="ourBackgroundColor rounded py-3 box-width">
             <div class="mx-auto homepageWidth overflow-break">
+
                 <h5 class="text-center">Senaste projekt</h5>
+
                 @if (latestProject != null)
                 {
                     <div class="p-4 rounded h-100 d-flex flex-column justify-content-center align-items-center text-center">
@@ -77,6 +81,7 @@
                         </div>
                     </div>
                 }
+
                 else
                 {
                     <p class="text-center fst-italic mt-2">Inga projekt ännu</p>
@@ -84,6 +89,7 @@
             </div>
         </div>
     </div>
+
     <div class="homepageWidth text-end">
         <a asp-controller="User"
            asp-action="ViewProfile"

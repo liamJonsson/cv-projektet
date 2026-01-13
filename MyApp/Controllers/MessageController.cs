@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyApp.Data;
 using MyApp.Models;
@@ -39,6 +38,7 @@ namespace MyApp.Controllers
                     message.SenderName = "[Avaktiverad användare]";
                 }
             }
+
             return View(userMessages);
         }
 
@@ -55,7 +55,6 @@ namespace MyApp.Controllers
             }
 
             return RedirectToAction("Index");
-
         }
 
         [HttpPost]
@@ -79,6 +78,7 @@ namespace MyApp.Controllers
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Meddelandet har skickats.";
             }
+
             //Ett anonymt objekt med id skickas med så att rätt profilsida visas(den man var på) när ett meddelande har skickats
             return RedirectToAction("Profile", "User", new { id = message.ReceiverId});
         }
@@ -97,6 +97,7 @@ namespace MyApp.Controllers
 
                 TempData["SuccessMessage"] = "Meddelandet har tagits bort!";
             }
+
             return RedirectToAction("Index");
         }
     }

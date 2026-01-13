@@ -8,14 +8,18 @@ namespace MyApp.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProjectId { get; set; }
 
+
         [Required(ErrorMessage = "Vänligen fyll i en titel.")]
         public string Title { get; set; } = string.Empty;
+
 
         [Required(ErrorMessage = "Vänligen fyll i en beskrivning.")]
         public string Description { get; set; } = string.Empty;
 
+
         [Required(ErrorMessage = "Vänligen fyll i ett startdatum.")]
         public DateTime? StartDate { get; set; }
+
 
         [Required(ErrorMessage = "Vänligen fyll i ett programmeringsspråk.")]
         [RegularExpression(@"^[a-zA-Z0-9\+#åäöÅÄÖéÉüÜ]*$", ErrorMessage = "Innehåller otillåtna tecken.")]

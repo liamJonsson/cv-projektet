@@ -1,33 +1,33 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    text-align: start;
 }
 
 /* PROJEktLISTNING */
@@ -43,7 +43,7 @@ body {
     border: 1px solid #ddd;
     padding: 20px;
     background-color: #f5f5f5;
-    position: relative; 
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -55,8 +55,9 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 12px;
-    padding-right: 5px; 
+    padding-right: 5px;
 }
+
 /* PLUS-KNAPPEN  */
 .project-join-btn {
     position: absolute;
@@ -78,9 +79,10 @@ body {
     border-color: #155724;
 }
 
-    .project-join-btn:hover {
-        background-color: #bfbfbf;
-    }
+.project-join-btn:hover {
+    background-color: #bfbfbf;
+}
+
 /* BEKRÄFTELSE-BOX  */
 .join-confirm-box {
     position: fixed;
@@ -112,9 +114,9 @@ body {
     font-weight: bold;
 }
 
-    .btn-yes:hover {
-        background-color: #f0f0f0;
-    }
+.btn-yes:hover {
+    background-color: #f0f0f0;
+}
 
 /* AVBRYT - knappen */
 .btn-cancel {
@@ -126,9 +128,9 @@ body {
     cursor: pointer;
 }
 
-    .btn-cancel:hover {
-        opacity: 0.8;
-    }
+.btn-cancel:hover {
+    opacity: 0.8;
+}
 
 /* text styling innuti kortet */
 .project-title {
@@ -167,9 +169,9 @@ body {
     text-transform: uppercase;
 }
 
-    .close-alert-btn:hover {
-        opacity: 0.8;
-    }
+.close-alert-btn:hover {
+    opacity: 0.8;
+}    
 
 .project-leave-btn {
     position: absolute;
@@ -192,126 +194,126 @@ body {
     color: #721c24;
 }
 
-    .project-leave-btn:hover {
-        background-color: #f5c6cb;
-    }
+.project-leave-btn:hover {
+    background-color: #f5c6cb;
+}
 
-    /*Flera klasser*/
-    .close-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 10px;
-        font-size: 0.8rem;
-        padding: 0.5rem;
-    }
+/*Flera klasser*/
+.close-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    font-size: 0.8rem;
+    padding: 0.5rem;
+}
 
-    .ourBackgroundColor {
-        background-color: #dcdcdc;
-    }
+.ourBackgroundColor {
+    background-color: #dcdcdc;
+}
 
-    /*Home - Index*/
-    .homepageWidth {
-        width: 90%;
-    }
+/*Home - Index*/
+.homepageWidth {
+    width: 90%;
+}
 
-    .overflow-break {
-        overflow-wrap: break-word;
-    }
+.overflow-break {
+    overflow-wrap: break-word;
+}
 
-    .box-width {
-        width: 47%;
-    }
+.box-width {
+    width: 47%;
+}
 
-    /*Message - Index*/
-    .sucess-message {
-        border-radius: 6px;
-        padding: 10px;
-        width: 60%;
-    }
+/*Message - Index*/
+.sucess-message {
+    border-radius: 6px;
+    padding: 10px;
+    width: 60%;
+}
 
-    .message-read {
-        font-weight: normal;
-        color: gray;
-    }
+.message-read {
+    font-weight: normal;
+    color: gray;
+}
 
-    .message-unread{
-        font-weight: bold;
-        color: black;
-    }
+.message-unread {
+    font-weight: bold;
+    color: black;
+}
 
-    /*Project - Add*/
-    .sucess-message {
-        border-radius: 6px;
-        padding: 10px;
-    }
+/*Project - Add*/
+.sucess-message {
+    border-radius: 6px;
+    padding: 10px;
+}
 
-    /*User - Edit*/
-    .editProfilePictureBox{
-        width: 150px;
-        height: 150px;
-    }
+/*User - Edit*/
+.editProfilePictureBox {
+    width: 150px;
+    height: 150px;
+}
 
-    .profilePictures {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+.profilePictures {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    .editProfilePictureLabel {
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-    }
+.editProfilePictureLabel {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
 
-    .inputGroupStyle {
-        background-color: #dcdcdc;
-        height: 45px;
-    }
+.inputGroupStyle {
+    background-color: #dcdcdc;
+    height: 45px;
+}
 
-    .cvPicture{
-        width: 130px;
-        height: 130px;
-    }
+.cvPicture {
+    width: 130px;
+    height: 130px;
+}
 
-    .editProfileCvPictureLabel {
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-        bottom: 0;
-        right: 0;
-    }
+.editProfileCvPictureLabel {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    bottom: 0;
+    right: 0;
+}
 
-    /*User - Login*/
-    .loginContainer {
-        width: 100%;
-        max-width: 400px;
-    }
+/*User - Login*/
+.loginContainer {
+    width: 100%;
+    max-width: 400px;
+}
 
-    .loginFontSize{
-        font-size: 1.1rem;
-    }
+.loginFontSize {
+    font-size: 1.1rem;
+}
 
-    .registerAndLoginBtn {
-        background-color: #c0c0c0;
-        border: none;
-        font-size: 1.1rem;
-    }
+.registerAndLoginBtn {
+    background-color: #c0c0c0;
+    border: none;
+    font-size: 1.1rem;
+}
 
-    /*User - MyPage*/
-    .profilePicture {
-        width: 300px;
-        height: 300px;
-        background-color: #6c6c6c;
-        overflow: hidden;
-    }
+/*User - MyPage*/
+.profilePicture {
+    width: 300px;
+    height: 300px;
+    background-color: #6c6c6c;
+    overflow: hidden;
+}
 
-    .cvInformation {
-        white-space: pre-line;
-        line-height: 1.8;
-    }
+.cvInformation {
+    white-space: pre-line;
+    line-height: 1.8;
+}
 
-    /*User - Register*/
-    .registerContainer{
-        max-width: 800px;
-    }
+/*User - Register*/
+.registerContainer {
+    max-width: 800px;
+}
