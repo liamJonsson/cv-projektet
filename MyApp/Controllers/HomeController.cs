@@ -70,7 +70,9 @@ namespace MyApp.Controllers
             //Skickar med query till vyn för att kunna använda den där
             ViewData["SearchQuery"] = query;
 
-            return View("Index", await users.ToListAsync());
+            var userList = await users.ToListAsync();
+
+            return View("Index", userList);
         }
     }
 }
